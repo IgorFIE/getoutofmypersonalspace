@@ -10,7 +10,7 @@ export class Player {
         this.playerWidthPos = (GameVariables.gameWidth / 2);
         this.playerHeightPos = (GameVariables.gameHeight / 2);
         this.speed = GameVariables.playerSpeed;
-        this.sanity = 0; 
+        this.sanity = 0;
 
         this.playerObj = new SquareObject(this.x, this.y, GameVariables.spriteSize, GameVariables.spriteSize);;
 
@@ -23,7 +23,7 @@ export class Player {
         this.context = canvas.getContext('2d');
     }
 
-     getPlayerObj() {
+    getPlayerObj() {
         return this.playerObj;
     }
 

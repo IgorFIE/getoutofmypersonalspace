@@ -42,6 +42,14 @@ export class Board {
             this.context.fillStyle = "grey";
         }
         this.context.fillRect(boardObj.x, boardObj.y, boardObj.w, boardObj.h);
+
+        if(boardObj.objType === 1){
+            this.context.beginPath();
+            this.context.lineWidth = "6";
+            this.context.strokeStyle = "red";
+            this.context.rect(boardObj.x, boardObj.y, boardObj.w, boardObj.h);
+            this.context.stroke();
+        }
     }
 
     updateBoard(playerX, playerY) {
@@ -49,7 +57,7 @@ export class Board {
     }
 
     hasCollision(movingObject) {
-        return !!this.boardCollisionObjs.find( (it) => this.rectIntersect(it,movingObject));
+        return !!this.boardCollisionObjs.find((it) => this.rectIntersect(it, movingObject));
     }
 
     rectIntersect(obj1, obj2) {

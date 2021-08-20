@@ -6,8 +6,7 @@ import { SquareObject } from "./square-object";
 let mainDiv;
 let board;
 let player;
-let x;
-let y;
+let keys = [];
 let secondsPassed;
 let oldTimeStamp;
 let fps;
@@ -24,8 +23,6 @@ function init() {
 
     player = new Player(mainDiv);
     const playerObj = player.getPlayerObj();
-    x = playerObj.x;
-    y = playerObj.y;
     player.drawPlayer();
     playerEvents();
 
@@ -33,19 +30,12 @@ function init() {
 }
 
 function playerEvents() {
-    window.addEventListener("keydown", event => {
-        if (event.key == 'd') {
-            x -= GameVariables.playerSpeed * secondsPassed;
-        } else if (event.key == 'a') {
-            x += GameVariables.playerSpeed * secondsPassed;
-        } else if (event.key == 'w') {
-            y += GameVariables.playerSpeed * secondsPassed;
-        } else if (event.key == 's') {
-            y -= GameVariables.playerSpeed * secondsPassed;
-        }
-        console.log(x, y);
-
-    });
+    window.addEventListener('keydown', function (e) {
+        keys[e.key] = true;
+    })
+    window.addEventListener('keyup', function (e) {
+        keys[e.key] = false;
+    })
 }
 
 function gameLoop(timeStamp) {
@@ -65,15 +55,36 @@ function gameLoop(timeStamp) {
 }
 
 function update() {
-    // const playerObj = player.getPlayerObj();
-    // if (!board.hasCollision(new SquareObject(x, y, GameVariables.spriteSize, GameVariables.spriteSize))) {
-    //     playerObj.x = x;
-    //     playerObj.y = x;
-    // } else {
-    //     x = playerObj.x;
-    //     y = playerObj.y;
-    // }
-    board.updateBoard(x, y);
+    playerMovement();
+    const playerObj = player.getPlayerObj();
+    board.updateBoard(playerObj.x, playerObj.y);
+}
+
+function playerMovement() {
+    const playerObj = player.getPlayerObj();
+    let newX = playerObj.x;
+    let newY = playerObj.y;
+
+    const isMultiDirection = keys ? Object.keys(keys).filter((key) => (key == 'd' || key == 'a' || key == 'w' || key == 's') && keys[key]).length > 1 : false;
+    const distance = isMultiDirection ? (secondsPassed * GameVariables.playerSpeed) / 1.4142 : secondsPassed * GameVariables.playerSpeed;
+
+    if (keys && keys['d']) { newX -= distance; }
+    if (keys && keys['a']) { newX += distance; }
+    if (keys && keys['w']) { newY += distance; }
+    if (keys && keys['s']) { newY -= distance; }
+
+    const playerBoardX = Math.abs(newX - (GameVariables.gameWidth / 2));
+    const playerBoardY = Math.abs(newY - (GameVariables.gameHeight / 2));
+
+    const newPlayerObj = new SquareObject(playerBoardX, playerBoardY, GameVariables.spriteSize, GameVariables.spriteSize);
+
+    if (board.hasCollision(newPlayerObj)) {
+        newX = playerObj.x;
+        newY = playerObj.y;
+    }
+
+    playerObj.x = newX;
+    playerObj.y = newY;
 }
 
 function clean() {
