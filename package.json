@@ -1,0 +1,15 @@
+{
+  "name": "get-out-of-my-personal-space",
+  "version": "1.0.0",
+  "description": "Get Out Of My Personal Space is a game about navigating in a city center collecting coins while keeping a social distancy of 2 meters from other people.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx webpack --config webpack.config.js"
+  },
+  "author": "Igor Estevao",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.50.0",
+    "webpack-cli": "^4.7.2"
+  }
+}
