@@ -11,6 +11,7 @@ export class Board {
         mainDiv.appendChild(this.canvas);
 
         this.context = this.canvas.getContext('2d');
+        this.context.imageSmoothingEnabled = false;
     }
 
     initBoard() {

@@ -73,8 +73,8 @@ function playerMovement() {
     if (keys && keys['w']) { newY += distance; }
     if (keys && keys['s']) { newY -= distance; }
 
-    const playerBoardX = Math.abs(newX - (GameVariables.gameWidth / 2));
-    const playerBoardY = Math.abs(newY - (GameVariables.gameHeight / 2));
+    const playerBoardX = Math.abs(newX - (GameVariables.gameWidth / 2) + GameVariables.halfSprite);
+    const playerBoardY = Math.abs(newY - (GameVariables.gameHeight / 2) + GameVariables.halfSprite);
 
     const newPlayerObj = new SquareObject(playerBoardX, playerBoardY, GameVariables.spriteSize, GameVariables.spriteSize);
 
