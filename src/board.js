@@ -1,5 +1,7 @@
 import { BoardObject } from "./board-object";
 import { GameVariables } from "./game-variables";
+import { PIXEL_MULTIPLIER } from "./game-variables";
+import { rectCollision, rectCircleCollision } from "./collision-utilities";
 
 export class Board {
 
@@ -36,35 +38,105 @@ export class Board {
     }
 
     drawBoardPiece(boardObj) {
-        this.context.beginPath();
         if (boardObj.objType === 1) {
-            this.context.fillStyle = "black";
+            for (let y = 0; y < buildingTile.length; y++) {
+                for (let x = 0; x < buildingTile[y].length; x++) {
+                    const currentColor = buildingTile[y][x];
+                    if (currentColor) {
+                        this.context.beginPath();
+                        this.context.fillStyle = currentColor;
+                        this.context.fillRect(
+                             boardObj.x + (x * boardObj.w / 16),
+                             boardObj.y + (y * boardObj.h / 16),
+                            boardObj.w / 16, boardObj.h / 16);
+                    }
+                }
+            }
         } else {
-            this.context.fillStyle = "grey";
-        }
-        this.context.fillRect(boardObj.x, boardObj.y, boardObj.w, boardObj.h);
-
-        if(boardObj.objType === 1){
-            this.context.beginPath();
-            this.context.lineWidth = "6";
-            this.context.strokeStyle = "red";
-            this.context.rect(boardObj.x, boardObj.y, boardObj.w, boardObj.h);
-            this.context.stroke();
+            // Need to simplify this
+            for (let yMultiplier = 0; yMultiplier < (PIXEL_MULTIPLIER / 2); yMultiplier++) {
+                const yTilePosition = yMultiplier * (boardObj.h / 2);
+                for (let xMultiplier = 0; xMultiplier < (PIXEL_MULTIPLIER / 2); xMultiplier++) {
+                    const xTilePosition = xMultiplier * (boardObj.w / 2);
+                    for (let y = 0; y < floorTile.length; y++) {
+                        for (let x = 0; x < floorTile[y].length; x++) {
+                            const currentColor = floorTile[y][x];
+                            if (currentColor) {
+                                this.context.beginPath();
+                                this.context.fillStyle = currentColor;
+                                this.context.fillRect(
+                                    xTilePosition + boardObj.x + (x * boardObj.w / 32),
+                                    yTilePosition + boardObj.y + (y * boardObj.h / 32),
+                                    boardObj.w / 32, boardObj.h / 32);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
-    updateBoard(playerX, playerY) {
-        this.canvas.style.transform = 'translate(' + playerX + 'px, ' + playerY + 'px)';
+    updateBoard(x, y) {
+        this.canvas.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
     }
 
     hasCollision(movingObject) {
-        return !!this.boardCollisionObjs.find((it) => this.rectIntersect(it, movingObject));
+        return !!this.boardCollisionObjs.find((it) => rectCollision(it, movingObject));
     }
 
-    rectIntersect(obj1, obj2) {
-        if (obj2.x > obj1.w + obj1.x || obj1.x > obj2.w + obj2.x || obj2.y > obj1.h + obj1.y || obj1.y > obj2.h + obj2.y) {
-            return false;
-        }
-        return true;
+    // remove after testing
+    hasAreaCollision(movingObject) {
+        return !!this.boardCollisionObjs.find((it) => {
+            const result = rectCircleCollision(movingObject, it)
+            if(result){
+                console.log('colision');
+            }
+            return result;
+        });
     }
 }
+
+const floorBrightColor = '#dadcf1';
+const floorMiddleColor = '#a7abd2';
+const floorDarkColor = '#64768f';
+const floorTile = [
+    [floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor],
+    [floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorDarkColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorDarkColor],
+    [floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorDarkColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorDarkColor],
+    [floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorDarkColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorDarkColor],
+    [floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorDarkColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorDarkColor],
+    [floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorDarkColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorDarkColor],
+    [floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorDarkColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorDarkColor],
+    [floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorDarkColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorDarkColor],
+    [floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor, floorDarkColor],
+    [floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorDarkColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorDarkColor],
+    [floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorDarkColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorDarkColor],
+    [floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorDarkColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorDarkColor],
+    [floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorDarkColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorDarkColor],
+    [floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorDarkColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorDarkColor],
+    [floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorDarkColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorDarkColor],
+    [floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorBrightColor, floorDarkColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorMiddleColor, floorDarkColor],
+];
+
+const buildColor = '#703a33';
+const buildWindowColor = '#38252e';
+const buildShadow = '#2f1519';
+const buildWindowBorder = '#865433';
+const buildingTile = [
+    [buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor],
+    [buildColor, buildShadow, buildShadow, buildShadow, buildShadow, buildColor, buildShadow, buildShadow, buildShadow, buildShadow, buildColor, buildShadow, buildShadow, buildShadow, buildShadow, buildColor],
+    [buildColor, buildWindowColor, buildWindowColor, buildWindowColor, buildWindowColor, buildColor, buildWindowColor, buildWindowColor, buildWindowColor, buildWindowColor, buildColor, buildWindowColor, buildWindowColor, buildWindowColor, buildWindowColor, buildColor],
+    [buildColor, buildWindowColor, buildWindowColor, buildWindowColor, buildWindowColor, buildColor, buildWindowColor, buildWindowColor, buildWindowColor, buildWindowColor, buildColor, buildWindowColor, buildWindowColor, buildWindowColor, buildWindowColor, buildColor],
+    [buildColor, buildWindowBorder, buildWindowBorder, buildWindowBorder, buildWindowBorder, buildColor, buildWindowBorder, buildWindowBorder, buildWindowBorder, buildWindowBorder, buildColor, buildWindowBorder, buildWindowBorder, buildWindowBorder, buildWindowBorder, buildColor],
+    [buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor],
+    [buildColor, buildShadow, buildShadow, buildShadow, buildShadow, buildColor, buildShadow, buildShadow, buildShadow, buildShadow, buildColor, buildShadow, buildShadow, buildShadow, buildShadow, buildColor],
+    [buildColor, buildWindowColor, buildWindowColor, buildWindowColor, buildWindowColor, buildColor, buildWindowColor, buildWindowColor, buildWindowColor, buildWindowColor, buildColor, buildWindowColor, buildWindowColor, buildWindowColor, buildWindowColor, buildColor],
+    [buildColor, buildWindowColor, buildWindowColor, buildWindowColor, buildWindowColor, buildColor, buildWindowColor, buildWindowColor, buildWindowColor, buildWindowColor, buildColor, buildWindowColor, buildWindowColor, buildWindowColor, buildWindowColor, buildColor],
+    [buildColor, buildWindowBorder, buildWindowBorder, buildWindowBorder, buildWindowBorder, buildColor, buildWindowBorder, buildWindowBorder, buildWindowBorder, buildWindowBorder, buildColor, buildWindowBorder, buildWindowBorder, buildWindowBorder, buildWindowBorder, buildColor],
+    [buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor],
+    [buildColor, buildShadow, buildShadow, buildShadow, buildShadow, buildColor, buildShadow, buildShadow, buildShadow, buildShadow, buildColor, buildShadow, buildShadow, buildShadow, buildShadow, buildColor],
+    [buildColor, buildWindowColor, buildWindowColor, buildWindowColor, buildWindowColor, buildColor, buildWindowColor, buildWindowColor, buildWindowColor, buildWindowColor, buildColor, buildWindowColor, buildWindowColor, buildWindowColor, buildWindowColor, buildColor],
+    [buildColor, buildWindowColor, buildWindowColor, buildWindowColor, buildWindowColor, buildColor, buildWindowColor, buildWindowColor, buildWindowColor, buildWindowColor, buildColor, buildWindowColor, buildWindowColor, buildWindowColor, buildWindowColor, buildColor],
+    [buildColor, buildWindowBorder, buildWindowBorder, buildWindowBorder, buildWindowBorder, buildColor, buildWindowBorder, buildWindowBorder, buildWindowBorder, buildWindowBorder, buildColor, buildWindowBorder, buildWindowBorder, buildWindowBorder, buildWindowBorder, buildColor],
+    [buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor, buildColor],
+];

@@ -1,5 +1,6 @@
 import { GameVariables } from "./game-variables";
 import { SquareObject } from "./square-object";
+import { CircleObject } from "./circle-object";
 
 export class Player {
 
@@ -12,9 +13,9 @@ export class Player {
         this.speed = GameVariables.playerSpeed;
         this.sanity = 0;
 
-        this.playerObj = new SquareObject(this.x, this.y, GameVariables.spriteSize, GameVariables.spriteSize);;
+        this.playerObj = new SquareObject(this.x, this.y + GameVariables.halfSprite, GameVariables.spriteSize, GameVariables.halfSprite);
+        this.playerArea = new CircleObject(this.x, this.y + GameVariables.halfSprite, GameVariables.spriteSize);
 
-        // can be refactor to utilities
         const canvas = document.createElement('canvas');
         canvas.width = GameVariables.gameWidth;
         canvas.height = GameVariables.gameHeight;
@@ -23,25 +24,276 @@ export class Player {
         this.context = canvas.getContext('2d');
         this.context.imageSmoothingEnabled = false;
 
-        this.img = new Image();
-        this.img.src = './img/main_char.png';
+        this.animationCicle = 0;
+        this.currentAnimationSprite = 0;
+
+        this.collisionInArea = false;
+        this.currentAreaLevel = 0;
+        this.areaLevelCicle = 0;
     }
 
     getPlayerObj() {
         return this.playerObj;
     }
 
+    getPlayerArea() {
+        return this.playerArea;
+    }
+
+    setCollisionInArea(hasCollision) {
+        this.collisionInArea = hasCollision;
+    }
+
     cleanPlayer() {
         this.context.clearRect(0, 0, GameVariables.gameWidth, GameVariables.gameHeight);
     }
 
-    drawPlayer() {
-        this.context.drawImage(this.img,this.playerWidthPos, this.playerHeightPos, GameVariables.spriteSize, GameVariables.spriteSize);
+    upgradePlayer() {
+        if (this.collisionInArea) {
+            if (this.areaLevelCicle == GameVariables.playerAreaLevelSpeed && this.currentAreaLevel < playerAreaLevelColors.length - 1) {
+                this.areaLevelCicle = 0;
+                this.currentAreaLevel++;
+            } else {
+                if(this.currentAreaLevel !== playerAreaLevelColors.length - 1 || 
+                    this.areaLevelCicle !== GameVariables.playerAreaLevelSpeed){
+                    this.areaLevelCicle++;
+                }
+            }
+        } else {
+            if (this.areaLevelCicle > 0) {
+                this.areaLevelCicle--;
+            } else {
+                if (this.currentAreaLevel > 0) {
+                    this.currentAreaLevel--;
+                    this.areaLevelCicle = GameVariables.playerAreaLevelSpeed;
+                }
+            }
+        }
+    }
 
-        this.context.beginPath();
-        this.context.lineWidth = "" + GameVariables.halfSprite;
-        this.context.strokeStyle = "green";
-        this.context.arc(this.playerWidthPos + GameVariables.halfSprite, this.playerHeightPos + GameVariables.halfSprite, GameVariables.spriteSize, 0, 2 * Math.PI);
-        this.context.stroke();
+    // should only draw new image if I need to update it, I should not be always redrawing it
+    drawPlayer(keys) {
+        const spriteToUse = this.spriteToUse(keys);
+        for (let y = 0; y < playerShadowSprite.length; y++) {
+            for (let x = 0; x < playerShadowSprite[y].length; x++) {
+                const currentColor = playerShadowSprite[y][x];
+                if (currentColor) {
+                    this.context.beginPath();
+                    this.context.fillStyle = currentColor;
+                    this.context.fillRect(
+                        this.playerWidthPos + (x * (GameVariables.halfSprite / 4)),
+                        (GameVariables.spriteSize - GameVariables.spriteSize / 4) + this.playerHeightPos + (y * (GameVariables.halfSprite / 4)),
+                        (GameVariables.halfSprite / 4), (GameVariables.halfSprite / 4));
+                }
+            }
+        }
+
+        for (let y = 0; y < playerAreaSprite.length; y++) {
+            for (let x = 0; x < playerAreaSprite[y].length; x++) {
+                const currentAreaColor = playerAreaSprite[y][x]; //todo convert this into a boolead list maybe
+                if (currentAreaColor) {
+                    this.context.beginPath();
+                    this.context.fillStyle = playerAreaLevelColors[this.currentAreaLevel];
+                    this.context.fillRect(
+                        this.playerWidthPos + (x * (GameVariables.halfSprite)) - (GameVariables.spriteSize + (GameVariables.spriteSize / 2)),
+                        this.playerHeightPos + (y * (GameVariables.halfSprite)) - (GameVariables.halfSprite / 4) - GameVariables.halfSprite,
+                        (GameVariables.halfSprite), (GameVariables.halfSprite));
+                }
+            }
+        }
+
+        for (let y = 0; y < spriteToUse.length; y++) {
+            for (let x = 0; x < spriteToUse[y].length; x++) {
+                const currentColor = spriteToUse[y][x];
+                if (currentColor) {
+                    this.context.beginPath();
+                    this.context.fillStyle = currentColor;
+                    this.context.fillRect(
+                        this.playerWidthPos + (x * (GameVariables.halfSprite / 4)),
+                        this.playerHeightPos + (y * (GameVariables.halfSprite / 4)),
+                        (GameVariables.halfSprite / 4), (GameVariables.halfSprite / 4));
+                }
+            }
+        }
+    }
+
+    spriteToUse(keys) {
+        this.animationCicle++;
+        if (this.animationCicle === GameVariables.playerAnimationSpeed) {
+            this.currentAnimationSprite = this.currentAnimationSprite === playerFrontWalkingCicle.length - 1 ? 0 : this.currentAnimationSprite + 1;
+            this.animationCicle = 0;
+        }
+        if (keys && keys['d']) { return playerRightWalkingCicle[this.currentAnimationSprite]; }
+        if (keys && keys['a']) { return playerLeftWalkingCicle[this.currentAnimationSprite]; }
+        if (keys && keys['w']) { return playerBackWalkingCicle[this.currentAnimationSprite]; }
+        if (keys && keys['s']) { return playerFrontWalkingCicle[this.currentAnimationSprite]; }
+        return playerFrontSprite;
     }
 }
+
+const hairColor = '#38252e';
+const black = '#000000';
+const skinColor = '#e7c688';
+const maskWhite = '#9bf2fa';
+const maskDark = '#00bcd4';
+const shirt = '#703a33';
+const gloves = '#641f14';
+const boots = '#1b1116';
+const shadow = 'rgba(0,0,0,0.5)';
+
+const greenArea = 'rgba(0,255,0,0.3)';
+const yellowArea = 'rgba(255,255,0,0.3)';
+const redArea = 'rgba(255,0,0,0.3)';
+const playerAreaLevelColors = [greenArea, yellowArea, redArea];
+
+const playerShadowSprite = [
+    [null, null, shadow, shadow, shadow, shadow, null, null],
+    [null, shadow, shadow, shadow, shadow, shadow, shadow, null],
+    [null, null, shadow, shadow, shadow, shadow, null, null],
+];
+
+const playerAreaSprite = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, greenArea, greenArea, null, null, null],
+    [null, null, greenArea, greenArea, greenArea, greenArea, null, null],
+    [null, null, greenArea, greenArea, greenArea, greenArea, null, null],
+    [null, null, null, greenArea, greenArea, null, null, null],
+    [null, null, null, null, null, null, null, null],
+];
+
+const playerFrontSprite = [
+    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
+    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
+    [null, hairColor, black, skinColor, skinColor, black, hairColor, null],
+    [null, maskWhite, maskDark, maskDark, maskDark, maskDark, maskWhite, null],
+    [null, null, maskDark, maskDark, maskDark, maskDark, null, null],
+    [null, shirt, shirt, shirt, shirt, shirt, shirt, null],
+    [null, gloves, shirt, shirt, shirt, shirt, gloves, null],
+    [null, null, boots, null, null, boots, null, null]
+];
+
+const playerFrontSpriteWalk1 = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
+    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
+    [null, hairColor, black, skinColor, skinColor, black, hairColor, null],
+    [null, maskWhite, maskDark, maskDark, maskDark, maskDark, maskWhite, null],
+    [null, gloves, maskDark, maskDark, maskDark, maskDark, null, null],
+    [null, null, shirt, shirt, shirt, gloves, null, null],
+    [null, null, boots, null, null, null, null, null]
+];
+
+const playerFrontSpriteWalk2 = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
+    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
+    [null, hairColor, black, skinColor, skinColor, black, hairColor, null],
+    [null, maskWhite, maskDark, maskDark, maskDark, maskDark, maskWhite, null],
+    [null, null, maskDark, maskDark, maskDark, maskDark, gloves, null],
+    [null, null, gloves, shirt, shirt, shirt, null, null],
+    [null, null, null, null, null, boots, null, null]
+];
+
+const playerBackSprite = [
+    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
+    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
+    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
+    [null, maskWhite, hairColor, hairColor, hairColor, hairColor, maskWhite, null],
+    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
+    [null, shirt, shirt, shirt, shirt, shirt, shirt, null],
+    [null, gloves, shirt, shirt, shirt, shirt, gloves, null],
+    [null, null, boots, null, null, boots, null, null]
+];
+
+const playerBackSpriteWalk1 = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
+    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
+    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
+    [null, maskWhite, hairColor, hairColor, hairColor, hairColor, maskWhite, null],
+    [null, shirt, hairColor, hairColor, hairColor, hairColor, gloves, null],
+    [null, gloves, shirt, shirt, shirt, shirt, null, null],
+    [null, null, null, null, null, boots, null, null]
+];
+
+const playerBackSpriteWalk2 = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
+    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
+    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
+    [null, maskWhite, hairColor, hairColor, hairColor, hairColor, maskWhite, null],
+    [null, gloves, hairColor, hairColor, hairColor, hairColor, shirt, null],
+    [null, null, shirt, shirt, shirt, shirt, gloves, null],
+    [null, null, boots, null, null, null, null, null]
+];
+
+const playerRightSprite = [
+    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
+    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
+    [null, hairColor, hairColor, hairColor, skinColor, black, skinColor, null],
+    [null, hairColor, hairColor, hairColor, maskWhite, maskDark, maskDark, null],
+    [null, null, hairColor, maskWhite, maskWhite, maskDark, maskDark, null],
+    [null, null, shirt, shirt, shirt, shirt, null, null],
+    [null, null, shirt, gloves, gloves, shirt, null, null],
+    [null, null, null, boots, boots, null, null, null]
+];
+
+const playerRightSpriteWalk1 = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
+    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
+    [null, hairColor, hairColor, hairColor, skinColor, black, skinColor, null],
+    [null, hairColor, hairColor, hairColor, maskWhite, maskDark, maskDark, null],
+    [null, null, hairColor, maskWhite, maskWhite, maskDark, maskDark, null],
+    [null, null, gloves, shirt, shirt, shirt, null, null],
+    [null, null, boots, null, null, boots, null, null]
+];
+
+const playerRightSpriteWalk2 = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
+    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
+    [null, hairColor, hairColor, hairColor, skinColor, black, skinColor, null],
+    [null, hairColor, hairColor, hairColor, maskWhite, maskDark, maskDark, null],
+    [null, null, hairColor, maskWhite, maskWhite, maskDark, maskDark, null],
+    [null, null, shirt, shirt, shirt, gloves, null, null],
+    [null, null, boots, null, null, boots, null, null]
+];
+
+const playerLeftSprite = [
+    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
+    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
+    [null, skinColor, black, skinColor, hairColor, hairColor, hairColor, null],
+    [null, maskDark, maskDark, maskWhite, hairColor, hairColor, hairColor, null],
+    [null, maskDark, maskDark, maskWhite, maskWhite, hairColor, null, null],
+    [null, null, shirt, shirt, shirt, shirt, null, null],
+    [null, null, shirt, gloves, gloves, shirt, null, null],
+    [null, null, null, boots, boots, null, null, null]
+];
+
+const playerLeftSpriteWalk1 = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
+    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
+    [null, skinColor, black, skinColor, hairColor, hairColor, hairColor, null],
+    [null, maskDark, maskDark, maskWhite, hairColor, hairColor, hairColor, null],
+    [null, maskDark, maskDark, maskWhite, maskWhite, hairColor, null, null],
+    [null, null, shirt, shirt, shirt, gloves, null, null],
+    [null, null, boots, null, null, boots, null, null]
+];
+
+const playerLeftSpriteWalk2 = [
+    [null, null, null, null, null, null, null, null],
+    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
+    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
+    [null, skinColor, black, skinColor, hairColor, hairColor, hairColor, null],
+    [null, maskDark, maskDark, maskWhite, hairColor, hairColor, hairColor, null],
+    [null, maskDark, maskDark, maskWhite, maskWhite, hairColor, null, null],
+    [null, null, gloves, shirt, shirt, shirt, null, null],
+    [null, null, boots, null, null, boots, null, null]
+];
+
+const playerFrontWalkingCicle = [playerFrontSpriteWalk1, playerFrontSprite, playerFrontSpriteWalk2, playerFrontSprite];
+const playerBackWalkingCicle = [playerBackSpriteWalk1, playerBackSprite, playerBackSpriteWalk2, playerBackSprite];
+const playerRightWalkingCicle = [playerRightSpriteWalk1, playerRightSprite, playerRightSpriteWalk2, playerRightSprite];
+const playerLeftWalkingCicle = [playerLeftSpriteWalk1, playerLeftSprite, playerLeftSpriteWalk2, playerLeftSprite];

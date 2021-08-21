@@ -2,6 +2,7 @@ import { Board } from "./board";
 import { Player } from "./player";
 import { GameVariables } from "./game-variables";
 import { SquareObject } from "./square-object";
+import { CircleObject } from "./circle-object";
 
 let mainDiv;
 let board;
@@ -58,6 +59,7 @@ function update() {
     playerMovement();
     const playerObj = player.getPlayerObj();
     board.updateBoard(playerObj.x, playerObj.y);
+    player.upgradePlayer();
 }
 
 function playerMovement() {
@@ -73,15 +75,18 @@ function playerMovement() {
     if (keys && keys['w']) { newY += distance; }
     if (keys && keys['s']) { newY -= distance; }
 
-    const playerBoardX = Math.abs(newX - (GameVariables.gameWidth / 2) + GameVariables.halfSprite);
-    const playerBoardY = Math.abs(newY - (GameVariables.gameHeight / 2) + GameVariables.halfSprite);
+    const playerBoardX = Math.abs(newX - (GameVariables.gameWidth / 2));
+    const playerBoardY = Math.abs(newY - (GameVariables.gameHeight / 2));
 
-    const newPlayerObj = new SquareObject(playerBoardX, playerBoardY, GameVariables.spriteSize, GameVariables.spriteSize);
+    const newPlayerObj = new SquareObject(playerBoardX - GameVariables.halfSprite, playerBoardY + (GameVariables.halfSprite / 4), playerObj.w, playerObj.h);
+    const newPlayerArea = new CircleObject(playerBoardX, playerBoardY + (GameVariables.halfSprite - GameVariables.halfSprite/4), player.getPlayerArea().r);
 
     if (board.hasCollision(newPlayerObj)) {
         newX = playerObj.x;
         newY = playerObj.y;
     }
+
+    player.setCollisionInArea(board.hasAreaCollision(newPlayerArea));
 
     playerObj.x = newX;
     playerObj.y = newY;
@@ -92,5 +97,5 @@ function clean() {
 }
 
 function draw() {
-    player.drawPlayer();
+    player.drawPlayer(keys);
 }

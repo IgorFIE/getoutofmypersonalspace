@@ -9,4 +9,7 @@ export const GameVariables = {
     boardScaleMultiplier: 5,
 
     playerSpeed: 500,
+    playerAnimationSpeed: 12,
+
+    playerAreaLevelSpeed: 60,
 }
