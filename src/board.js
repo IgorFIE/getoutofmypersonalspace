@@ -87,11 +87,7 @@ export class Board {
     // remove after testing
     hasAreaCollision(movingObject) {
         return !!this.boardCollisionObjs.find((it) => {
-            const result = rectCircleCollision(movingObject, it)
-            if(result){
-                console.log('colision');
-            }
-            return result;
+            return rectCircleCollision(movingObject, it);
         });
     }
 }
