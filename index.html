@@ -3,12 +3,46 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=VT323">
+    <style>
+        html,
+        body {
+            font-family: "VT323";
+            background-color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            overflow: auto;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        #main {
+            overflow: hidden;
+            position: relative;
+        }
+
+        #minimap {
+            position: absolute;
+            left: 24px;
+            top: 24px;
+            z-index: 999;
+        }
+
+        canvas {
+            position: absolute;
+        }
+    </style>
 </head>
 
 <body>
-    <h2 style="position: absolute; top: 0;" id='fps'>FPS</h2>
-    <div id='main'></div>
+    <h2 style="position: absolute; top: 0; z-index: 999;" id='fps'>FPS</h2>
+    <canvas id="minimap"></canvas>
+    <div id="main"></div>
     <script src="dist/game.js"></script>
 </body>
 

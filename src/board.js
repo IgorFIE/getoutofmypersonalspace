@@ -16,6 +16,10 @@ export class Board {
         this.context.imageSmoothingEnabled = false;
     }
 
+    getBoard() {
+        return this.board;
+    }
+
     initBoard() {
         const spriteWithMultiplier = GameVariables.spriteSize * GameVariables.boardScaleMultiplier;
         this.canvas.width = GameVariables.boardSize * spriteWithMultiplier;

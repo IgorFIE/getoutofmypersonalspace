@@ -1,7 +1,7 @@
-export const PIXEL_MULTIPLIER = 4;
+export const PIXEL_MULTIPLIER = 5;
 export const GameVariables = {
-    gameWidth: 1270,
-    gameHeight : 720,
+    gameWidth: window.innerWidth,
+    gameHeight : window.innerHeight-1,
     spriteSize: 32 * PIXEL_MULTIPLIER,
     halfSprite: 16 * PIXEL_MULTIPLIER,
 
