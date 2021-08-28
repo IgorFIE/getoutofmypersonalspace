@@ -48,8 +48,6 @@ export class Minimap {
         const playerBoardPosX = this.convertPlayerPosToBoardPos(playerObj.x);
         const playerBoardPosY = this.convertPlayerPosToBoardPos(playerObj.y);
 
-        console.log(playerBoardPosX, playerBoardPosY);
-
         for (let y = 0; y < this.board.length; y++) {
             for (let x = 0; x < this.board[y].length; x++) {
                 const isEdge = y === 0 || y === GameVariables.boardSize - 1 || x === 0 || x === GameVariables.boardSize - 1;

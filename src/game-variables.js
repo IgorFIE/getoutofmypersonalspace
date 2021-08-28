@@ -1,7 +1,7 @@
 export const PIXEL_MULTIPLIER = 5;
 export const GameVariables = {
     gameWidth: window.innerWidth,
-    gameHeight : window.innerHeight-1,
+    gameHeight : window.innerHeight,
     spriteSize: 32 * PIXEL_MULTIPLIER,
     halfSprite: 16 * PIXEL_MULTIPLIER,
 
@@ -12,4 +12,6 @@ export const GameVariables = {
     playerAnimationSpeed: 12,
 
     playerAreaLevelSpeed: 60,
+
+    playerMaxAnsiety: 500
 }

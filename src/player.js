@@ -30,6 +30,9 @@ export class Player {
         this.collisionInArea = false;
         this.currentAreaLevel = 0;
         this.areaLevelCicle = 0;
+
+        this.currentAnsiety = 0;
+        this.currentAnsietyLevel = 0;
     }
 
     getPlayerObj() {
@@ -49,13 +52,18 @@ export class Player {
     }
 
     upgradePlayer() {
+        this.updatePlayerCollisionParams();
+        this.updatePlayerAnsietyParams();
+    }
+
+    updatePlayerCollisionParams() {
         if (this.collisionInArea) {
             if (this.areaLevelCicle == GameVariables.playerAreaLevelSpeed && this.currentAreaLevel < playerAreaLevelColors.length - 1) {
                 this.areaLevelCicle = 0;
                 this.currentAreaLevel++;
             } else {
-                if(this.currentAreaLevel !== playerAreaLevelColors.length - 1 || 
-                    this.areaLevelCicle !== GameVariables.playerAreaLevelSpeed){
+                if (this.currentAreaLevel !== playerAreaLevelColors.length - 1 ||
+                    this.areaLevelCicle !== GameVariables.playerAreaLevelSpeed) {
                     this.areaLevelCicle++;
                 }
             }
@@ -71,23 +79,27 @@ export class Player {
         }
     }
 
-    // should only draw new image if I need to update it, I should not be always redrawing it
-    drawPlayer(keys) {
-        const spriteToUse = this.spriteToUse(keys);
-        for (let y = 0; y < playerShadowSprite.length; y++) {
-            for (let x = 0; x < playerShadowSprite[y].length; x++) {
-                const currentColor = playerShadowSprite[y][x];
-                if (currentColor) {
-                    this.context.beginPath();
-                    this.context.fillStyle = currentColor;
-                    this.context.fillRect(
-                        this.playerWidthPos + (x * (GameVariables.halfSprite / 4)),
-                        (GameVariables.spriteSize - GameVariables.spriteSize / 4) + this.playerHeightPos + (y * (GameVariables.halfSprite / 4)),
-                        (GameVariables.halfSprite / 4), (GameVariables.halfSprite / 4));
-                }
+    updatePlayerAnsietyParams() {
+        if (this.collisionInArea && this.currentAnsiety < GameVariables.playerMaxAnsiety) {
+            this.currentAnsiety += 1 + this.currentAreaLevel;
+        } else {
+            if (this.currentAnsiety > 0) {
+                this.currentAnsiety--;
             }
         }
 
+        if(this.currentAnsiety > (GameVariables.playerMaxAnsiety/2 + GameVariables.playerMaxAnsiety/4)){
+            this.currentAnsietyLevel = 2;
+        }else if(this.currentAnsiety > GameVariables.playerMaxAnsiety/2){
+            this.currentAnsietyLevel = 1;
+        } else {
+            this.currentAnsietyLevel = 0;
+        }
+    }
+
+    // should only draw new image if I need to update it, I should not be always redrawing it
+    drawPlayer(keys) {
+        // Draw Player Area
         for (let y = 0; y < playerAreaSprite.length; y++) {
             for (let x = 0; x < playerAreaSprite[y].length; x++) {
                 const currentAreaColor = playerAreaSprite[y][x]; //todo convert this into a boolead list maybe
@@ -102,6 +114,23 @@ export class Player {
             }
         }
 
+        // Draw Player Shadow
+        for (let y = 0; y < playerShadowSprite.length; y++) {
+            for (let x = 0; x < playerShadowSprite[y].length; x++) {
+                const currentColor = playerShadowSprite[y][x];
+                if (currentColor) {
+                    this.context.beginPath();
+                    this.context.fillStyle = currentColor;
+                    this.context.fillRect(
+                        this.playerWidthPos + (x * (GameVariables.halfSprite / 4)),
+                        (GameVariables.spriteSize - GameVariables.spriteSize / 4) + this.playerHeightPos + (y * (GameVariables.halfSprite / 4)),
+                        (GameVariables.halfSprite / 4), (GameVariables.halfSprite / 4));
+                }
+            }
+        }
+
+        // Draw Player
+        const spriteToUse = this.spriteToUse(keys);
         for (let y = 0; y < spriteToUse.length; y++) {
             for (let x = 0; x < spriteToUse[y].length; x++) {
                 const currentColor = spriteToUse[y][x];
@@ -115,6 +144,15 @@ export class Player {
                 }
             }
         }
+
+        // Draw Player ansiety bar
+        this.context.beginPath();
+        this.context.fillStyle = playerAnsietyLevelColors[this.currentAnsietyLevel];
+        this.context.fillRect(
+            this.playerWidthPos - GameVariables.halfSprite,
+            this.playerHeightPos - GameVariables.halfSprite,
+            Math.min((this.currentAnsiety * (GameVariables.spriteSize * 2)) / GameVariables.playerMaxAnsiety, GameVariables.spriteSize * 2),
+            GameVariables.halfSprite / 2);
     }
 
     spriteToUse(keys) {
@@ -145,6 +183,11 @@ const greenArea = 'rgba(0,255,0,0.3)';
 const yellowArea = 'rgba(255,255,0,0.3)';
 const redArea = 'rgba(255,0,0,0.3)';
 const playerAreaLevelColors = [greenArea, yellowArea, redArea];
+
+const ansietyLevel1 = 'rgba(0,127,255,0.8)';
+const ansietyLevel2 = 'rgba(127,0,255,0.8)';
+const ansietyLevel3 = 'rgba(255,0,255,0.8)';
+const playerAnsietyLevelColors = [ansietyLevel1, ansietyLevel2, ansietyLevel3];
 
 const playerShadowSprite = [
     [null, null, shadow, shadow, shadow, shadow, null, null],
