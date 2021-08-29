@@ -3,21 +3,16 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=VT323">
     <style>
         html,
         body {
-            font-family: "VT323";
             background-color: black;
-            color: black;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             height: 100%;
             width: 100%;
+            display: flex;
+            align-items: center;
             overflow: auto;
             position: fixed;
-            display: flex;
             flex-direction: column;
             justify-content: center;
         }
@@ -28,37 +23,24 @@
         }
 
         #minimap {
-            position: absolute;
+            top: 24px;
             left: 24px;
+            z-index: 999;
+        }
+
+        #scoreMessage {
             top: 24px;
             z-index: 999;
         }
 
-        .score {
-            position: absolute;
-            top: 0;
-            z-index: 999;
-        }
-
-        #itemsMessage {
-            position: absolute;
-            transform: scaleX(2);
-            top: 48px;
-            font-size: 2em;
-            z-index: 999;
-        }
-
-        #itemsNumber {
-            position: absolute;
-            transform: scaleX(2);
+        #scoreNumber {
             top: 72px;
-            font-size: 4em;
             z-index: 999;
         }
 
         #fps {
             position: absolute;
-            top: 0;
+            bottom: 0;
             z-index: 999;
         }
 
@@ -70,9 +52,6 @@
 
 <body>
     <h2 id='fps'>FPS</h2>
-    <div id='itemsMessage'>ITEMS</div>
-    <div id='itemsNumber'>0</div>
-    <canvas id="minimap"></canvas>
     <div id="main"></div>
     <script src="dist/game.js"></script>
 </body>

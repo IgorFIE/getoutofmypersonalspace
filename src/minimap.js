@@ -7,12 +7,15 @@ const minimapItemColor = 'rgba(255,255,0,0.8)';
 const minimapPlayerColor = 'rgba(0,0,255,255.8)';
 
 export class Minimap {
-    constructor(board) {
+    constructor(board, mainDiv) {
         this.board = board;
 
-        this.canvas = document.getElementById('minimap');
+        this.canvas = document.createElement('canvas');
+        this.canvas.id = 'minimap';
         this.canvas.width = (GameVariables.halfSprite / 4) * GameVariables.boardSize;
         this.canvas.height = (GameVariables.halfSprite / 4) * GameVariables.boardSize;
+        mainDiv.appendChild(this.canvas);
+
         this.context = this.canvas.getContext('2d');
         this.context.imageSmoothingEnabled = false;
     }

@@ -5,6 +5,7 @@ import { SquareObject } from "./square-object";
 import { CircleObject } from "./circle-object";
 import { Minimap } from "./minimap";
 import { Item } from "./item";
+import { ScoreBoard } from "./score-board";
 
 let mainDiv;
 let board;
@@ -15,8 +16,7 @@ let keys = [];
 let secondsPassed;
 let oldTimeStamp;
 let fps;
-let itemScoreElem;
-let itemScoreNumber = 0;
+let scoreBoard;
 
 window.onload = init;
 
@@ -25,18 +25,17 @@ function init() {
     mainDiv.style.width = GameVariables.gameWidth + 'px';
     mainDiv.style.height = GameVariables.gameHeight + 'px';
 
-    itemScoreElem = document.getElementById('itemsNumber');
-
     board = new Board(mainDiv);
     board.initBoard();
 
-    minimap = new Minimap(board.getBoard());
+    minimap = new Minimap(board.getBoard(), mainDiv);
 
     item = new Item(mainDiv);
     item.generateNewItem();
 
+    scoreBoard = new ScoreBoard(mainDiv);
+
     player = new Player(mainDiv);
-    const playerObj = player.getPlayerObj();
     player.drawPlayer();
     playerEvents();
 
@@ -101,9 +100,8 @@ function playerMovement() {
     }
 
     if (item.hasCollision(newPlayerObj)) {
-        itemScoreNumber++;
-        itemScoreElem.innerHTML = itemScoreNumber;
         item.generateNewItem();
+        scoreBoard.updateScore();
     }
 
     player.setCollisionInArea(board.hasAreaCollision(newPlayerArea));
