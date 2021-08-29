@@ -9,7 +9,6 @@ const minimapPlayerColor = 'rgba(0,0,255,255.8)';
 export class Minimap {
     constructor(board, mainDiv) {
         this.board = board;
-
         this.canvas = document.createElement('canvas');
         this.canvas.id = 'minimap';
         this.canvas.width = (GameVariables.halfSprite / 4) * GameVariables.boardSize;
@@ -27,11 +26,8 @@ export class Minimap {
         this.context.clearRect(0, 0, GameVariables.gameWidth, GameVariables.gameHeight);
     }
 
-    // missing Player position on the board here playerX, playerYÎ
-    drawMinimap(playerObj, itemBoardPosX, itemBoardPosY) {
-        const playerBoardPosX = convertGeneralPosToBoardPos(playerObj.x);
-        const playerBoardPosY = convertGeneralPosToBoardPos(playerObj.y);
-
+    drawMinimap(playerBoardPosX, playerBoardPosY, itemBoardPosX, itemBoardPosY) {
+        this.cleanMinimap();
         for (let y = 0; y < this.board.length; y++) {
             for (let x = 0; x < this.board[y].length; x++) {
                 const isEdge = y === 0 || y === GameVariables.boardSize - 1 || x === 0 || x === GameVariables.boardSize - 1;

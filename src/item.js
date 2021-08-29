@@ -196,4 +196,26 @@ const glasesItem = [
     [null, itemBlackColor, itemBlackColor, null, null, itemBlackColor, itemBlackColor, null]
 ];
 
-const items = [maskItem, gloveItem, vaccineItem, pillItem, soapItem, glasesItem];
+const visorItem = [
+    [null, null, null, null, null, null, null, null],
+    [null, itemDarkBlueColor, itemBlackColor, itemBlackColor, itemBlackColor, itemBlackColor, null, null],
+    [null, itemlightBlueColor, itemDarkBlueColor, itemDarkBlueColor, itemDarkBlueColor, itemBlackColor, itemBlackColor, null],
+    [null, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemShadow, itemBlackColor, null],
+    [null, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemBlackColor, itemBlackColor, null],
+    [null, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemShadow, itemShadow, null],
+    [null, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, null, null, null],
+    [null, itemBlackColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, null, null, null]
+];
+
+const toiletPaperItem = [
+    [null, null, null, null, null, null, null, null],
+    [null, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, null, null, null],
+    [itemlightBlueColor, itemlightBlueColor, itemDarkBlueColor, itemDarkBlueColor, itemlightBlueColor, itemlightBlueColor, itemDarkBlueColor, null],
+    [itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemDarkBlueColor, itemlightBlueColor],
+    [itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemDarkBlueColor, itemlightBlueColor],
+    [itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemDarkBlueColor, itemlightBlueColor],
+    [itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemDarkBlueColor, itemlightBlueColor],
+    [itemBlackColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemBlackColor, itemBlackColor, itemlightBlueColor]
+];
+
+const items = [maskItem, gloveItem, vaccineItem, pillItem, soapItem, glasesItem, visorItem, toiletPaperItem];

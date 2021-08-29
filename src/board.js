@@ -2,6 +2,7 @@ import { BoardObject } from "./board-object";
 import { GameVariables } from "./game-variables";
 import { PIXEL_MULTIPLIER } from "./game-variables";
 import { rectCollision, rectCircleCollision } from "./collision-utilities";
+import { convertGeneralPosToBoardPos } from "./util";
 
 export class Board {
 
@@ -93,6 +94,10 @@ export class Board {
         return !!this.boardCollisionObjs.find((it) => {
             return rectCircleCollision(movingObject, it);
         });
+    }
+
+    getBoardXYPosition(movingObject) {
+        return convertGeneralPosToBoardPos(movingObject, this.board);
     }
 }
 

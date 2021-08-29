@@ -92,7 +92,7 @@ function playerMovement() {
     const playerBoardY = Math.abs(newY - (GameVariables.gameHeight / 2));
 
     const newPlayerObj = new SquareObject(playerBoardX - GameVariables.halfSprite, playerBoardY + (GameVariables.halfSprite / 4), playerObj.w, playerObj.h);
-    const newPlayerArea = new CircleObject(playerBoardX, playerBoardY + (GameVariables.halfSprite - GameVariables.halfSprite/4), player.getPlayerArea().r);
+    const newPlayerArea = new CircleObject(playerBoardX, playerBoardY + (GameVariables.halfSprite - GameVariables.halfSprite / 4), player.getPlayerArea().r);
 
     if (board.hasCollision(newPlayerObj)) {
         newX = playerObj.x;
@@ -104,6 +104,9 @@ function playerMovement() {
         scoreBoard.updateScore();
     }
 
+    const playerXYBoardPos = board.getBoardXYPosition(newPlayerArea);
+    minimap.drawMinimap(playerXYBoardPos.x, playerXYBoardPos.y, item.getItemBoardPosX, item.getItemBoardPosY);
+
     player.setCollisionInArea(board.hasAreaCollision(newPlayerArea));
 
     playerObj.x = newX;
@@ -112,10 +115,8 @@ function playerMovement() {
 
 function clean() {
     player.cleanPlayer();
-    minimap.cleanMinimap();
 }
 
 function draw() {
     player.drawPlayer(keys);
-    minimap.drawMinimap(player.getPlayerObj(), item.getItemBoardPosX, item.getItemBoardPosY);
 }

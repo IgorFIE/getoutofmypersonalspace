@@ -3,9 +3,6 @@ export const drawPixelTextInCanvasContext = (pixelText, canvas, pixelSize) => {
     const canvasHalfWidth = canvas.width / 2;
     const textStartPosition = canvasHalfWidth - halfPixelTextSize;
     const context = canvas.getContext('2d');
-
-    console.log(pixelText);
-
     for (let y = 0; y < pixelText.length; y++) {
         for (let x = 0; x < pixelText[y].length; x++) {
             const drawPixel = pixelText[y][x];
@@ -40,7 +37,7 @@ export const convertTextToPixelArt = (text) => {
 }
 
 const retrievePixelLetter = (letter) => {
-    switch (letter) {
+    switch (letter.toUpperCase()) {
         case 'A':
             return A;
         case 'B':

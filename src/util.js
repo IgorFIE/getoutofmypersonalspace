@@ -1,15 +1,16 @@
 import { GameVariables } from "./game-variables";
+import { rectCollision } from "./collision-utilities";
 
-export const convertGeneralPosToBoardPos = (value) => {
-    const boardRealSize = GameVariables.spriteSize * GameVariables.boardScaleMultiplier * GameVariables.boardSize;
-    const playerBoardPos = (GameVariables.boardSize * value) / -boardRealSize;
-    if (playerBoardPos < 1) {
-        return 1;
-    } else if (playerBoardPos > GameVariables.boardSize - 2) {
-        return GameVariables.boardSize - 2;
-    } else {
-        return  Math.round(playerBoardPos); // need to revisit this, sometimes the player dot goes inside the builds
+export const convertGeneralPosToBoardPos = (obj, board) => {
+    for (let y = 0; y < board.length; y++) {
+        for (let x = 0; x < board[y].length; x++) {
+            const currentBoardObj = board[y][x];
+            if (rectCollision(obj, currentBoardObj)) {
+                return { x: x, y: y };
+            }
+        }
     }
+    return { x: 0, y: 0 };
 }
 
 export const convertBoardPosToGeneralPos = (value) => {
