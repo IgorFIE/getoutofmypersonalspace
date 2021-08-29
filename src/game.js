@@ -15,6 +15,8 @@ let keys = [];
 let secondsPassed;
 let oldTimeStamp;
 let fps;
+let itemScoreElem;
+let itemScoreNumber = 0;
 
 window.onload = init;
 
@@ -23,12 +25,15 @@ function init() {
     mainDiv.style.width = GameVariables.gameWidth + 'px';
     mainDiv.style.height = GameVariables.gameHeight + 'px';
 
+    itemScoreElem = document.getElementById('itemsNumber');
+
     board = new Board(mainDiv);
     board.initBoard();
 
     minimap = new Minimap(board.getBoard());
 
     item = new Item(mainDiv);
+    item.generateNewItem();
 
     player = new Player(mainDiv);
     const playerObj = player.getPlayerObj();
@@ -67,6 +72,7 @@ function update() {
     playerMovement();
     const playerObj = player.getPlayerObj();
     board.updateBoard(playerObj.x, playerObj.y);
+    item.updateItem(playerObj.x, playerObj.y);
     player.upgradePlayer();
 }
 
@@ -92,6 +98,12 @@ function playerMovement() {
     if (board.hasCollision(newPlayerObj)) {
         newX = playerObj.x;
         newY = playerObj.y;
+    }
+
+    if (item.hasCollision(newPlayerObj)) {
+        itemScoreNumber++;
+        itemScoreElem.innerHTML = itemScoreNumber;
+        item.generateNewItem();
     }
 
     player.setCollisionInArea(board.hasAreaCollision(newPlayerArea));

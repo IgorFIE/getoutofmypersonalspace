@@ -1,4 +1,5 @@
 import { GameVariables } from "./game-variables";
+import { convertGeneralPosToBoardPos } from "./util";
 
 const minimapBuildColor = 'rgba(112, 58, 51, 0.8)';
 const minimapFloorColor = 'rgba(218, 220, 241, 0.8)';
@@ -25,8 +26,8 @@ export class Minimap {
 
     // missing Player position on the board here playerX, playerYÎ
     drawMinimap(playerObj, itemBoardPosX, itemBoardPosY) {
-        const playerBoardPosX = this.convertPlayerPosToBoardPos(playerObj.x);
-        const playerBoardPosY = this.convertPlayerPosToBoardPos(playerObj.y);
+        const playerBoardPosX = convertGeneralPosToBoardPos(playerObj.x);
+        const playerBoardPosY = convertGeneralPosToBoardPos(playerObj.y);
 
         for (let y = 0; y < this.board.length; y++) {
             for (let x = 0; x < this.board[y].length; x++) {
@@ -54,18 +55,5 @@ export class Minimap {
             (x * (GameVariables.halfSprite / 4)),
             (y * (GameVariables.halfSprite / 4)),
             (GameVariables.halfSprite / 4), (GameVariables.halfSprite / 4));
-    }
-
-    convertPlayerPosToBoardPos(value) {
-        const boardRealSize = GameVariables.spriteSize * GameVariables.boardScaleMultiplier * this.board.length;
-        const playerBoardPos = (this.board.length * value) / -boardRealSize;
-        if (playerBoardPos < 1) {
-            return 1;
-        } else if (playerBoardPos > GameVariables.boardSize - 2) {
-            return GameVariables.boardSize - 2;
-        } else {
-            return  Math.round(playerBoardPos); // need to revisit this, sometimes the player dot goes inside the builds
-        }
-
     }
 }
