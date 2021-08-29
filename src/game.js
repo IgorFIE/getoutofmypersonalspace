@@ -4,11 +4,13 @@ import { GameVariables } from "./game-variables";
 import { SquareObject } from "./square-object";
 import { CircleObject } from "./circle-object";
 import { Minimap } from "./minimap";
+import { Item } from "./item";
 
 let mainDiv;
 let board;
 let minimap;
 let player;
+let item;
 let keys = [];
 let secondsPassed;
 let oldTimeStamp;
@@ -25,7 +27,8 @@ function init() {
     board.initBoard();
 
     minimap = new Minimap(board.getBoard());
-    minimap.updateMinimap();
+
+    item = new Item(mainDiv);
 
     player = new Player(mainDiv);
     const playerObj = player.getPlayerObj();
@@ -104,5 +107,5 @@ function clean() {
 
 function draw() {
     player.drawPlayer(keys);
-    minimap.drawMinimap(player.getPlayerObj());
+    minimap.drawMinimap(player.getPlayerObj(), item.getItemBoardPosX, item.getItemBoardPosY);
 }

@@ -8,8 +8,6 @@ const minimapPlayerColor = 'rgba(0,0,255,255.8)';
 export class Minimap {
     constructor(board) {
         this.board = board;
-        this.itemPosX = 0;
-        this.itemPosY = 0;
 
         this.canvas = document.getElementById('minimap');
         this.canvas.width = (GameVariables.halfSprite / 4) * GameVariables.boardSize;
@@ -18,25 +16,7 @@ export class Minimap {
         this.context.imageSmoothingEnabled = false;
     }
 
-    generateNewItemRandomPositions(newPosX, newPosY) {
-        const isBuild = newPosX % 2 === 0 && newPosY % 2 === 0;
-        const equalsToLastValues = this.itemPosX === newPosX && this.itemPosY === newPosY;
-        if (isBuild || equalsToLastValues) {
-            this.generateNewItemRandomPositions(this.generateRandomNumberInsideBoard(), this.generateRandomNumberInsideBoard())
-        } else {
-            this.itemPosX = newPosX;
-            this.itemPosY = newPosY;
-        }
-    }
-
-    generateRandomNumberInsideBoard() {
-        const min = Math.ceil(1);
-        const max = Math.floor(GameVariables.boardSize - 2);
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
     updateMinimap() {
-        this.generateNewItemRandomPositions(this.itemPosX, this.itemPosX);
     }
 
     cleanMinimap() {
@@ -44,7 +24,7 @@ export class Minimap {
     }
 
     // missing Player position on the board here playerX, playerYÎ
-    drawMinimap(playerObj) {
+    drawMinimap(playerObj, itemBoardPosX, itemBoardPosY) {
         const playerBoardPosX = this.convertPlayerPosToBoardPos(playerObj.x);
         const playerBoardPosY = this.convertPlayerPosToBoardPos(playerObj.y);
 
@@ -57,7 +37,7 @@ export class Minimap {
                 } else {
                     if (playerBoardPosX === x && playerBoardPosY === y) {
                         this.drawBlock(x, y, minimapPlayerColor);
-                    } else if (this.itemPosX === x && this.itemPosY === y) {
+                    } else if (itemBoardPosX === x && itemBoardPosY === y) {
                         this.drawBlock(x, y, minimapItemColor);
                     } else {
                         this.drawBlock(x, y, minimapFloorColor);
@@ -84,7 +64,7 @@ export class Minimap {
         } else if (playerBoardPos > GameVariables.boardSize - 2) {
             return GameVariables.boardSize - 2;
         } else {
-            return  Math.round(playerBoardPos);
+            return  Math.round(playerBoardPos); // need to revisit this, sometimes the player dot goes inside the builds
         }
 
     }

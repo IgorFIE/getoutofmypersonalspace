@@ -33,6 +33,34 @@
             z-index: 999;
         }
 
+        .score {
+            position: absolute;
+            top: 0;
+            z-index: 999;
+        }
+
+        #itemsMessage {
+            position: absolute;
+            top: 48px;
+            font-weight: bold;
+            font-size: 2em;
+            z-index: 999;
+        }
+
+        #itemsNumber {
+            position: absolute;
+            top: 72px;
+            font-weight: bold;
+            font-size: 4em;
+            z-index: 999;
+        }
+
+        #fps {
+            position: absolute;
+            top: 0;
+            z-index: 999;
+        }
+
         canvas {
             position: absolute;
         }
@@ -40,7 +68,9 @@
 </head>
 
 <body>
-    <h2 style="position: absolute; top: 0; z-index: 999;" id='fps'>FPS</h2>
+    <h2 id='fps'>FPS</h2>
+    <div id='itemsMessage'>ITEMS</div>
+    <div id='itemsNumber'>0</div>
     <canvas id="minimap"></canvas>
     <div id="main"></div>
     <script src="dist/game.js"></script>
