@@ -25,17 +25,18 @@ export class Item {
         this.context.imageSmoothingEnabled = false;
     }
 
-    generateNewItem() {
+    generateNewItem(playerXYBoardPos) {
         this.cleanItem();
-        this.generateNewItemRandomPositions(this.itemBoardPosX, this.itemBoardPosY);
+        this.generateNewItemRandomPositions(this.itemBoardPosX, this.itemBoardPosY, playerXYBoardPos);
         this.drawItem();
     }
 
-    generateNewItemRandomPositions(newPosX, newPosY) {
+    generateNewItemRandomPositions(newPosX, newPosY, playerXYBoardPos) {
         const isBuild = newPosX % 2 === 0 && newPosY % 2 === 0;
         const equalsToLastValues = this.itemBoardPosX === newPosX && this.itemBoardPosY === newPosY;
-        if (isBuild || equalsToLastValues) {
-            this.generateNewItemRandomPositions(this.generateRandomNumberInsideBoard(), this.generateRandomNumberInsideBoard())
+        const equalsToPlayerPos = playerXYBoardPos.x === newPosX && playerXYBoardPos.y === newPosY;
+        if (isBuild || equalsToLastValues || equalsToPlayerPos) {
+            this.generateNewItemRandomPositions(this.generateRandomNumberInsideBoard(), this.generateRandomNumberInsideBoard(), playerXYBoardPos)
         } else {
             this.itemBoardPosX = newPosX;
             this.itemBoardPosY = newPosY;

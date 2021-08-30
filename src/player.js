@@ -13,6 +13,7 @@ export class Player {
         this.speed = GameVariables.playerSpeed;
         this.sanity = 0;
 
+        this.playerBoardObj = new SquareObject(initialPosition - GameVariables.halfSprite, initialPosition + (GameVariables.halfSprite / 4), GameVariables.spriteSize, GameVariables.halfSprite);
         this.playerObj = new SquareObject(this.x, this.y + GameVariables.halfSprite, GameVariables.spriteSize, GameVariables.halfSprite);
         this.playerArea = new CircleObject(this.x, this.y + GameVariables.halfSprite, GameVariables.spriteSize);
 
@@ -33,6 +34,10 @@ export class Player {
 
         this.currentAnsiety = 0;
         this.currentAnsietyLevel = 0;
+    }
+
+    getPlayerBoardObj() {
+        return this.playerBoardObj;
     }
 
     getPlayerObj() {
@@ -88,9 +93,9 @@ export class Player {
             }
         }
 
-        if(this.currentAnsiety > (GameVariables.playerMaxAnsiety/2 + GameVariables.playerMaxAnsiety/4)){
+        if (this.currentAnsiety > (GameVariables.playerMaxAnsiety / 2 + GameVariables.playerMaxAnsiety / 4)) {
             this.currentAnsietyLevel = 2;
-        }else if(this.currentAnsiety > GameVariables.playerMaxAnsiety/2){
+        } else if (this.currentAnsiety > GameVariables.playerMaxAnsiety / 2) {
             this.currentAnsietyLevel = 1;
         } else {
             this.currentAnsietyLevel = 0;
@@ -175,7 +180,7 @@ const skinColor = '#e7c688';
 const maskWhite = '#9bf2fa';
 const maskDark = '#00bcd4';
 const shirt = '#703a33';
-const gloves = '#641f14';
+const gloves = '#38252e';
 const boots = '#1b1116';
 const shadow = 'rgba(0,0,0,0.5)';
 

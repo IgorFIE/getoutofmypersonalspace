@@ -10,8 +10,10 @@ export const GameVariables = {
 
     playerSpeed: 500,
     playerAnimationSpeed: 12,
-
     playerAreaLevelSpeed: 60,
+    playerMaxAnsiety: 500,
 
-    playerMaxAnsiety: 500
+    enemySpeed: 500,
+    enemyAnimationSpeed: 12,
+    enemyNumber: 80
 }
