@@ -97,9 +97,6 @@ function createMainMenuScreen(mainDiv) {
 
     const mainMenuContext = mainMenuScreen.getContext('2d');
     mainMenuContext.imageSmoothingEnabled = false;
-    mainMenuContext.beginPath();
-    mainMenuContext.fillStyle = 'rgba(255,255,255,0.1)';
-    mainMenuContext.fillRect(0, 0, GameVariables.gameWidth, GameVariables.gameHeight);
 
     const mainMenuTitleAsPixels = convertTextToPixelArt('Get out of my personal space');
     const mainMenuPixelSize = PIXEL_MULTIPLIER * 2;
@@ -138,7 +135,7 @@ function createGameOverScreen(mainDiv) {
     const gameOverContext = gameOverScreen.getContext('2d');
     gameOverContext.imageSmoothingEnabled = false;
     gameOverContext.beginPath();
-    gameOverContext.fillStyle = 'rgba(255,0,255,0.3)';
+    gameOverContext.fillStyle = 'rgba(255,0,255,0.2)';
     gameOverContext.fillRect(0, 0, GameVariables.gameWidth, GameVariables.gameHeight);
 
     const gameOverAsPixels = convertTextToPixelArt('game over');
