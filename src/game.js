@@ -86,6 +86,7 @@ function gameLoop(timeStamp) {
 
 function update() {
     generateEnemy();
+    enemies.forEach((it) => it.enemyMovement(board, secondsPassed));
     playerMovement();
     const playerObj = player.getPlayerObj();
     board.updateBoard(playerObj.x, playerObj.y);
@@ -103,10 +104,10 @@ function playerMovement() {
     const isMultiDirection = keys ? Object.keys(keys).filter((key) => (key == 'd' || key == 'a' || key == 'w' || key == 's') && keys[key]).length > 1 : false;
     const distance = isMultiDirection ? (secondsPassed * GameVariables.playerSpeed) / 1.4142 : secondsPassed * GameVariables.playerSpeed;
 
-    if (keys && keys['d']) { newX -= distance; }
-    if (keys && keys['a']) { newX += distance; }
-    if (keys && keys['w']) { newY += distance; }
-    if (keys && keys['s']) { newY -= distance; }
+    if (keys['d']) { newX -= distance; }
+    if (keys['a']) { newX += distance; }
+    if (keys['w']) { newY += distance; }
+    if (keys['s']) { newY -= distance; }
 
     const playerBoardX = Math.abs(newX - (GameVariables.gameWidth / 2));
     const playerBoardY = Math.abs(newY - (GameVariables.gameHeight / 2));
@@ -114,8 +115,7 @@ function playerMovement() {
     const newPlayerObj = new SquareObject(playerBoardX - GameVariables.halfSprite, playerBoardY + (GameVariables.halfSprite / 4), playerObj.w, playerObj.h);
     const newPlayerArea = new CircleObject(playerBoardX, playerBoardY + (GameVariables.halfSprite - GameVariables.halfSprite / 4), player.getPlayerArea().r);
 
-    const hasEnemyCollision = !!enemies.find((it) => rectCollision(it.getEnemyObj(), newPlayerObj));
-    if (board.hasCollision(newPlayerObj) || hasEnemyCollision) {
+    if (board.hasCollision(newPlayerObj)) {
         newX = playerObj.x;
         newY = playerObj.y;
         newPlayerObj.x = playerBoardObj.x;
@@ -163,7 +163,6 @@ function generateEnemy() {
         ), newEnemyObj);
 
         if (!hasBoardCollision && !hasEnemyCollision && !hasPlayerCollision) {
-            console.log(newEnemyObj);
             enemies.push(new Enemy(newEnemyObj, mainDiv));
         }
     }

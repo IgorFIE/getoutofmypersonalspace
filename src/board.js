@@ -89,13 +89,6 @@ export class Board {
         return !!this.boardCollisionObjs.find((it) => rectCollision(it, movingObject));
     }
 
-    // remove after testing
-    hasAreaCollision(movingObject) {
-        return !!this.boardCollisionObjs.find((it) => {
-            return rectCircleCollision(movingObject, it);
-        });
-    }
-
     getBoardXYPosition(movingObject) {
         return convertGeneralPosToBoardPos(movingObject, this.board);
     }

@@ -1,11 +1,17 @@
+import { rectCollision } from "./collision-utilities";
 import { GameVariables } from "./game-variables";
+import { SquareObject } from "./square-object";
+import { generateRandomNumberBetweenRange } from "./util";
 
 export class Enemy {
     constructor(enemyObj) {
         this.enemyObj = enemyObj;
         this.animationCicle = 0;
         this.currentAnimationSprite = 0;
+
         this.keys = [];
+        this.lastMovementKey = '';
+        this.stepMovement = 0;
     }
 
     getEnemyObj() {
@@ -16,8 +22,52 @@ export class Enemy {
         this.canvas.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
     }
 
-    generateEnemyMovement() {
+    enemyMovement(board, secondsPassed) {
+        this.generateEnemyMovement();
 
+        let newX = this.enemyObj.x;
+        let newY = this.enemyObj.y;
+
+        const distance = secondsPassed * GameVariables.playerSpeed;
+        if (this.keys['d']) { newX += distance; }
+        if (this.keys['a']) { newX -= distance; }
+        if (this.keys['w']) { newY -= distance; }
+        if (this.keys['s']) { newY += distance; }
+
+        const newEnemyObj = new SquareObject(newX, newY, this.enemyObj.w, this.enemyObj.h);
+        if (board.hasCollision(newEnemyObj)) {
+            newEnemyObj.x = this.enemyObj.x;
+            newEnemyObj.y = this.enemyObj.y;
+            this.stepMovement = 0; // reset movement on collision with walls
+        }
+        this.enemyObj = newEnemyObj;
+    }
+
+    generateEnemyMovement() {
+        if (this.stepMovement > 0) {
+            this.stepMovement--;
+            this.keys[this.lastMovementKey] = true;
+        } else {
+            this.keys[this.lastMovementKey] = false;
+            this.stepMovement = generateRandomNumberBetweenRange(30, 120);
+            switch (generateRandomNumberBetweenRange(0, 3)) {
+                case 0:
+                    this.lastMovementKey = 'd';
+                    break;
+                case 1:
+                    this.lastMovementKey = 'a';
+                    break;
+                case 2:
+                    this.lastMovementKey = 'w';
+                    break;
+                case 3:
+                    this.lastMovementKey = 's';
+                    break;
+                default:
+                    break;
+            }
+            this.keys[this.lastMovementKey] = true;
+        }
     }
 
     drawEnemy(context) {

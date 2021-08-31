@@ -18,3 +18,7 @@ export const convertBoardPosToGeneralPos = (value) => {
     const boardRealSize = boardSpriteSize * GameVariables.boardSize;
     return ((boardRealSize * value) / GameVariables.boardSize) + (boardSpriteSize / 2);
 }
+
+export const generateRandomNumberBetweenRange = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
