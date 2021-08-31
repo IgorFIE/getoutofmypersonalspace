@@ -1,5 +1,5 @@
-import { GameVariables, PIXEL_MULTIPLIER } from "./game-variables";
-import { convertTextToPixelArt, drawPixelTextInCanvasContext } from "./text";
+import { GameVariables, PIXEL_MULTIPLIER } from "../game-variables";
+import { convertTextToPixelArt, drawPixelTextInCanvasContext } from "../utilities/text";
 
 export class ScoreBoard {
     constructor(mainDiv) {

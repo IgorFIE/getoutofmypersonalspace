@@ -1,13 +1,13 @@
-import { Board } from "./board";
-import { Player } from "./player";
+import { Board } from "./entities/board";
+import { Player } from "./entities/player";
 import { GameVariables, PIXEL_MULTIPLIER } from "./game-variables";
-import { SquareObject } from "./square-object";
-import { CircleObject } from "./circle-object";
-import { Minimap } from "./minimap";
-import { Item } from "./item";
-import { ScoreBoard } from "./score-board";
-import { Enemy } from "./enemy";
-import { rectCircleCollision, rectCollision } from "./collision-utilities";
+import { SquareObject } from "./objects/square-object";
+import { CircleObject } from "./objects/circle-object";
+import { Minimap } from "./entities/minimap";
+import { Item } from "./entities/item";
+import { ScoreBoard } from "./entities/score-board";
+import { Enemy } from "./entities/enemy";
+import { rectCircleCollision, rectCollision } from "./utilities/collision-utilities";
 
 let mainDiv;
 let board;
@@ -22,11 +22,11 @@ let oldTimeStamp;
 let fps;
 let scoreBoard;
 
+let isGameOver;
+
 let enemies = [];
 let ememyCanvas;
 let ememyContext;
-
-window.onload = init;
 
 function init() {
     mainDiv = document.getElementById('main');
@@ -54,18 +54,9 @@ function init() {
 
     player = new Player(mainDiv);
     player.drawPlayer();
-    playerEvents();
+    addPlayerEvents();
 
     window.requestAnimationFrame(gameLoop);
-}
-
-function playerEvents() {
-    window.addEventListener('keydown', function (e) {
-        keys[e.key] = true;
-    })
-    window.addEventListener('keyup', function (e) {
-        keys[e.key] = false;
-    })
 }
 
 function gameLoop(timeStamp) {
@@ -77,9 +68,15 @@ function gameLoop(timeStamp) {
     const fpsElem = document.getElementById('fps');
     fpsElem.innerHTML = fps + 's';
 
-    update();
-    clean();
-    draw();
+    isGameOver = player.getPlayerAnsiety() >= GameVariables.playerMaxAnsiety;
+    
+    if(isGameOver){
+        console.log('GAME OVER!!!');
+    } else {
+        update();
+        clean();
+        draw();
+    }
 
     window.requestAnimationFrame(gameLoop);
 }
@@ -178,3 +175,28 @@ function generateRandomPositionInsideBoard() {
     const max = (boardSpriteSize * GameVariables.boardSize) - boardSpriteSize + PIXEL_MULTIPLIER;
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+function addPlayerEvents() {
+    window.addEventListener('keydown', keyDown);
+    window.addEventListener('keyup', keyUp);
+}
+
+function removePlayerEvents() {
+    window.removeEventListener('keydown', keyDown);
+    window.removeEventListener('keyup', keyUp);
+}
+
+function keyDown(e) {
+    keys[e.key] = true;
+}
+
+function keyUp(e) {
+    keys[e.key] = false;
+}
+
+function destroy() {
+    mainDiv.innerHTML = '';
+    removePlayerEvents();
+}
+
+init();

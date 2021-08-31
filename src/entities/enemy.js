@@ -1,7 +1,7 @@
-import { rectCollision } from "./collision-utilities";
-import { GameVariables } from "./game-variables";
-import { SquareObject } from "./square-object";
-import { generateRandomNumberBetweenRange } from "./util";
+import { rectCollision } from "../utilities/collision-utilities";
+import { GameVariables } from "../game-variables";
+import { SquareObject } from "../objects/square-object";
+import { generateRandomNumberBetweenRange } from "../utilities/util";
 
 export class Enemy {
     constructor(enemyObj) {

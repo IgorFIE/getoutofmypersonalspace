@@ -1,6 +1,6 @@
-import { GameVariables } from "./game-variables";
-import { SquareObject } from "./square-object";
-import { CircleObject } from "./circle-object";
+import { GameVariables } from "../game-variables";
+import { SquareObject } from "../objects/square-object";
+import { CircleObject } from "../objects/circle-object";
 
 export class Player {
 
@@ -34,6 +34,10 @@ export class Player {
 
         this.currentAnsiety = 0;
         this.currentAnsietyLevel = 0;
+    }
+
+    getPlayerAnsiety(){
+        return this.currentAnsiety;
     }
 
     getPlayerBoardObj() {

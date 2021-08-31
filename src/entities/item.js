@@ -1,7 +1,7 @@
-import { GameVariables } from "./game-variables";
-import { SquareObject } from "./square-object";
-import { convertBoardPosToGeneralPos } from "./util";
-import { rectCollision } from "./collision-utilities";
+import { GameVariables } from "../game-variables";
+import { SquareObject } from "../objects/square-object";
+import { convertBoardPosToGeneralPos } from "../utilities/util";
+import { rectCollision } from "../utilities/collision-utilities";
 
 export class Item {
     constructor(mainDiv) {

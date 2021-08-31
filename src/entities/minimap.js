@@ -1,5 +1,4 @@
-import { GameVariables } from "./game-variables";
-import { convertGeneralPosToBoardPos } from "./util";
+import { GameVariables } from "../game-variables";
 
 const minimapBuildColor = 'rgba(112, 58, 51, 0.8)';
 const minimapFloorColor = 'rgba(218, 220, 241, 0.8)';

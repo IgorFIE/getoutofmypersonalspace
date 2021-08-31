@@ -1,8 +1,8 @@
-import { BoardObject } from "./board-object";
-import { GameVariables } from "./game-variables";
-import { PIXEL_MULTIPLIER } from "./game-variables";
-import { rectCollision, rectCircleCollision } from "./collision-utilities";
-import { convertGeneralPosToBoardPos } from "./util";
+import { BoardObject } from "../objects/board-object";
+import { GameVariables } from "../game-variables";
+import { PIXEL_MULTIPLIER } from "../game-variables";
+import { rectCollision, rectCircleCollision } from "../utilities/collision-utilities";
+import { convertGeneralPosToBoardPos } from "../utilities/util";
 
 export class Board {
 

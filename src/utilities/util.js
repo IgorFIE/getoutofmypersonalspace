@@ -1,4 +1,4 @@
-import { GameVariables } from "./game-variables";
+import { GameVariables } from "../game-variables";
 import { rectCollision } from "./collision-utilities";
 
 export const convertGeneralPosToBoardPos = (obj, board) => {
