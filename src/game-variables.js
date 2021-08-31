@@ -5,15 +5,15 @@ export const GameVariables = {
     spriteSize: 32 * PIXEL_MULTIPLIER,
     halfSprite: 16 * PIXEL_MULTIPLIER,
 
-    endGameScreenTimer: 120,
+    endGameScreenTimer: 3, // seconds
 
     boardSize: 11,
     boardScaleMultiplier: 5,
 
     playerSpeed: 500,
     playerAnimationSpeed: 12,
-    playerAreaLevelSpeed: 60,
-    playerMaxAnsiety: 400,
+    playerAreaLevelSpeed: 30,
+    playerMaxAnsiety: 250,
 
     enemySpeed: 500,
     enemyAnimationSpeed: 12,

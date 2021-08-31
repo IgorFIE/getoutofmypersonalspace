@@ -22,19 +22,14 @@
             position: relative;
         }
 
+        #gameOver, #mainMenu, #score {
+            top: 0px;
+            z-index: 999;
+        }
+
         #minimap {
             top: 24px;
             left: 24px;
-            z-index: 999;
-        }
-
-        #scoreMessage {
-            top: 24px;
-            z-index: 999;
-        }
-
-        #scoreNumber {
-            top: 72px;
             z-index: 999;
         }
 
@@ -42,6 +37,10 @@
             position: absolute;
             bottom: 0;
             z-index: 999;
+        }
+
+        .hidden {
+            display: none;
         }
 
         canvas {
@@ -53,7 +52,7 @@
 <body>
     <h2 id='fps'>FPS</h2>
     <div id="main"></div>
-    <script src="game.js"></script>
+    <script src="main.js"></script>
 </body>
 
 </html>

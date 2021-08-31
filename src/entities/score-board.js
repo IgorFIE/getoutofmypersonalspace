@@ -3,36 +3,23 @@ import { convertTextToPixelArt, drawPixelTextInCanvasContext } from "../utilitie
 
 export class ScoreBoard {
     constructor(mainDiv) {
-        this.scoreMessageCanvas = document.createElement('canvas');
-        this.scoreMessageCanvas.id = 'scoreMessage';
-        this.scoreMessageCanvas.width = GameVariables.gameWidth;
-        this.scoreMessageCanvas.height = GameVariables.gameHeight;
-        mainDiv.appendChild(this.scoreMessageCanvas);
+        this.scoreCanvas = document.createElement('canvas');
+        this.scoreCanvas.id = 'score';
+        this.scoreCanvas.width = GameVariables.gameWidth;
+        this.scoreCanvas.height = GameVariables.gameHeight;
+        mainDiv.appendChild(this.scoreCanvas);
 
-        this.scoreMessageContext = this.scoreMessageCanvas.getContext('2d');
-        this.scoreMessageContext.imageSmoothingEnabled = false;
-
-        this.scoreNumberCanvas = document.createElement('canvas');
-        this.scoreNumberCanvas.id = 'scoreNumber';
-        this.scoreNumberCanvas.width = GameVariables.gameWidth;
-        this.scoreNumberCanvas.height = GameVariables.gameHeight;
-        mainDiv.appendChild(this.scoreNumberCanvas);
-
-        this.scoreNumberContext = this.scoreNumberCanvas.getContext('2d');
-        this.scoreNumberContext.imageSmoothingEnabled = false;
+        this.scoreContext = this.scoreCanvas.getContext('2d');
+        this.scoreContext.imageSmoothingEnabled = false;
 
         this.currentScore = 0;
 
-        this.init();
-    }
-
-    init() {
         this.drawScoreMessage();
         this.drawScore();
     }
 
     cleanScore(){
-        this.scoreNumberContext.clearRect(0, 0, GameVariables.gameWidth, GameVariables.gameHeight);
+        this.scoreContext.clearRect(0, 76 - (PIXEL_MULTIPLIER * 3), GameVariables.gameWidth, GameVariables.gameHeight / 3);
     }
 
     updateScore() {
@@ -43,11 +30,11 @@ export class ScoreBoard {
 
     drawScoreMessage() {
         const scoreMessageHasPixels = convertTextToPixelArt('SCORE');
-        drawPixelTextInCanvasContext(scoreMessageHasPixels, this.scoreMessageCanvas, PIXEL_MULTIPLIER);
+        drawPixelTextInCanvasContext(scoreMessageHasPixels, this.scoreCanvas, PIXEL_MULTIPLIER, 28 + PIXEL_MULTIPLIER * 2);
     }
 
     drawScore(){
         const scoreHasPixels = convertTextToPixelArt(this.currentScore);
-        drawPixelTextInCanvasContext(scoreHasPixels, this.scoreNumberCanvas, PIXEL_MULTIPLIER * 2);
+        drawPixelTextInCanvasContext(scoreHasPixels, this.scoreCanvas, PIXEL_MULTIPLIER * 2, 76 + PIXEL_MULTIPLIER * 2);
     }
 }

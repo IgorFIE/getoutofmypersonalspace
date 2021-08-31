@@ -1,4 +1,3 @@
-import { rectCollision } from "../utilities/collision-utilities";
 import { GameVariables } from "../game-variables";
 import { SquareObject } from "../objects/square-object";
 import { generateRandomNumberBetweenRange } from "../utilities/util";

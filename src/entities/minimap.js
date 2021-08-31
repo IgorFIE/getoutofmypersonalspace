@@ -18,11 +18,8 @@ export class Minimap {
         this.context.imageSmoothingEnabled = false;
     }
 
-    updateMinimap() {
-    }
-
     cleanMinimap() {
-        this.context.clearRect(0, 0, GameVariables.gameWidth, GameVariables.gameHeight);
+        this.context.clearRect(0, 0, GameVariables.gameWidth / 3, GameVariables.gameHeight / 3);
     }
 
     drawMinimap(playerBoardPosX, playerBoardPosY, itemBoardPosX, itemBoardPosY) {

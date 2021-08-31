@@ -2,9 +2,9 @@ const path = require('path');
 
 module.exports = {
   mode: 'production',
-  entry: './src/game.js',
+  entry: './src/main.js',
   output: {
-    filename: 'game.js',
+    filename: 'main.js',
     path: path.resolve(__dirname, 'dist'),
   },
   devServer: {

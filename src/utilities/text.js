@@ -1,7 +1,9 @@
-export const drawPixelTextInCanvasContext = (pixelText, canvas, pixelSize) => {
-    const halfPixelTextSize = (pixelText[0].length * pixelSize) / 2;
+export const drawPixelTextInCanvasContext = (pixelText, canvas, pixelSize, textHeightPosition) => {
+    const halfWidthPixelTextSize = (pixelText[0].length * pixelSize) / 2;
+    const halfHeightPixelTextSize = (pixelText.length * pixelSize) / 2;
     const canvasHalfWidth = canvas.width / 2;
-    const textStartPosition = canvasHalfWidth - halfPixelTextSize;
+    const textWidthStartPosition = canvasHalfWidth - halfWidthPixelTextSize;
+    const textHeightStartPosition = textHeightPosition - halfHeightPixelTextSize;
     const context = canvas.getContext('2d');
     for (let y = 0; y < pixelText.length; y++) {
         for (let x = 0; x < pixelText[y].length; x++) {
@@ -10,8 +12,8 @@ export const drawPixelTextInCanvasContext = (pixelText, canvas, pixelSize) => {
                 context.beginPath();
                 context.fillStyle = 'black';
                 context.fillRect(
-                    textStartPosition + (x * pixelSize),
-                    y * pixelSize,
+                    textWidthStartPosition + (x * pixelSize),
+                    textHeightStartPosition + (y * pixelSize),
                     pixelSize, pixelSize);
             }
         }
@@ -122,13 +124,11 @@ const SPACE = [
     [false, false, false],
     [false, false, false],
     [false, false, false],
-    [false, false, false],
     [false, false, false]
 ];
 
 const A = [
     [false, true, false],
-    [true, false, true],
     [true, false, true],
     [true, true, true],
     [true, false, true],
@@ -140,7 +140,7 @@ const B = [
     [true, false, true],
     [true, true, false],
     [true, false, true],
-    [true, true, false],
+    [true, true, false]
 ];
 
 const C = [
@@ -148,12 +148,11 @@ const C = [
     [true, false, false],
     [true, false, false],
     [true, false, false],
-    [true, true, true],
+    [true, true, true]
 ];
 
 const D = [
     [true, true, false],
-    [true, false, true],
     [true, false, true],
     [true, false, true],
     [true, false, true],
@@ -165,7 +164,7 @@ const E = [
     [true, false, false],
     [true, true, false],
     [true, false, false],
-    [true, true, true],
+    [true, true, true]
 ];
 
 const F = [
@@ -173,15 +172,15 @@ const F = [
     [true, false, false],
     [true, true, false],
     [true, false, false],
-    [true, false, false],
+    [true, false, false]
 ];
 
 const G = [
     [true, true, true],
     [true, false, false],
-    [true, true, true],
     [true, false, true],
-    [true, true, false],
+    [true, false, true],
+    [true, true, false]
 ];
 
 const H = [
@@ -189,7 +188,7 @@ const H = [
     [true, false, true],
     [true, true, true],
     [true, false, true],
-    [true, false, true],
+    [true, false, true]
 ];
 
 const I = [
@@ -197,15 +196,15 @@ const I = [
     [false, true, false],
     [false, true, false],
     [false, true, false],
-    [true, true, true],
+    [true, true, true]
 ];
 
 const J = [
     [true, true, true],
     [false, false, true],
-    [false, false, true],
     [true, false, true],
-    [true, true, true],
+    [true, false, true],
+    [false, true, true]
 ];
 
 const K = [
@@ -213,7 +212,7 @@ const K = [
     [true, false, true],
     [true, true, false],
     [true, false, true],
-    [true, false, true],
+    [true, false, true]
 ];
 
 const L = [
@@ -221,7 +220,7 @@ const L = [
     [true, false, false],
     [true, false, false],
     [true, false, false],
-    [true, true, true],
+    [true, true, true]
 ];
 
 const M = [
@@ -229,15 +228,15 @@ const M = [
     [true, true, true],
     [true, false, true],
     [true, false, true],
-    [true, false, true],
+    [true, false, true]
 ];
 
 const N = [
     [true, false, true],
     [true, false, true],
-    [true, true, true],
-    [true, true, true],
     [true, false, true],
+    [true, true, true],
+    [true, false, true]
 ];
 
 const O = [
@@ -245,7 +244,7 @@ const O = [
     [true, false, true],
     [true, false, true],
     [true, false, true],
-    [false, true, false],
+    [false, true, false]
 ];
 
 const P = [
@@ -253,15 +252,15 @@ const P = [
     [true, false, true],
     [true, true, true],
     [true, false, false],
-    [true, false, false],
+    [true, false, false]
 ];
 
 const Q = [
     [false, true, false],
     [true, false, true],
     [true, false, true],
-    [true, false, true],
-    [false, true, true],
+    [false, true, false],
+    [false, false, true]
 ];
 
 const R = [
@@ -269,7 +268,7 @@ const R = [
     [true, false, true],
     [true, false, true],
     [true, true, false],
-    [true, false, true],
+    [true, false, true]
 ];
 
 const S = [
@@ -277,7 +276,7 @@ const S = [
     [true, false, false],
     [true, true, true],
     [false, false, true],
-    [true, true, true],
+    [true, true, true]
 ];
 
 const T = [
@@ -285,7 +284,7 @@ const T = [
     [false, true, false],
     [false, true, false],
     [false, true, false],
-    [false, true, false],
+    [false, true, false]
 ];
 
 const U = [
@@ -293,7 +292,7 @@ const U = [
     [true, false, true],
     [true, false, true],
     [true, false, true],
-    [true, true, true],
+    [true, true, true]
 ];
 
 const V = [
@@ -301,7 +300,7 @@ const V = [
     [true, false, true],
     [true, false, true],
     [true, false, true],
-    [false, true, false],
+    [false, true, false]
 ];
 
 const W = [
@@ -309,7 +308,7 @@ const W = [
     [true, false, true],
     [true, false, true],
     [true, true, true],
-    [true, false, true],
+    [true, false, true]
 ];
 
 const X = [
@@ -317,7 +316,7 @@ const X = [
     [true, true, true],
     [false, true, false],
     [true, true, true],
-    [true, false, true],
+    [true, false, true]
 ];
 
 const Y = [
@@ -325,7 +324,7 @@ const Y = [
     [true, false, true],
     [false, true, false],
     [false, true, false],
-    [false, true, false],
+    [false, true, false]
 ];
 
 const Z = [
@@ -333,7 +332,7 @@ const Z = [
     [false, false, true],
     [false, true, false],
     [true, false, false],
-    [true, true, true],
+    [true, true, true]
 ];
 
 const ZERO = [
@@ -341,7 +340,7 @@ const ZERO = [
     [true, false, true],
     [true, false, true],
     [true, false, true],
-    [true, true, true],
+    [true, true, true]
 ];
 
 const ONE = [
@@ -349,7 +348,7 @@ const ONE = [
     [true, true, false],
     [false, true, false],
     [false, true, false],
-    [true, true, true],
+    [true, true, true]
 ];
 
 const TWO = [
@@ -357,7 +356,7 @@ const TWO = [
     [true, false, true],
     [false, true, true],
     [true, false, false],
-    [true, true, true],
+    [true, true, true]
 ];
 
 const THREE = [
@@ -365,7 +364,7 @@ const THREE = [
     [false, false, true],
     [false, true, true],
     [false, false, true],
-    [true, true, true],
+    [true, true, true]
 ];
 
 const FOUR = [
@@ -373,7 +372,7 @@ const FOUR = [
     [true, false, true],
     [true, false, true],
     [true, true, true],
-    [false, false, true],
+    [false, false, true]
 ];
 
 const FIVE = [
@@ -381,7 +380,7 @@ const FIVE = [
     [true, false, false],
     [true, true, true],
     [false, false, true],
-    [true, true, true],
+    [true, true, true]
 ];
 
 const SIX = [
@@ -389,7 +388,7 @@ const SIX = [
     [true, false, false],
     [true, true, true],
     [true, false, true],
-    [true, true, true],
+    [true, true, true]
 ];
 
 const SEVEN = [
@@ -397,7 +396,7 @@ const SEVEN = [
     [false, false, true],
     [false, false, true],
     [false, true, false],
-    [false, true, false],
+    [false, true, false]
 ];
 
 const EIGHT = [
@@ -405,7 +404,7 @@ const EIGHT = [
     [true, false, true],
     [true, true, true],
     [true, false, true],
-    [true, true, true],
+    [true, true, true]
 ];
 
 const NINE = [
@@ -413,5 +412,5 @@ const NINE = [
     [true, false, true],
     [true, true, true],
     [false, false, true],
-    [true, true, true],
+    [true, true, true]
 ];
