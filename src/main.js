@@ -105,8 +105,11 @@ function createMainMenuScreen(mainDiv) {
     const mainMenuPixelSize = PIXEL_MULTIPLIER * 2;
     drawPixelTextInCanvasContext(mainMenuTitleAsPixels, mainMenuScreen, mainMenuPixelSize, (mainMenuScreen.height / 3));
 
+    const controlsMessageAsPixels = convertTextToPixelArt('wasd to move player');
+    drawPixelTextInCanvasContext(controlsMessageAsPixels, mainMenuScreen, PIXEL_MULTIPLIER, (mainMenuScreen.height / 2) + (mainMenuScreen.height / 5));
+
     const startMessageAsPixels = convertTextToPixelArt('press enter to start the game');
-    drawPixelTextInCanvasContext(startMessageAsPixels, mainMenuScreen, PIXEL_MULTIPLIER, (mainMenuScreen.height / 2) + (mainMenuScreen.height / 5));
+    drawPixelTextInCanvasContext(startMessageAsPixels, mainMenuScreen, PIXEL_MULTIPLIER, (mainMenuScreen.height / 2) + (mainMenuScreen.height / 4));
 
     const createdByMessageAsPixels = convertTextToPixelArt('a game by igor estevao   js13kgames 2021');
     drawPixelTextInCanvasContext(createdByMessageAsPixels, mainMenuScreen, PIXEL_MULTIPLIER / 2, mainMenuScreen.height - 28 - (PIXEL_MULTIPLIER * 2));
@@ -143,7 +146,7 @@ function createGameOverScreen(mainDiv) {
     drawPixelTextInCanvasContext(gameOverAsPixels, gameOverScreen, gameOverPixeltSize, (gameOverScreen.height / 3));
 
     const anxietyMessageAsPixels = convertTextToPixelArt('your anxiety is to high');
-    drawPixelTextInCanvasContext(anxietyMessageAsPixels, gameOverScreen, PIXEL_MULTIPLIER, (mainMenuScreen.height / 2) + (mainMenuScreen.height / 4));
+    drawPixelTextInCanvasContext(anxietyMessageAsPixels, gameOverScreen, PIXEL_MULTIPLIER, (mainMenuScreen.height / 2) + (mainMenuScreen.height / 5));
 }
 
 function showGameOverScreen() {

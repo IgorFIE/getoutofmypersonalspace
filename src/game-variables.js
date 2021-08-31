@@ -5,7 +5,7 @@ export const GameVariables = {
     spriteSize: 32 * PIXEL_MULTIPLIER,
     halfSprite: 16 * PIXEL_MULTIPLIER,
 
-    endGameScreenTimer: 3, // seconds
+    endGameScreenTimer: 4, // seconds
 
     boardSize: 11,
     boardScaleMultiplier: 5,
