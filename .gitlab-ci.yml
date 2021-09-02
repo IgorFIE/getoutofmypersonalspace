@@ -14,7 +14,7 @@ build:
   - apt-get install zip
   - npm ci
   script:
-  - npm run-script build -- --public-url ./ --no-source-maps --no-content-hash
+  - npm run build
   - cd dist
   - zip -9 getoutofmypersonalspace *.html *.js
   - cd -
