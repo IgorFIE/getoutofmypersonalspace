@@ -4,7 +4,7 @@ Is a game about navigating in a city center collecting items while keeping a soc
 
 If you don't manage your social distance your anxiety bar will rise so keep it low!!!
 
-You can play the game here [Get Out Of My Personal Space](https://igorfie.gitlab.io/getoutofmypersonalspace/)
+You can play a live version here: https://igorfie.gitlab.io/getoutofmypersonalspace/
 
 This game was created for the [2021 js13kGames](https://js13kgames.com/) where the theme was `SPACE`.
 
