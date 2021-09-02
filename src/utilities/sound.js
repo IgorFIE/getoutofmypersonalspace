@@ -38,9 +38,9 @@ export class Sound {
     playHumanMusic() {
         if (this.isSoundOn) {
             if (this.currentTime >= (this.loopMaxTime / this.notesPeerLoop)) {
-                const randomBassSound = generateRandomNumberBetweenRange(0, 1) === 0 ? '' : generateRandomNumberBetweenRange(65.41, 123.5); // Oct2
-                const randomMelodySound = generateRandomNumberBetweenRange(0, 2) === 0 ? '' : generateRandomNumberBetweenRange(1047, 1976); // Oct6
-                this.playSound("sawtooth", randomBassSound, 0.3, 0, 0.1);
+                const randomBassSound = generateRandomNumberBetweenRange(0, 3) === 0 ? '' : cMajorPantonicScale[generateRandomNumberBetweenRange(0, cMajorPantonicScale.length - 1)];
+                const randomMelodySound = generateRandomNumberBetweenRange(0, 2) === 0 ? '' : cMinorPantonicScale[generateRandomNumberBetweenRange(0, cMinorPantonicScale.length - 1)];
+                this.playSound("square", randomBassSound, 0.3, 0, 0.1);
                 this.playSound("Sawtooth", randomMelodySound, 0.3, 0, 0.1);
 
                 if (this.playAreaSound) {
@@ -97,3 +97,7 @@ export class Sound {
 
 // 16*B1, 16*A1, 8*G1, 8*A1
 const bass = [[16, 61.74], [16, 55.00], [8, 49.00], [8, 55.00]];
+
+// const cMajorPantonicScale = [65.41,73.42,82.41,98.00,110.0,130.8];
+const cMajorPantonicScale = [32.70,	36.71,41.20,49.00,55.00,65.41];
+const cMinorPantonicScale = [1047,1175,1319,1568,1760,2093];
