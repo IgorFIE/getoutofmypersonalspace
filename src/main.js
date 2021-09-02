@@ -41,7 +41,7 @@ function init() {
 function mainLoop(timeStamp) {
     secondsPassed = (timeStamp - oldTimeStamp) / 1000;
     oldTimeStamp = timeStamp;
-    fpsElem.innerHTML = Math.round(1 / secondsPassed) + 's';
+    // fpsElem.innerHTML = Math.round(1 / secondsPassed) + 's';
     if (isGameRunning) {
         game.gameLoop(secondsPassed, keys);
         if (game.isGameOver()) {
