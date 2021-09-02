@@ -31,8 +31,8 @@ pages:
   script:
   - npm ci
   - npm run build
-  - cd dist
-  - cp * public
+  - cp index.html public
+  - cp main.js public
   artifacts:
     paths:
     - public
