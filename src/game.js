@@ -8,6 +8,7 @@ import { Item } from "./entities/item";
 import { ScoreBoard } from "./entities/score-board";
 import { Enemy } from "./entities/enemy";
 import { rectCircleCollision, rectCollision } from "./utilities/collision-utilities";
+import { Sound } from "./utilities/sound";
 
 export class Game {
     constructor() {
@@ -26,13 +27,17 @@ export class Game {
         this.enemies = [];
         this.enemyCanvas = null;
         this.enemyContext = null;
+
+        this.sound = null;
     }
 
 
-    init(newGameDiv) {
+    init(newGameDiv, sound) {
         this.gameDiv = newGameDiv;
         this.gameDiv.style.width = GameVariables.gameWidth + 'px';
         this.gameDiv.style.height = GameVariables.gameHeight + 'px';
+
+        this.sound = sound;
 
         this.board = new Board(this.gameDiv);
         this.board.initBoard();
@@ -115,12 +120,19 @@ export class Game {
 
         const playerXYBoardPos = this.board.getBoardXYPosition(newPlayerArea);
         if (this.item.hasCollision(newPlayerObj)) {
+            this.sound.playPickSound();
             this.item.generateNewItem(playerXYBoardPos);
             this.scoreBoard.updateScore();
         }
         this.minimap.drawMinimap(playerXYBoardPos.x, playerXYBoardPos.y, this.item.getItemBoardPosX, this.item.getItemBoardPosY);
 
-        this.player.setCollisionInArea(this.hasEnemyInPlayerArea(newPlayerArea));
+        const hasEnemyInPlayerArea = this.hasEnemyInPlayerArea(newPlayerArea)
+        this.player.setCollisionInArea(hasEnemyInPlayerArea);
+        if(hasEnemyInPlayerArea){
+            this.sound.playInAreaSound();
+        } else {
+            this.sound.stopInAreaSound();
+        }
 
         playerObj.x = newX;
         playerObj.y = newY;

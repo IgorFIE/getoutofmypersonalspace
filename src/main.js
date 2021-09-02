@@ -1,5 +1,6 @@
 const { Game } = require("./game");
 const { GameVariables, PIXEL_MULTIPLIER } = require("./game-variables");
+const { Sound } = require("./utilities/sound");
 const { convertTextToPixelArt, drawPixelTextInCanvasContext } = require("./utilities/text");
 
 let fpsElem;
@@ -7,6 +8,9 @@ let mainDiv;
 let mainMenuScreen;
 let gameDiv;
 let gameOverScreen;
+
+let sound;
+let wasGameOverSoundPlayed = false;
 
 let isGameRunning = false;
 let game;
@@ -24,6 +28,8 @@ function init() {
     gameDiv.id = 'gameDiv';
     mainDiv.appendChild(gameDiv);
 
+    sound = new Sound();
+
     createMainMenuScreen(mainDiv);
     createGameOverScreen(mainDiv);
     hideGameOverScreen();
@@ -39,16 +45,24 @@ function mainLoop(timeStamp) {
     if (isGameRunning) {
         game.gameLoop(secondsPassed, keys);
         if (game.isGameOver()) {
+            if(!wasGameOverSoundPlayed){
+                sound.playGameOverSound();
+                wasGameOverSoundPlayed = true;
+            }
             showGameOverScreen();
             handleGameOverInput();
             endGameTimer += secondsPassed;
             if (endGameTimer > GameVariables.endGameScreenTimer) {
                 destroyGameAndLoadMainMenu();
             }
+        } else {
+            sound.playHumanMusic();
         }
     } else {
+        sound.playMenuMusic();
         handleStartGameInput();
     }
+    handleMuteInput();
     window.requestAnimationFrame(mainLoop);
 }
 
@@ -73,6 +87,13 @@ function handleGameOverInput() {
     }
 }
 
+function handleMuteInput() {
+    if (keys['m']) {
+        keys['m'] = false;
+        sound.muteMusic();
+    }
+}
+
 function addKeyListenerEvents() {
     window.addEventListener('keydown', function (e) {
         keys[e.key] = true;
@@ -84,8 +105,9 @@ function addKeyListenerEvents() {
 
 function createNewGame() {
     endGameTimer = 0;
+    wasGameOverSoundPlayed = false;
     game = new Game();
-    game.init(gameDiv);
+    game.init(gameDiv, sound);
 }
 
 function createMainMenuScreen(mainDiv) {
@@ -100,13 +122,16 @@ function createMainMenuScreen(mainDiv) {
 
     const mainMenuTitleAsPixels = convertTextToPixelArt('Get out of my personal space');
     const mainMenuPixelSize = PIXEL_MULTIPLIER * 2;
-    drawPixelTextInCanvasContext(mainMenuTitleAsPixels, mainMenuScreen, mainMenuPixelSize, (mainMenuScreen.height / 3));
+    drawPixelTextInCanvasContext(mainMenuTitleAsPixels, mainMenuScreen, mainMenuPixelSize, (mainMenuScreen.height / 4));
 
     const controlsMessageAsPixels = convertTextToPixelArt('wasd to move player');
     drawPixelTextInCanvasContext(controlsMessageAsPixels, mainMenuScreen, PIXEL_MULTIPLIER, (mainMenuScreen.height / 2) + (mainMenuScreen.height / 5));
 
     const startMessageAsPixels = convertTextToPixelArt('press enter to start the game');
     drawPixelTextInCanvasContext(startMessageAsPixels, mainMenuScreen, PIXEL_MULTIPLIER, (mainMenuScreen.height / 2) + (mainMenuScreen.height / 4));
+
+    const soundMessageAsPixels = convertTextToPixelArt('m to mute sound');
+    drawPixelTextInCanvasContext(soundMessageAsPixels, mainMenuScreen, PIXEL_MULTIPLIER, mainMenuScreen.height - 76 - (PIXEL_MULTIPLIER));
 
     const createdByMessageAsPixels = convertTextToPixelArt('a game by igor estevao   js13kgames 2021');
     drawPixelTextInCanvasContext(createdByMessageAsPixels, mainMenuScreen, PIXEL_MULTIPLIER / 2, mainMenuScreen.height - 28 - (PIXEL_MULTIPLIER * 2));
@@ -142,7 +167,7 @@ function createGameOverScreen(mainDiv) {
     const gameOverPixeltSize = PIXEL_MULTIPLIER * 4;
     drawPixelTextInCanvasContext(gameOverAsPixels, gameOverScreen, gameOverPixeltSize, (gameOverScreen.height / 3));
 
-    const anxietyMessageAsPixels = convertTextToPixelArt('your anxiety is to high');
+    const anxietyMessageAsPixels = convertTextToPixelArt('your anxiety is too high');
     drawPixelTextInCanvasContext(anxietyMessageAsPixels, gameOverScreen, PIXEL_MULTIPLIER, (mainMenuScreen.height / 2) + (mainMenuScreen.height / 5));
 }
 
