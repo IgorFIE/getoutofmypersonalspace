@@ -30,9 +30,9 @@ build:
 pages:
   script:
   - npm ci
-  - npm run start
+  - npm run build
   artifacts:
     paths:
-    - public
+    - public/dist
   only:
   - main
