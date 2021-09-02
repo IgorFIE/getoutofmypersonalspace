@@ -35,4 +35,4 @@ pages:
     paths:
     - dist
   only:
-  - main
+  - index
