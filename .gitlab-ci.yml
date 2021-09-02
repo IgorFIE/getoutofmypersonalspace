@@ -29,7 +29,7 @@ build:
 
 pages:
   script:
-  - npm run start
+  - npm run build
   artifacts:
     paths:
     - public
