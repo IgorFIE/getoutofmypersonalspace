@@ -18,7 +18,7 @@ build:
   - cd dist
   - zip -9 getoutofmypersonalspace *.html *.js
   - cd -
-  - mv dist/game.zip ./
+  - mv dist/getoutofmypersonalspace.zip ./
   - echo 'file_size $(stat --printf="%s" getoutofmypersonalspace.zip)' > metrics.txt
   #- test $(stat --printf="%s" getoutofmypersonalspace.zip) -lt 13312
   artifacts:
