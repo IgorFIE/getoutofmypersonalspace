@@ -7,4 +7,3 @@ If you don't manage your social distance your anxiety bar will rise so keep it l
 This game was created for the [2021 js13kGames](https://js13kgames.com/) where the theme was `SPACE`.
 
 ![main menu](GetOutOfMyPersonalSpace.JPG "Get Out Of My Personal Space Main Menu")
-![game](GetOutOfMyPersonalSpace1.JPG "Get Out Of My Personal Space Game")
