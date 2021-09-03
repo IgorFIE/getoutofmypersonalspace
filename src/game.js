@@ -1,6 +1,6 @@
 import { Board } from "./entities/board";
 import { Player } from "./entities/player";
-import { GameVariables, PIXEL_MULTIPLIER } from "./game-variables";
+import { GameVariables } from "./game-variables";
 import { SquareObject } from "./objects/square-object";
 import { CircleObject } from "./objects/circle-object";
 import { Minimap } from "./entities/minimap";
@@ -8,55 +8,38 @@ import { Item } from "./entities/item";
 import { ScoreBoard } from "./entities/score-board";
 import { Enemy } from "./entities/enemy";
 import { rectCircleCollision, rectCollision } from "./utilities/collision-utilities";
-import { Sound } from "./utilities/sound";
+import { generalRectToBoardRect, randomNumberOnRange } from "./utilities/util";
 
 export class Game {
-    constructor() {
-        this.gameDiv = null;
-        this.board = null;
-        this.minimap = null;
-        this.player = null;
-        this.item = null;
-        this.keys = [];
-
-        this.secondsPassed = 0;
-
-        this.fps = 0;
-        this.scoreBoard = null;
-
-        this.enemies = [];
-        this.enemyCanvas = null;
-        this.enemyContext = null;
-
-        this.sound = null;
-    }
-
-
-    init(newGameDiv, sound) {
-        this.gameDiv = newGameDiv;
+    constructor(gameDiv, sound) {
+        this.gameDiv = gameDiv;
         this.gameDiv.style.width = GameVariables.gameWidth + 'px';
         this.gameDiv.style.height = GameVariables.gameHeight + 'px';
 
         this.sound = sound;
 
         this.board = new Board(this.gameDiv);
-        this.board.initBoard();
 
+        this.minimap = new Minimap(this.board.getBoard(), this.gameDiv);
+        
+        this.item = new Item(this.gameDiv);
+        this.item.generateNewItem({ x: 5, y: 5 });
+
+        this.keys = [];
+
+        this.secondsPassed = 0;
+
+        this.fps = 0;
+        this.scoreBoard = new ScoreBoard(this.gameDiv);
+
+        this.enemies = [];
         this.enemyCanvas = document.createElement('canvas');
-        const spriteWithMultiplier = GameVariables.spriteSize * GameVariables.boardScaleMultiplier;
-        this.enemyCanvas.width = GameVariables.boardSize * spriteWithMultiplier;
-        this.enemyCanvas.height = GameVariables.boardSize * spriteWithMultiplier;
+        this.enemyCanvas.width = GameVariables.boardRealSize;
+        this.enemyCanvas.height = GameVariables.boardRealSize;
         this.gameDiv.appendChild(this.enemyCanvas);
 
         this.enemyContext = this.enemyCanvas.getContext('2d');
         this.enemyContext.imageSmoothingEnabled = false;
-
-        this.minimap = new Minimap(this.board.getBoard(), this.gameDiv);
-
-        this.item = new Item(this.gameDiv);
-        this.item.generateNewItem({ x: 5, y: 5 });
-
-        this.scoreBoard = new ScoreBoard(this.gameDiv);
 
         this.player = new Player(this.gameDiv);
         this.player.drawPlayer();
@@ -108,23 +91,24 @@ export class Game {
         const playerBoardX = Math.abs(newX - (GameVariables.gameWidth / 2));
         const playerBoardY = Math.abs(newY - (GameVariables.gameHeight / 2));
 
-        const newPlayerObj = new SquareObject(playerBoardX - GameVariables.halfSprite, playerBoardY + (GameVariables.halfSprite / 4), playerObj.w, playerObj.h);
+        const newPlayerRect = new SquareObject(playerBoardX - GameVariables.halfSprite, playerBoardY + (GameVariables.halfSprite / 4), playerObj.w, playerObj.h);
         const newPlayerArea = new CircleObject(playerBoardX, playerBoardY + (GameVariables.halfSprite - GameVariables.halfSprite / 4), this.player.getPlayerArea().r);
 
-        if (this.board.hasCollision(newPlayerObj)) {
+        if (this.board.hasCollision(newPlayerRect)) {
             newX = playerObj.x;
             newY = playerObj.y;
-            newPlayerObj.x = playerBoardObj.x;
-            newPlayerObj.y = playerBoardObj.y;
+            newPlayerRect.x = playerBoardObj.x;
+            newPlayerRect.y = playerBoardObj.y;
         }
 
-        const playerXYBoardPos = this.board.getBoardXYPosition(newPlayerArea);
-        if (this.item.hasCollision(newPlayerObj)) {
+        const playerBoardRect = generalRectToBoardRect(newPlayerRect, this.board.getBoard());
+        if (this.item.hasCollision(newPlayerRect)) {
             this.sound.playPickSound();
-            this.item.generateNewItem(playerXYBoardPos);
+            this.item.generateNewItem(playerBoardRect);
             this.scoreBoard.updateScore();
         }
-        this.minimap.drawMinimap(playerXYBoardPos.x, playerXYBoardPos.y, this.item.getItemBoardPosX, this.item.getItemBoardPosY);
+
+        this.minimap.drawMinimap(playerBoardRect.x, playerBoardRect.y, this.item.getItemBoardPosX, this.item.getItemBoardPosY);
 
         const hasEnemyInPlayerArea = this.hasEnemyInPlayerArea(newPlayerArea)
         this.player.setCollisionInArea(hasEnemyInPlayerArea);
@@ -136,8 +120,8 @@ export class Game {
 
         playerObj.x = newX;
         playerObj.y = newY;
-        playerBoardObj.x = newPlayerObj.x;
-        playerBoardObj.y = newPlayerObj.y;
+        playerBoardObj.x = newPlayerRect.x;
+        playerBoardObj.y = newPlayerRect.y;
     }
 
     clean() {
@@ -146,23 +130,22 @@ export class Game {
     }
 
     draw() {
-        this.player.drawPlayer(this.keys);
         this.enemies.forEach((it) => it.drawEnemy(this.enemyContext));
+        this.player.drawPlayer(this.keys);
     }
 
     generateEnemy() {
         if (this.enemies.length < GameVariables.enemyNumber) {
-            const boardSpriteSize = GameVariables.spriteSize * GameVariables.boardScaleMultiplier;
             const newEnemyObj = new SquareObject(this.generateRandomPositionInsideBoard(), this.generateRandomPositionInsideBoard(), GameVariables.spriteSize, GameVariables.spriteSize);
             const hasBoardCollision = this.board.hasCollision(newEnemyObj);
             const hasEnemyCollision = !!this.enemies.find((it) => rectCollision(it.getEnemyObj(), newEnemyObj));
 
-            // need to check this afterwards
+            // todo improve spawn area
             const hasPlayerCollision = rectCollision(new SquareObject(
-                this.player.getPlayerBoardObj().x - boardSpriteSize,
-                this.player.getPlayerBoardObj().y - boardSpriteSize,
-                boardSpriteSize * 2,
-                boardSpriteSize * 3
+                this.player.getPlayerBoardObj().x - GameVariables.boardSpriteSize,
+                this.player.getPlayerBoardObj().y - GameVariables.boardSpriteSize,
+                GameVariables.boardSpriteSize * 2,
+                GameVariables.boardSpriteSize * 3
             ), newEnemyObj);
 
             if (!hasBoardCollision && !hasEnemyCollision && !hasPlayerCollision) {
@@ -176,10 +159,9 @@ export class Game {
     }
 
     generateRandomPositionInsideBoard() {
-        const boardSpriteSize = GameVariables.spriteSize * GameVariables.boardScaleMultiplier;
-        const min = boardSpriteSize + PIXEL_MULTIPLIER;
-        const max = (boardSpriteSize * GameVariables.boardSize) - boardSpriteSize + PIXEL_MULTIPLIER;
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+        const min = GameVariables.boardSpriteSize + GameVariables.pixelMulpiplier;
+        const max = (GameVariables.boardSpriteSize * GameVariables.boardSize) - min;
+        return randomNumberOnRange(min,max);
     }
 
     destroy() {

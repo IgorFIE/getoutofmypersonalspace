@@ -1,11 +1,11 @@
 import { GameVariables } from "../game-variables";
 import { rectCollision } from "./collision-utilities";
 
-export const convertGeneralPosToBoardPos = (obj, board) => {
+export const generalRectToBoardRect = (rect, board) => {
     for (let y = 0; y < board.length; y++) {
         for (let x = 0; x < board[y].length; x++) {
-            const currentBoardObj = board[y][x];
-            if (rectCollision(obj, currentBoardObj)) {
+            const currentBoardRect = board[y][x];
+            if (rectCollision(rect, currentBoardRect)) {
                 return { x: x, y: y };
             }
         }
@@ -13,12 +13,10 @@ export const convertGeneralPosToBoardPos = (obj, board) => {
     return { x: 0, y: 0 };
 }
 
-export const convertBoardPosToGeneralPos = (value) => {
-    const boardSpriteSize = GameVariables.spriteSize * GameVariables.boardScaleMultiplier;
-    const boardRealSize = boardSpriteSize * GameVariables.boardSize;
-    return ((boardRealSize * value) / GameVariables.boardSize) + (boardSpriteSize / 2);
+export const boardPosToGeneralPos = (boardPosValue) => {
+    return ((GameVariables.boardRealSize * boardPosValue) / GameVariables.boardSize) + (GameVariables.boardSpriteSize / 2);
 }
 
-export const generateRandomNumberBetweenRange = (min, max) => {
+export const randomNumberOnRange = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }

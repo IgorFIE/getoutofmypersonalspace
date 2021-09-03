@@ -1,4 +1,4 @@
-import { generateRandomNumberBetweenRange } from "./util";
+import { randomNumberOnRange } from "./util";
 
 export class Sound {
     constructor() {
@@ -8,9 +8,6 @@ export class Sound {
         this.loopMaxTime = 4;
         this.notesPeerLoop = 32;
         this.currentTime = this.loopMaxTime / this.notesPeerLoop;
-
-        this.bassPosition = 0;
-        this.bassNoteCount = 0;
 
         this.isSoundOn = true;
         this.playAreaSound = false;
@@ -38,10 +35,10 @@ export class Sound {
     playHumanMusic() {
         if (this.isSoundOn) {
             if (this.currentTime >= (this.loopMaxTime / this.notesPeerLoop)) {
-                const randomBassSound = generateRandomNumberBetweenRange(0, 3) === 0 ? '' : cMajorPantonicScale[generateRandomNumberBetweenRange(0, cMajorPantonicScale.length - 1)];
-                const randomMelodySound = generateRandomNumberBetweenRange(0, 2) === 0 ? '' : cMinorPantonicScale[generateRandomNumberBetweenRange(0, cMinorPantonicScale.length - 1)];
-                this.playSound("square", randomBassSound, 0.3, 0, 0.1);
-                this.playSound("Sawtooth", randomMelodySound, 0.3, 0, 0.1);
+                const randomBassSound = randomNumberOnRange(0, 3) === 0 ? '' : cMajorPantonicScale[randomNumberOnRange(0, cMajorPantonicScale.length - 1)];
+                const randomMelodySound = randomNumberOnRange(0, 2) === 0 ? '' : cMinorPantonicScale[randomNumberOnRange(0, cMinorPantonicScale.length - 1)];
+                this.playSound("square", randomBassSound, 0.25, 0, 0.1);
+                this.playSound("sine", randomMelodySound, 0.3, 0, 0.1);
 
                 if (this.playAreaSound) {
                     this.playSound("square", 1397, 0.3, 0, 0.1); // F6
@@ -61,27 +58,6 @@ export class Sound {
         }
     }
 
-    playMenuMusic() {
-        if (this.isSoundOn) {
-            if (this.currentTime >= (this.loopMaxTime / this.notesPeerLoop)) {
-                this.playBass();
-                this.currentTime = 0;
-            } else {
-                this.currentTime = this.currentTime + this.loopTime;
-            }
-        }
-    }
-
-    playBass() {
-        this.playSound("square", bass[this.bassPosition][1], 0.3, 0, 0.2);
-        if (this.bassNoteCount === bass[this.bassPosition][0] - 1) {
-            this.bassNoteCount = 0;
-            this.bassPosition = this.bassPosition + 1 > bass.length - 1 ? 0 : this.bassPosition + 1;
-        } else {
-            this.bassNoteCount++;
-        }
-    }
-
     playSound(type, value, volume, start, end) {
         const o = this.context.createOscillator();
         const g = this.context.createGain();
@@ -95,9 +71,5 @@ export class Sound {
     }
 }
 
-// 16*B1, 16*A1, 8*G1, 8*A1
-const bass = [[16, 61.74], [16, 55.00], [8, 49.00], [8, 55.00]];
-
-// const cMajorPantonicScale = [65.41,73.42,82.41,98.00,110.0,130.8];
 const cMajorPantonicScale = [32.70,	36.71,41.20,49.00,55.00,65.41];
 const cMinorPantonicScale = [1047,1175,1319,1568,1760,2093];

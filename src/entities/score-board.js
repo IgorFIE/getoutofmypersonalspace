@@ -1,4 +1,4 @@
-import { GameVariables, PIXEL_MULTIPLIER } from "../game-variables";
+import { GameVariables } from "../game-variables";
 import { convertTextToPixelArt, drawPixelTextInCanvasContext } from "../utilities/text";
 
 export class ScoreBoard {
@@ -19,7 +19,7 @@ export class ScoreBoard {
     }
 
     cleanScore(){
-        this.scoreContext.clearRect(0, 76 - (PIXEL_MULTIPLIER * 3), GameVariables.gameWidth, GameVariables.gameHeight / 3);
+        this.scoreContext.clearRect(0, 76 - (GameVariables.pixelMulpiplier * 3), GameVariables.gameWidth, GameVariables.gameHeight / 3);
     }
 
     updateScore() {
@@ -30,11 +30,11 @@ export class ScoreBoard {
 
     drawScoreMessage() {
         const scoreMessageHasPixels = convertTextToPixelArt('SCORE');
-        drawPixelTextInCanvasContext(scoreMessageHasPixels, this.scoreCanvas, PIXEL_MULTIPLIER, 28 + PIXEL_MULTIPLIER * 2);
+        drawPixelTextInCanvasContext(scoreMessageHasPixels, this.scoreCanvas, GameVariables.pixelMulpiplier, 28 + GameVariables.pixelMulpiplier * 2);
     }
 
     drawScore(){
         const scoreHasPixels = convertTextToPixelArt(this.currentScore);
-        drawPixelTextInCanvasContext(scoreHasPixels, this.scoreCanvas, PIXEL_MULTIPLIER * 2, 76 + PIXEL_MULTIPLIER * 2);
+        drawPixelTextInCanvasContext(scoreHasPixels, this.scoreCanvas, GameVariables.pixelMulpiplier * 2, 76 + GameVariables.pixelMulpiplier * 2);
     }
 }

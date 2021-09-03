@@ -1,6 +1,6 @@
 import { GameVariables } from "../game-variables";
 import { SquareObject } from "../objects/square-object";
-import { convertBoardPosToGeneralPos } from "../utilities/util";
+import { boardPosToGeneralPos } from "../utilities/util";
 import { rectCollision } from "../utilities/collision-utilities";
 
 export class Item {
@@ -16,9 +16,8 @@ export class Item {
         this.itemObj = new SquareObject(0, 0, GameVariables.halfSprite, GameVariables.halfSprite);
 
         this.canvas = document.createElement('canvas');
-        const spriteWithMultiplier = GameVariables.spriteSize * GameVariables.boardScaleMultiplier;
-        this.canvas.width = GameVariables.boardSize * spriteWithMultiplier;
-        this.canvas.height = GameVariables.boardSize * spriteWithMultiplier;
+        this.canvas.width = GameVariables.boardRealSize;
+        this.canvas.height = GameVariables.boardRealSize;
         mainDiv.appendChild(this.canvas);
 
         this.context = this.canvas.getContext('2d');
@@ -41,8 +40,8 @@ export class Item {
             this.itemBoardPosX = newPosX;
             this.itemBoardPosY = newPosY;
 
-            this.itemGeneralPosX = convertBoardPosToGeneralPos(newPosX);
-            this.itemGeneralPosY = convertBoardPosToGeneralPos(newPosY);
+            this.itemGeneralPosX = boardPosToGeneralPos(newPosX);
+            this.itemGeneralPosY = boardPosToGeneralPos(newPosY);
 
             this.itemType = this.generateRandomItemType();
 

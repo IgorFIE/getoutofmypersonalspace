@@ -1,8 +1,7 @@
 export const drawPixelTextInCanvasContext = (pixelText, canvas, pixelSize, textHeightPosition) => {
     const halfWidthPixelTextSize = (pixelText[0].length * pixelSize) / 2;
     const halfHeightPixelTextSize = (pixelText.length * pixelSize) / 2;
-    const canvasHalfWidth = canvas.width / 2;
-    const textWidthStartPosition = canvasHalfWidth - halfWidthPixelTextSize;
+    const textWidthStartPosition = (canvas.width / 2) - halfWidthPixelTextSize;
     const textHeightStartPosition = textHeightPosition - halfHeightPixelTextSize;
     const context = canvas.getContext('2d');
     for (let y = 0; y < pixelText.length; y++) {
@@ -26,8 +25,8 @@ export const convertTextToPixelArt = (text) => {
     for (let pixelLetterHeight = 0; pixelLetterHeight < SPACE.length; pixelLetterHeight++) {
         let newPixelTextArray = [];
         for (let letterPos = 0; letterPos < textLetters.length; letterPos++) {
-            // space between letters
             if (letterPos > 0) {
+                // space between letters
                 newPixelTextArray.push([false]);
             }
             const currentPixelLetter = retrievePixelLetter(textLetters[letterPos]);

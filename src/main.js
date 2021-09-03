@@ -1,16 +1,17 @@
 const { Game } = require("./game");
-const { GameVariables, PIXEL_MULTIPLIER } = require("./game-variables");
+const { GameVariables } = require("./game-variables");
 const { Sound } = require("./utilities/sound");
 const { convertTextToPixelArt, drawPixelTextInCanvasContext } = require("./utilities/text");
 
 let fpsElem;
 let mainDiv;
-let mainMenuScreen;
+let mainMenuCanvas;
+
 let gameDiv;
-let gameOverScreen;
+let gameOverCanvas;
 
 let sound;
-let wasGameOverSoundPlayed = false;
+let isGameOverFirstLoopProcessed = false;
 
 let isGameRunning = false;
 let game;
@@ -41,16 +42,17 @@ function init() {
 function mainLoop(timeStamp) {
     secondsPassed = (timeStamp - oldTimeStamp) / 1000;
     oldTimeStamp = timeStamp;
-    // fpsElem.innerHTML = Math.round(1 / secondsPassed) + 's';
+    fpsElem.innerHTML = Math.round(1 / secondsPassed) + 's';
     if (isGameRunning) {
         game.gameLoop(secondsPassed, keys);
         if (game.isGameOver()) {
-            if(!wasGameOverSoundPlayed){
+            if(!isGameOverFirstLoopProcessed){
+                showGameOverScreen();
                 sound.playGameOverSound();
-                wasGameOverSoundPlayed = true;
+                sound.stopInAreaSound();
+                isGameOverFirstLoopProcessed = true;
             }
-            showGameOverScreen();
-            handleGameOverInput();
+            handleSkipMenuInput(destroyGameAndLoadMainMenu);
             endGameTimer += secondsPassed;
             if (endGameTimer > GameVariables.endGameScreenTimer) {
                 destroyGameAndLoadMainMenu();
@@ -59,8 +61,8 @@ function mainLoop(timeStamp) {
             sound.playHumanMusic();
         }
     } else {
-        sound.playMenuMusic();
-        handleStartGameInput();
+        sound.playHumanMusic();
+        handleSkipMenuInput(hideMainMenuScreen);
     }
     handleMuteInput();
     window.requestAnimationFrame(mainLoop);
@@ -73,17 +75,10 @@ function destroyGameAndLoadMainMenu() {
     showMainMenuScreen();
 }
 
-function handleStartGameInput() {
+function handleSkipMenuInput(menuToSkipFn) {
     if (keys['Enter']) {
         keys['Enter'] = false;
-        hideMainMenuScreen();
-    }
-}
-
-function handleGameOverInput() {
-    if (keys['Enter']) {
-        keys['Enter'] = false;
-        destroyGameAndLoadMainMenu();
+        menuToSkipFn();
     }
 }
 
@@ -105,36 +100,34 @@ function addKeyListenerEvents() {
 
 function createNewGame() {
     endGameTimer = 0;
-    wasGameOverSoundPlayed = false;
-    game = new Game();
-    game.init(gameDiv, sound);
+    isGameOverFirstLoopProcessed = false;
+    game = new Game(gameDiv, sound);
 }
 
 function createMainMenuScreen(mainDiv) {
-    mainMenuScreen = document.createElement('canvas');
-    mainMenuScreen.id = 'mainMenu';
-    mainMenuScreen.width = GameVariables.gameWidth;
-    mainMenuScreen.height = GameVariables.gameHeight;
-    mainDiv.appendChild(mainMenuScreen);
+    mainMenuCanvas = document.createElement('canvas');
+    mainMenuCanvas.id = 'mainMenu';
+    mainMenuCanvas.width = GameVariables.gameWidth;
+    mainMenuCanvas.height = GameVariables.gameHeight;
+    mainDiv.appendChild(mainMenuCanvas);
 
-    const mainMenuContext = mainMenuScreen.getContext('2d');
+    const mainMenuContext = mainMenuCanvas.getContext('2d');
     mainMenuContext.imageSmoothingEnabled = false;
 
     const mainMenuTitleAsPixels = convertTextToPixelArt('Get out of my personal space');
-    const mainMenuPixelSize = PIXEL_MULTIPLIER * 2;
-    drawPixelTextInCanvasContext(mainMenuTitleAsPixels, mainMenuScreen, mainMenuPixelSize, (mainMenuScreen.height / 4));
+    drawPixelTextInCanvasContext(mainMenuTitleAsPixels, mainMenuCanvas, GameVariables.pixelMulpiplier * 2, (mainMenuCanvas.height / 4));
 
     const controlsMessageAsPixels = convertTextToPixelArt('wasd to move player');
-    drawPixelTextInCanvasContext(controlsMessageAsPixels, mainMenuScreen, PIXEL_MULTIPLIER, (mainMenuScreen.height / 2) + (mainMenuScreen.height / 5));
+    drawPixelTextInCanvasContext(controlsMessageAsPixels, mainMenuCanvas, GameVariables.pixelMulpiplier, (mainMenuCanvas.height / 2) + (mainMenuCanvas.height / 5));
 
     const startMessageAsPixels = convertTextToPixelArt('press enter to start the game');
-    drawPixelTextInCanvasContext(startMessageAsPixels, mainMenuScreen, PIXEL_MULTIPLIER, (mainMenuScreen.height / 2) + (mainMenuScreen.height / 4));
+    drawPixelTextInCanvasContext(startMessageAsPixels, mainMenuCanvas, GameVariables.pixelMulpiplier, (mainMenuCanvas.height / 2) + (mainMenuCanvas.height / 4));
 
     const soundMessageAsPixels = convertTextToPixelArt('m to mute sound');
-    drawPixelTextInCanvasContext(soundMessageAsPixels, mainMenuScreen, PIXEL_MULTIPLIER, mainMenuScreen.height - 76 - (PIXEL_MULTIPLIER));
+    drawPixelTextInCanvasContext(soundMessageAsPixels, mainMenuCanvas, GameVariables.pixelMulpiplier, mainMenuCanvas.height - 76 - (GameVariables.pixelMulpiplier));
 
     const createdByMessageAsPixels = convertTextToPixelArt('a game by igor estevao   js13kgames 2021');
-    drawPixelTextInCanvasContext(createdByMessageAsPixels, mainMenuScreen, PIXEL_MULTIPLIER / 2, mainMenuScreen.height - 28 - (PIXEL_MULTIPLIER * 2));
+    drawPixelTextInCanvasContext(createdByMessageAsPixels, mainMenuCanvas, GameVariables.pixelMulpiplier / 2, mainMenuCanvas.height - 28 - (GameVariables.pixelMulpiplier * 2));
 
     createNewGame();
 }
@@ -142,41 +135,40 @@ function createMainMenuScreen(mainDiv) {
 function showMainMenuScreen() {
     isGameRunning = false;
     createNewGame();
-    mainMenuScreen.classList.remove('hidden');
+    mainMenuCanvas.classList.remove('hidden');
 }
 
 function hideMainMenuScreen() {
     isGameRunning = true;
-    mainMenuScreen.classList.add('hidden');
+    mainMenuCanvas.classList.add('hidden');
 }
 
 function createGameOverScreen(mainDiv) {
-    gameOverScreen = document.createElement('canvas');
-    gameOverScreen.id = 'gameOver';
-    gameOverScreen.width = GameVariables.gameWidth;
-    gameOverScreen.height = GameVariables.gameHeight;
-    mainDiv.appendChild(gameOverScreen);
+    gameOverCanvas = document.createElement('canvas');
+    gameOverCanvas.id = 'gameOver';
+    gameOverCanvas.width = GameVariables.gameWidth;
+    gameOverCanvas.height = GameVariables.gameHeight;
+    mainDiv.appendChild(gameOverCanvas);
 
-    const gameOverContext = gameOverScreen.getContext('2d');
+    const gameOverContext = gameOverCanvas.getContext('2d');
     gameOverContext.imageSmoothingEnabled = false;
     gameOverContext.beginPath();
     gameOverContext.fillStyle = 'rgba(255,0,255,0.2)';
     gameOverContext.fillRect(0, 0, GameVariables.gameWidth, GameVariables.gameHeight);
 
     const gameOverAsPixels = convertTextToPixelArt('game over');
-    const gameOverPixeltSize = PIXEL_MULTIPLIER * 4;
-    drawPixelTextInCanvasContext(gameOverAsPixels, gameOverScreen, gameOverPixeltSize, (gameOverScreen.height / 3));
+    drawPixelTextInCanvasContext(gameOverAsPixels, gameOverCanvas, GameVariables.pixelMulpiplier * 4, (gameOverCanvas.height / 3));
 
     const anxietyMessageAsPixels = convertTextToPixelArt('your anxiety is too high');
-    drawPixelTextInCanvasContext(anxietyMessageAsPixels, gameOverScreen, PIXEL_MULTIPLIER, (mainMenuScreen.height / 2) + (mainMenuScreen.height / 5));
+    drawPixelTextInCanvasContext(anxietyMessageAsPixels, gameOverCanvas, GameVariables.pixelMulpiplier, (mainMenuCanvas.height / 2) + (mainMenuCanvas.height / 5));
 }
 
 function showGameOverScreen() {
-    gameOverScreen.classList.remove('hidden');
+    gameOverCanvas.classList.remove('hidden');
 }
 
 function hideGameOverScreen() {
-    gameOverScreen.classList.add('hidden');
+    gameOverCanvas.classList.add('hidden');
 }
 
 init();

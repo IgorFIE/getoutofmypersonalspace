@@ -1,6 +1,6 @@
 import { GameVariables } from "../game-variables";
 import { SquareObject } from "../objects/square-object";
-import { generateRandomNumberBetweenRange } from "../utilities/util";
+import { randomNumberOnRange } from "../utilities/util";
 
 export class Enemy {
     constructor(enemyObj) {
@@ -11,10 +11,6 @@ export class Enemy {
         this.keys = [];
         this.lastMovementKey = '';
         this.stepMovement = 0;
-    }
-
-    getEnemyObj() {
-        return this.enemyObj;
     }
 
     updateEnemy(x, y) {
@@ -48,8 +44,8 @@ export class Enemy {
             this.keys[this.lastMovementKey] = true;
         } else {
             this.keys[this.lastMovementKey] = false;
-            this.stepMovement = generateRandomNumberBetweenRange(30, 120);
-            switch (generateRandomNumberBetweenRange(0, 3)) {
+            this.stepMovement = randomNumberOnRange(30, 120);
+            switch (randomNumberOnRange(0, 3)) {
                 case 0:
                     this.lastMovementKey = 'd';
                     break;
@@ -113,6 +109,10 @@ export class Enemy {
         if (this.keys['w']) { return enemyBackWalkingCicle[this.currentAnimationSprite]; }
         if (this.keys['s']) { return enemyFrontWalkingCicle[this.currentAnimationSprite]; }
         return enemyFrontSprite;
+    }
+
+    getEnemyObj() {
+        return this.enemyObj;
     }
 
     destroyEnemy() {

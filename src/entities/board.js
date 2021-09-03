@@ -1,8 +1,6 @@
 import { BoardObject } from "../objects/board-object";
 import { GameVariables } from "../game-variables";
-import { PIXEL_MULTIPLIER } from "../game-variables";
-import { rectCollision, rectCircleCollision } from "../utilities/collision-utilities";
-import { convertGeneralPosToBoardPos } from "../utilities/util";
+import { rectCollision } from "../utilities/collision-utilities";
 
 export class Board {
 
@@ -15,23 +13,20 @@ export class Board {
 
         this.context = this.canvas.getContext('2d');
         this.context.imageSmoothingEnabled = false;
-    }
 
-    getBoard() {
-        return this.board;
+        this.initBoard();
     }
 
     initBoard() {
-        const spriteWithMultiplier = GameVariables.spriteSize * GameVariables.boardScaleMultiplier;
-        this.canvas.width = GameVariables.boardSize * spriteWithMultiplier;
-        this.canvas.height = GameVariables.boardSize * spriteWithMultiplier;
+        this.canvas.width = GameVariables.boardRealSize;
+        this.canvas.height = GameVariables.boardRealSize;
         for (let y = 0; y < GameVariables.boardSize; y++) {
             let newBoardRow = [];
             for (let x = 0; x < GameVariables.boardSize; x++) {
                 const isEdge = y === 0 || y === GameVariables.boardSize - 1 || x === 0 || x === GameVariables.boardSize - 1;
                 const isBuild = x % 2 === 0 && y % 2 === 0;
                 const currentBlockType = isEdge || isBuild ? 1 : 0;
-                const boardObj = new BoardObject(x * spriteWithMultiplier, y * spriteWithMultiplier, spriteWithMultiplier, spriteWithMultiplier, currentBlockType);
+                const boardObj = new BoardObject(x * GameVariables.boardSpriteSize, y * GameVariables.boardSpriteSize, GameVariables.boardSpriteSize, GameVariables.boardSpriteSize, currentBlockType);
                 this.drawBoardPiece(boardObj);
                 if (currentBlockType === 1) {
                     this.boardCollisionObjs.push(boardObj);
@@ -44,36 +39,47 @@ export class Board {
 
     drawBoardPiece(boardObj) {
         if (boardObj.objType === 1) {
-            for (let y = 0; y < buildingTile.length; y++) {
-                for (let x = 0; x < buildingTile[y].length; x++) {
-                    const currentColor = buildingTile[y][x];
-                    if (currentColor) {
-                        this.context.beginPath();
-                        this.context.fillStyle = currentColor;
-                        this.context.fillRect(
-                             boardObj.x + (x * boardObj.w / 16),
-                             boardObj.y + (y * boardObj.h / 16),
-                            boardObj.w / 16, boardObj.h / 16);
-                    }
+            this.drawBuilding(boardObj);
+        } else {
+            this.drawFloor(boardObj);
+        }
+    }
+
+    drawBuilding(boardObj) {
+        const buildPixelWidth = boardObj.w / GameVariables.originalHalfSprite;
+        const buildPixelHeight = boardObj.h / GameVariables.originalHalfSprite;
+        for (let y = 0; y < buildingTile.length; y++) {
+            for (let x = 0; x < buildingTile[y].length; x++) {
+                const currentColor = buildingTile[y][x];
+                if (currentColor) {
+                    this.context.beginPath();
+                    this.context.fillStyle = currentColor;
+                    this.context.fillRect(
+                        boardObj.x + (x * buildPixelWidth),
+                        boardObj.y + (y * buildPixelHeight),
+                        buildPixelWidth, buildPixelHeight);
                 }
             }
-        } else {
-            // Need to simplify this
-            for (let yMultiplier = 0; yMultiplier < (PIXEL_MULTIPLIER / 2); yMultiplier++) {
-                const yTilePosition = yMultiplier * (boardObj.h / 2);
-                for (let xMultiplier = 0; xMultiplier < (PIXEL_MULTIPLIER / 2); xMultiplier++) {
-                    const xTilePosition = xMultiplier * (boardObj.w / 2);
-                    for (let y = 0; y < floorTile.length; y++) {
-                        for (let x = 0; x < floorTile[y].length; x++) {
-                            const currentColor = floorTile[y][x];
-                            if (currentColor) {
-                                this.context.beginPath();
-                                this.context.fillStyle = currentColor;
-                                this.context.fillRect(
-                                    xTilePosition + boardObj.x + (x * boardObj.w / 32),
-                                    yTilePosition + boardObj.y + (y * boardObj.h / 32),
-                                    boardObj.w / 32, boardObj.h / 32);
-                            }
+        }
+    }
+
+    drawFloor(boardObj) {
+        const floorPixelWidth = boardObj.w / GameVariables.originalSpriteSize;
+        const floorPixelHeight = boardObj.h / GameVariables.originalSpriteSize;
+        for (let yMultiplier = 0; yMultiplier < (GameVariables.pixelMulpiplier / 2); yMultiplier++) {
+            const yTilePosition = yMultiplier * (boardObj.h / 2);
+            for (let xMultiplier = 0; xMultiplier < (GameVariables.pixelMulpiplier / 2); xMultiplier++) {
+                const xTilePosition = xMultiplier * (boardObj.w / 2);
+                for (let y = 0; y < floorTile.length; y++) {
+                    for (let x = 0; x < floorTile[y].length; x++) {
+                        const currentColor = floorTile[y][x];
+                        if (currentColor) {
+                            this.context.beginPath();
+                            this.context.fillStyle = currentColor;
+                            this.context.fillRect(
+                                xTilePosition + boardObj.x + (x * floorPixelWidth),
+                                yTilePosition + boardObj.y + (y * floorPixelHeight),
+                                floorPixelWidth, floorPixelHeight);
                         }
                     }
                 }
@@ -89,8 +95,8 @@ export class Board {
         return !!this.boardCollisionObjs.find((it) => rectCollision(it, movingObject));
     }
 
-    getBoardXYPosition(movingObject) {
-        return convertGeneralPosToBoardPos(movingObject, this.board);
+    getBoard() {
+        return this.board;
     }
 }
 

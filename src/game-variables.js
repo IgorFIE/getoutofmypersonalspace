@@ -1,21 +1,48 @@
-export const PIXEL_MULTIPLIER = 5;
+const pixelMulpiplier = 5;
+
+const gameWidth = window.innerWidth;
+const gameHeight = window.innerHeight;
+
+const spriteSize = 32 * pixelMulpiplier;
+const halfSprite = 16 * pixelMulpiplier;
+
+const originalSpriteSize = spriteSize / pixelMulpiplier;
+const originalHalfSprite = halfSprite / pixelMulpiplier;
+
+const endGameScreenTimer = 4;
+
+const boardSize = 11;
+const boardScaleMultiplier = 5;
+const boardSpriteSize = spriteSize * boardScaleMultiplier;
+const boardRealSize = boardSpriteSize * boardSize;
+
+const playerSpeed = 500;
+const playerAnimationSpeed = 12;
+const playerAreaLevelSpeed = 30;
+const playerMaxAnsiety = 250;
+
+const enemySpeed = 500;
+const enemyAnimationSpeed = 12;
+const enemyNumber = 80;
+
 export const GameVariables = {
-    gameWidth: window.innerWidth,
-    gameHeight : window.innerHeight,
-    spriteSize: 32 * PIXEL_MULTIPLIER,
-    halfSprite: 16 * PIXEL_MULTIPLIER,
-
-    endGameScreenTimer: 4, // seconds
-
-    boardSize: 11,
-    boardScaleMultiplier: 5,
-
-    playerSpeed: 500,
-    playerAnimationSpeed: 12,
-    playerAreaLevelSpeed: 30,
-    playerMaxAnsiety: 250,
-
-    enemySpeed: 500,
-    enemyAnimationSpeed: 12,
-    enemyNumber: 80
+    pixelMulpiplier,
+    gameWidth,
+    gameHeight,
+    spriteSize,
+    halfSprite,
+    originalSpriteSize,
+    originalHalfSprite,
+    endGameScreenTimer,
+    boardSize,
+    boardScaleMultiplier,
+    boardSpriteSize,
+    boardRealSize,
+    playerSpeed,
+    playerAnimationSpeed,
+    playerAreaLevelSpeed,
+    playerMaxAnsiety,
+    enemySpeed,
+    enemyAnimationSpeed,
+    enemyNumber
 }
