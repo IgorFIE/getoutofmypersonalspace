@@ -61,11 +61,11 @@ export class Player {
     }
 
     upgradePlayer() {
-        this.updatePlayerCollisionParams();
-        this.updatePlayerAnsietyParams();
+        this.updatePlayerAnsietyArea();
+        this.updatePlayerAnsiety();
     }
 
-    updatePlayerCollisionParams() {
+    updatePlayerAnsietyArea() {
         if (this.collisionInArea) {
             if (this.areaLevelCicle == GameVariables.playerAreaLevelSpeed && this.currentAreaLevel < playerAreaLevelColors.length - 1) {
                 this.areaLevelCicle = 0;
@@ -88,7 +88,7 @@ export class Player {
         }
     }
 
-    updatePlayerAnsietyParams() {
+    updatePlayerAnsiety() {
         if (this.collisionInArea && this.currentAnsiety < GameVariables.playerMaxAnsiety) {
             this.currentAnsiety += 1 + this.currentAreaLevel;
         } else {

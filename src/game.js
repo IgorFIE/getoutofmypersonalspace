@@ -22,7 +22,7 @@ export class Game {
 
         this.minimap = new Minimap(this.board.getBoard(), this.gameDiv);
         
-        this.item = new Item(this.gameDiv);
+        this.item = new Item();
         this.item.generateNewItem({ x: 5, y: 5 });
 
         this.keys = [];
@@ -33,20 +33,19 @@ export class Game {
         this.scoreBoard = new ScoreBoard(this.gameDiv);
 
         this.enemies = [];
-        this.enemyCanvas = document.createElement('canvas');
-        this.enemyCanvas.width = GameVariables.boardRealSize;
-        this.enemyCanvas.height = GameVariables.boardRealSize;
-        this.gameDiv.appendChild(this.enemyCanvas);
+        this.actionCanvas = document.createElement('canvas');
+        this.actionCanvas.width = GameVariables.boardRealSize;
+        this.actionCanvas.height = GameVariables.boardRealSize;
+        this.gameDiv.appendChild(this.actionCanvas);
 
-        this.enemyContext = this.enemyCanvas.getContext('2d');
-        this.enemyContext.imageSmoothingEnabled = false;
+        this.actionContext = this.actionCanvas.getContext('2d');
+        this.actionContext.imageSmoothingEnabled = false;
 
         this.player = new Player(this.gameDiv);
         this.player.drawPlayer();
 
         const playerObj = this.player.getPlayerObj();
         this.board.updateBoard(playerObj.x, playerObj.y);
-        this.item.updateItem(playerObj.x, playerObj.y);
     }
 
     isGameOver() {
@@ -69,9 +68,8 @@ export class Game {
         this.playerMovement();
         const playerObj = this.player.getPlayerObj();
         this.board.updateBoard(playerObj.x, playerObj.y);
-        this.item.updateItem(playerObj.x, playerObj.y);
         this.player.upgradePlayer();
-        this.enemyCanvas.style.transform = 'translate(' + playerObj.x + 'px, ' + playerObj.y + 'px)';
+        this.actionCanvas.style.transform = 'translate(' + playerObj.x + 'px, ' + playerObj.y + 'px)';
     }
 
     playerMovement() {
@@ -126,11 +124,12 @@ export class Game {
 
     clean() {
         this.player.cleanPlayer();
-        this.enemyContext.clearRect(0, 0, this.enemyCanvas.width, this.enemyCanvas.height);
+        this.actionContext.clearRect(0, 0, this.actionCanvas.width, this.actionCanvas.height);
     }
 
     draw() {
-        this.enemies.forEach((it) => it.drawEnemy(this.enemyContext));
+        this.enemies.forEach((it) => it.drawEnemy(this.actionContext));
+        this.item.drawItem(this.actionContext);
         this.player.drawPlayer(this.keys);
     }
 
@@ -149,7 +148,7 @@ export class Game {
             ), newEnemyObj);
 
             if (!hasBoardCollision && !hasEnemyCollision && !hasPlayerCollision) {
-                this.enemies.push(new Enemy(newEnemyObj, this.gameDiv));
+                this.enemies.push(new Enemy(newEnemyObj));
             }
         }
     }

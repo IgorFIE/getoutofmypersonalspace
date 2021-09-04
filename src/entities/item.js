@@ -1,10 +1,10 @@
 import { GameVariables } from "../game-variables";
 import { SquareObject } from "../objects/square-object";
-import { boardPosToGeneralPos } from "../utilities/util";
+import { boardPosToGeneralPos, randomNumberOnRange } from "../utilities/util";
 import { rectCollision } from "../utilities/collision-utilities";
 
 export class Item {
-    constructor(mainDiv) {
+    constructor() {
         this.itemBoardPosX = 0;
         this.itemBoardPosY = 0;
 
@@ -14,20 +14,10 @@ export class Item {
         this.itemType = 0;
 
         this.itemObj = new SquareObject(0, 0, GameVariables.halfSprite, GameVariables.halfSprite);
-
-        this.canvas = document.createElement('canvas');
-        this.canvas.width = GameVariables.boardRealSize;
-        this.canvas.height = GameVariables.boardRealSize;
-        mainDiv.appendChild(this.canvas);
-
-        this.context = this.canvas.getContext('2d');
-        this.context.imageSmoothingEnabled = false;
     }
 
     generateNewItem(playerXYBoardPos) {
-        this.cleanItem();
         this.generateNewItemRandomPositions(this.itemBoardPosX, this.itemBoardPosY, playerXYBoardPos);
-        this.drawItem();
     }
 
     generateNewItemRandomPositions(newPosX, newPosY, playerXYBoardPos) {
@@ -43,7 +33,7 @@ export class Item {
             this.itemGeneralPosX = boardPosToGeneralPos(newPosX);
             this.itemGeneralPosY = boardPosToGeneralPos(newPosY);
 
-            this.itemType = this.generateRandomItemType();
+            this.itemType = randomNumberOnRange(0, items.length - 1);
 
             this.itemObj.x = this.itemGeneralPosX - (GameVariables.spriteSize / 3);
             this.itemObj.y = this.itemGeneralPosY - GameVariables.halfSprite;
@@ -51,30 +41,18 @@ export class Item {
     }
 
     generateRandomNumberInsideBoard() {
-        const min = Math.ceil(1);
-        const max = Math.floor(GameVariables.boardSize - 2);
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+        return randomNumberOnRange(1, GameVariables.boardSize - 2);
     }
 
-    generateRandomItemType() {
-        const min = 0;
-        const max = items.length - 1;
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    cleanItem() {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
-
-    drawItem() {
+    drawItem(context) {
         // Draw Item Shadow
         for (let y = 0; y < itemShadowSprite.length; y++) {
             for (let x = 0; x < itemShadowSprite[y].length; x++) {
                 const currentColor = itemShadowSprite[y][x];
                 if (currentColor) {
-                    this.context.beginPath();
-                    this.context.fillStyle = currentColor;
-                    this.context.fillRect(
+                    context.beginPath();
+                    context.fillStyle = currentColor;
+                    context.fillRect(
                         (this.itemGeneralPosX - (GameVariables.spriteSize / 3)) + (x * (GameVariables.halfSprite / 8)),
                         (this.itemGeneralPosY - (GameVariables.spriteSize / 8)) + (y * (GameVariables.halfSprite / 8)),
                         (GameVariables.halfSprite / 8), (GameVariables.halfSprite / 8));
@@ -88,20 +66,15 @@ export class Item {
             for (let x = 0; x < spriteToUse[y].length; x++) {
                 const currentColor = spriteToUse[y][x];
                 if (currentColor) {
-                    this.context.beginPath();
-                    this.context.fillStyle = currentColor;
-                    this.context.fillRect(
+                    context.beginPath();
+                    context.fillStyle = currentColor;
+                    context.fillRect(
                         this.itemObj.x + (x * (GameVariables.halfSprite / 8)),
                         this.itemObj.y + (y * (GameVariables.halfSprite / 8)),
                         (GameVariables.halfSprite / 8), (GameVariables.halfSprite / 8));
-                    this.context.stroke();
                 }
             }
         }
-    }
-
-    updateItem(x, y) {
-        this.canvas.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
     }
 
     hasCollision(movingObject) {
