@@ -59,7 +59,7 @@ export class Game {
     }
 
     update() {
-        // this.enemies.forEach((it) => it.enemyMovement(this.board, this.secondsPassed));
+        this.enemies.forEach((it) => it.enemyMovement(this.board, this.secondsPassed));
         this.player.updatePlayerMovement(this.board, this.keys, this.secondsPassed);
         this.updateGameLogic();
         this.updateCanvasPositions();
@@ -67,7 +67,7 @@ export class Game {
 
     generateEnemy() {
         if (this.enemies.length < GameVariables.enemyNumber) {
-            const newEnemyObj = new SquareObject(this.generateRandomPositionInsideBoard(), this.generateRandomPositionInsideBoard(), GameVariables.halfSprite, GameVariables.halfSprite);
+            const newEnemyObj = new SquareObject(this.generateRandomPositionInsideBoard(), this.generateRandomPositionInsideBoard(), GameVariables.spriteSize, GameVariables.spriteSize);
             const hasBoardCollision = this.board.hasCollision(newEnemyObj);
             const hasEnemyCollision = !!this.enemies.find((it) => rectCollision(it.getEnemyObj(), newEnemyObj));
             const hasPlayerCollision = rectCollision(this.retrieveActionDrawArea(), newEnemyObj);
@@ -104,8 +104,8 @@ export class Game {
     }
 
     updateCanvasPositions(){
-        const updateGameWidthPosition = -this.player.getPlayerRect().x + GameVariables.gameHalfWidth - GameVariables.oneFourthSprite;
-        const updateGameHeightPosition = -this.player.getPlayerRect().y + GameVariables.gameHalfHeight;
+        const updateGameWidthPosition = -this.player.getPlayerRect().x + GameVariables.gameHalfWidth - (this.player.getPlayerRect().w / 2);
+        const updateGameHeightPosition = -this.player.getPlayerRect().y + GameVariables.gameHalfHeight - (this.player.getPlayerRect().h / 2);
         this.board.updateBoard(updateGameWidthPosition, updateGameHeightPosition);
         this.actionCanvas.style.transform = 'translate(' + updateGameWidthPosition + 'px, ' + updateGameHeightPosition + 'px)';
     }
@@ -133,9 +133,9 @@ export class Game {
 
     retrieveActionDrawArea(){
         return new SquareObject(
-            this.player.getPlayerRect().x - GameVariables.gameHalfWidth - GameVariables.halfSprite + GameVariables.oneFourthSprite,
-            this.player.getPlayerRect().y - GameVariables.gameHalfHeight - GameVariables.oneFourthSprite,
-            GameVariables.gameWidth + GameVariables.spriteSize, GameVariables.gameHeight + GameVariables.spriteSize
+            this.player.getPlayerRect().x - GameVariables.gameHalfWidth + GameVariables.oneFourthSprite,
+            this.player.getPlayerRect().y - GameVariables.gameHalfHeight + GameVariables.oneFourthSprite,
+            GameVariables.gameWidth, GameVariables.gameHeight
         );
     }
 

@@ -27,6 +27,7 @@ const playerSpeed = 500;
 const playerAnimationSpeed = 12;
 const playerAreaLevelSpeed = 30;
 const playerMaxAnxiety = 250;
+const playerSpriteSize = oneFourthSprite * 3;
 
 const enemySpeed = 500;
 const enemyAnimationSpeed = 12;
@@ -57,6 +58,7 @@ export const GameVariables = {
     playerAnimationSpeed,
     playerAreaLevelSpeed,
     playerMaxAnxiety,
+    playerSpriteSize,
     enemySpeed,
     enemyAnimationSpeed,
     enemyNumber,

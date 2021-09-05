@@ -92,9 +92,21 @@ export class Board {
         this.canvas.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
     }
 
-    // TODO change this to only check collisions with 3*3 around rect position
     hasCollision(movingObject) {
-        return !!this.boardCollisionObjs.find((it) => rectCollision(it, movingObject));
+        const movingObjBoardPosX = Math.round( (this.board.length * movingObject.x) / GameVariables.boardRealSize);
+        const movingObjBoardPosY = Math.round( (this.board.length * movingObject.y) / GameVariables.boardRealSize);
+        const minXValue = movingObjBoardPosX - 1 <= 0 ? 0 : movingObjBoardPosX - 1;
+        const maxXValue = movingObjBoardPosX + 1 >= this.board.length - 1 ? this.board.length - 1 : movingObjBoardPosX + 1;
+        const minYValue = movingObjBoardPosY - 1 <= 0 ? 0 : movingObjBoardPosY - 1;
+        const maxYValue = movingObjBoardPosY + 1 >= this.board.length - 1 ? this.board.length - 1 : movingObjBoardPosY + 1;
+        for (let y = minYValue; y <= maxYValue; y++) {
+            for (let x = minXValue; x <= maxXValue; x++) {
+               if(this.board[y][x].objType === 1 && rectCollision(this.board[y][x], movingObject)){
+                return true;
+               }
+            }
+        }
+        return false;
     }
 
     getBoard() {

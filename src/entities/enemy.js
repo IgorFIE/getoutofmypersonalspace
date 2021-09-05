@@ -66,9 +66,8 @@ export class Enemy {
         this.drawEnemySprite(context);
     }
 
-    drawEnemyShadow(context) {
-        const enemyXPosAjustment = this.enemyObj.x - GameVariables.oneFourthSprite;
-        const enemyYPosAjustment = this.enemyObj.y + (GameVariables.oneEighthSprite * 2);
+    drawEnemyShadow(context){
+        const playerYPosAjustment = this.enemyObj.y + (GameVariables.oneFourthSprite * 3);
         for (let y = 0; y < enemyShadowSprite.length; y++) {
             for (let x = 0; x < enemyShadowSprite[y].length; x++) {
                 const currentColor = enemyShadowSprite[y][x];
@@ -76,8 +75,8 @@ export class Enemy {
                     context.beginPath();
                     context.fillStyle = currentColor;
                     context.fillRect(
-                        enemyXPosAjustment + (x * GameVariables.oneEighthSprite),
-                        enemyYPosAjustment + (y * GameVariables.oneEighthSprite),
+                        this.enemyObj.x + (x * GameVariables.oneEighthSprite),
+                        playerYPosAjustment + (y * GameVariables.oneEighthSprite),
                         GameVariables.oneEighthSprite, GameVariables.oneEighthSprite);
                 }
             }
@@ -85,8 +84,6 @@ export class Enemy {
     }
 
     drawEnemySprite(context) {
-        const enemyXPosAjustment = this.enemyObj.x - (GameVariables.oneFourthSprite);
-        const enemyYPosAjustment = this.enemyObj.y - GameVariables.halfSprite;
         const spriteToUse = this.spriteToUse();
         for (let y = 0; y < spriteToUse.length; y++) {
             for (let x = 0; x < spriteToUse[y].length; x++) {
@@ -95,8 +92,8 @@ export class Enemy {
                     context.beginPath();
                     context.fillStyle = currentColor;
                     context.fillRect(
-                        enemyXPosAjustment + (x * GameVariables.oneEighthSprite),
-                        enemyYPosAjustment + (y * GameVariables.oneEighthSprite),
+                        this.enemyObj.x + (x * GameVariables.oneEighthSprite),
+                        this.enemyObj.y + (y * GameVariables.oneEighthSprite),
                         GameVariables.oneEighthSprite, GameVariables.oneEighthSprite);
                 }
             }

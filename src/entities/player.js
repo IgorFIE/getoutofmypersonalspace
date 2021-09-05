@@ -15,9 +15,11 @@ export class Player {
         this.currentAnxiety = 0;
         this.currentAnxietyLevel = 0;
 
-        const initialPosition = GameVariables.boardRealSize / 2;
-        this.playerRect = new SquareObject(initialPosition - GameVariables.oneFourthSprite, initialPosition, GameVariables.halfSprite, GameVariables.halfSprite);
-        this.playerArea = new CircleObject(this.playerRect.x + GameVariables.oneFourthSprite, this.playerRect.y + GameVariables.oneFourthSprite, GameVariables.spriteSize);
+        const initialPosition = (GameVariables.boardRealSize / 2) - (GameVariables.playerSpriteSize/2);
+        this.playerRect = new SquareObject(initialPosition, initialPosition, GameVariables.playerSpriteSize, GameVariables.playerSpriteSize);
+
+        const circleCenter = initialPosition + (GameVariables.playerSpriteSize / 2);
+        this.playerArea = new CircleObject(circleCenter, circleCenter, GameVariables.spriteSize);
     }
 
     getPlayerAnxiety() {
@@ -113,8 +115,8 @@ export class Player {
     }
 
     drawPlayerArea(context) {
-        const areaXPosAjustment = this.playerRect.x - (GameVariables.oneFourthSprite * 7);
-        const areaYPosAjustment = this.playerRect.y - (GameVariables.oneFourthSprite * 5);
+        const areaXPosAjustment = this.playerRect.x - (GameVariables.oneEighthSprite * 13);
+        const areaYPosAjustment = this.playerRect.y - (GameVariables.oneEighthSprite * 9);
         for (let y = 0; y < playerAreaSprite.length; y++) {
             for (let x = 0; x < playerAreaSprite[y].length; x++) {
                 if (playerAreaSprite[y][x]) {
@@ -130,8 +132,8 @@ export class Player {
     }
 
     drawPlayerShadow(context) {
-        const shadowXPosAjustment = this.playerRect.x - GameVariables.oneFourthSprite;
-        const shadowYPosAjustment = this.playerRect.y + (GameVariables.oneEighthSprite * 2);
+        const shadowXPosAjustment = this.playerRect.x - GameVariables.oneEighthSprite;
+        const shadowYPosAjustment = this.playerRect.y + (GameVariables.oneEighthSprite * 3);
         for (let y = 0; y < playerShadowSprite.length; y++) {
             for (let x = 0; x < playerShadowSprite[y].length; x++) {
                 const currentColor = playerShadowSprite[y][x];
@@ -148,8 +150,8 @@ export class Player {
     }
 
     drawPlayerSprite(keys, context) {
-        const playerXPosAjustment = this.playerRect.x - (GameVariables.oneFourthSprite);
-        const playerYPosAjustment = this.playerRect.y - GameVariables.halfSprite;
+        const playerXPosAjustment = this.playerRect.x - GameVariables.oneEighthSprite;
+        const playerYPosAjustment = this.playerRect.y - (GameVariables.oneEighthSprite * 3);
         const spriteToUse = this.spriteToUse(keys);
         for (let y = 0; y < spriteToUse.length; y++) {
             for (let x = 0; x < spriteToUse[y].length; x++) {
