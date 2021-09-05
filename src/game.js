@@ -21,7 +21,7 @@ export class Game {
         this.board = new Board(this.gameDiv);
 
         this.minimap = new Minimap(this.board.getBoard(), this.gameDiv);
-        
+
         this.item = new Item();
         this.item.generateNewItem({ x: 5, y: 5 });
 
@@ -101,16 +101,16 @@ export class Game {
 
         const playerBoardRect = generalRectToBoardRect(newPlayerRect, this.board.getBoard());
         if (this.item.hasCollision(newPlayerRect)) {
-            this.sound.playPickSound();
             this.item.generateNewItem(playerBoardRect);
             this.scoreBoard.updateScore();
+            this.sound.playPickSound();
         }
 
         this.minimap.drawMinimap(playerBoardRect.x, playerBoardRect.y, this.item.getItemBoardPosX, this.item.getItemBoardPosY);
 
         const hasEnemyInPlayerArea = this.hasEnemyInPlayerArea(newPlayerArea)
         this.player.setCollisionInArea(hasEnemyInPlayerArea);
-        if(hasEnemyInPlayerArea){
+        if (hasEnemyInPlayerArea) {
             this.sound.playInAreaSound();
         } else {
             this.sound.stopInAreaSound();
@@ -128,7 +128,16 @@ export class Game {
     }
 
     draw() {
-        this.enemies.forEach((it) => it.drawEnemy(this.actionContext));
+        const enemiesDrawArea = new SquareObject(
+            this.player.getPlayerBoardObj().x - (GameVariables.gameWidth / 2) + GameVariables.halfSprite,
+            this.player.getPlayerBoardObj().y - (GameVariables.gameHeight / 2) - (GameVariables.halfSprite / 2),
+            GameVariables.gameWidth, GameVariables.gameHeight
+        );
+        this.enemies.forEach((enemy) => {
+            if (rectCollision(enemiesDrawArea, enemy.getEnemyObj())) {
+                enemy.drawEnemy(this.actionContext)
+            }
+        });
         this.item.drawItem(this.actionContext);
         this.player.drawPlayer(this.keys);
     }
@@ -139,12 +148,11 @@ export class Game {
             const hasBoardCollision = this.board.hasCollision(newEnemyObj);
             const hasEnemyCollision = !!this.enemies.find((it) => rectCollision(it.getEnemyObj(), newEnemyObj));
 
-            // todo improve spawn area
             const hasPlayerCollision = rectCollision(new SquareObject(
-                this.player.getPlayerBoardObj().x - GameVariables.boardSpriteSize,
-                this.player.getPlayerBoardObj().y - GameVariables.boardSpriteSize,
-                GameVariables.boardSpriteSize * 2,
-                GameVariables.boardSpriteSize * 3
+                this.player.getPlayerBoardObj().x - (GameVariables.gameWidth / 2) + GameVariables.halfSprite,
+                this.player.getPlayerBoardObj().y - (GameVariables.gameHeight / 2) - GameVariables.halfSprite,
+                GameVariables.gameWidth,
+                GameVariables.gameHeight
             ), newEnemyObj);
 
             if (!hasBoardCollision && !hasEnemyCollision && !hasPlayerCollision) {
@@ -160,7 +168,7 @@ export class Game {
     generateRandomPositionInsideBoard() {
         const min = GameVariables.boardSpriteSize + GameVariables.pixelMulpiplier;
         const max = (GameVariables.boardSpriteSize * GameVariables.boardSize) - min;
-        return randomNumberOnRange(min,max);
+        return randomNumberOnRange(min, max);
     }
 
     destroy() {
