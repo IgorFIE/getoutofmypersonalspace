@@ -128,17 +128,19 @@ export class Game {
     }
 
     draw() {
-        const enemiesDrawArea = new SquareObject(
+        const drawArea = new SquareObject(
             this.player.getPlayerBoardObj().x - (GameVariables.gameWidth / 2) + GameVariables.halfSprite,
             this.player.getPlayerBoardObj().y - (GameVariables.gameHeight / 2) - (GameVariables.halfSprite / 2),
             GameVariables.gameWidth, GameVariables.gameHeight
         );
         this.enemies.forEach((enemy) => {
-            if (rectCollision(enemiesDrawArea, enemy.getEnemyObj())) {
+            if (rectCollision(drawArea, enemy.getEnemyObj())) {
                 enemy.drawEnemy(this.actionContext)
             }
         });
-        this.item.drawItem(this.actionContext);
+        if (this.item.hasCollision(drawArea)) {
+            this.item.drawItem(this.actionContext);
+        }
         this.player.drawPlayer(this.keys);
     }
 
