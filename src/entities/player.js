@@ -4,69 +4,68 @@ import { CircleObject } from "../objects/circle-object";
 
 export class Player {
 
-    constructor(mainDiv) {
-        const initialPosition = (GameVariables.spriteSize * GameVariables.boardScaleMultiplier * GameVariables.boardSize) / 2;
-        this.x = -initialPosition + (GameVariables.gameWidth / 2);
-        this.y = -initialPosition + (GameVariables.gameHeight / 2);
-        this.playerWidthPos = (GameVariables.gameWidth / 2) - GameVariables.halfSprite;
-        this.playerHeightPos = (GameVariables.gameHeight / 2) - GameVariables.halfSprite;
-        this.speed = GameVariables.playerSpeed;
-        this.sanity = 0;
-
-        this.playerBoardObj = new SquareObject(initialPosition - GameVariables.halfSprite, initialPosition + (GameVariables.halfSprite / 4), GameVariables.spriteSize, GameVariables.halfSprite);
-        this.playerObj = new SquareObject(this.x, this.y + GameVariables.halfSprite, GameVariables.spriteSize, GameVariables.halfSprite);
-        this.playerArea = new CircleObject(this.x, this.y + GameVariables.halfSprite, GameVariables.spriteSize);
-
-        const canvas = document.createElement('canvas');
-        canvas.width = GameVariables.gameWidth;
-        canvas.height = GameVariables.gameHeight;
-        mainDiv.appendChild(canvas);
-
-        this.context = canvas.getContext('2d');
-        this.context.imageSmoothingEnabled = false;
-
+    constructor() {
         this.animationCicle = 0;
         this.currentAnimationSprite = 0;
 
-        this.collisionInArea = false;
+        this.collisionInPlayerArea = false;
         this.currentAreaLevel = 0;
         this.areaLevelCicle = 0;
 
-        this.currentAnsiety = 0;
-        this.currentAnsietyLevel = 0;
+        this.currentAnxiety = 0;
+        this.currentAnxietyLevel = 0;
+
+        const initialPosition = GameVariables.boardRealSize / 2;
+        this.playerRect = new SquareObject(initialPosition - GameVariables.oneFourthSprite, initialPosition, GameVariables.halfSprite, GameVariables.halfSprite);
+        this.playerArea = new CircleObject(this.playerRect.x + GameVariables.oneFourthSprite, this.playerRect.y + GameVariables.oneFourthSprite, GameVariables.spriteSize);
     }
 
-    getPlayerAnsiety(){
-        return this.currentAnsiety;
+    getPlayerAnxiety() {
+        return this.currentAnxiety;
     }
 
-    getPlayerBoardObj() {
-        return this.playerBoardObj;
-    }
-
-    getPlayerObj() {
-        return this.playerObj;
+    getPlayerRect() {
+        return this.playerRect;
     }
 
     getPlayerArea() {
         return this.playerArea;
     }
 
-    setCollisionInArea(hasCollision) {
-        this.collisionInArea = hasCollision;
+    setCollisionInPlayerArea(hasCollision) {
+        this.collisionInPlayerArea = hasCollision;
     }
 
-    cleanPlayer() {
-        this.context.clearRect(0, 0, GameVariables.gameWidth, GameVariables.gameHeight);
+    updatePlayerMovement(board, keys, secondsPassed) {
+        let newRectX = this.playerRect.x;
+        let newRectY = this.playerRect.y;
+
+        let newAreaX = this.playerArea.x;
+        let newAreaY = this.playerArea.y;
+
+        const isMultiDirection = keys ? Object.keys(keys).filter((key) => (key == 'd' || key == 'a' || key == 'w' || key == 's') && keys[key]).length > 1 : false;
+        const distance = isMultiDirection ? (secondsPassed * GameVariables.playerSpeed) / 1.4142 : secondsPassed * GameVariables.playerSpeed;
+
+        if (keys['d']) { newRectX += distance; newAreaX += distance; }
+        if (keys['a']) { newRectX -= distance; newAreaX -= distance; }
+        if (keys['w']) { newRectY -= distance; newAreaY -= distance; }
+        if (keys['s']) { newRectY += distance; newAreaY += distance; }
+
+        const newPlayerRect = new SquareObject(newRectX, newRectY, this.playerRect.w, this.playerRect.h);
+        if (board.hasCollision(newPlayerRect)) {
+            newRectX = this.playerRect.x;
+            newRectY = this.playerRect.y;
+            newAreaX = this.playerArea.x;
+            newAreaY = this.playerArea.y;
+        }
+        this.playerRect.x = newRectX;
+        this.playerRect.y = newRectY;
+        this.playerArea.x = newAreaX;
+        this.playerArea.y = newAreaY;
     }
 
-    upgradePlayer() {
-        this.updatePlayerAnsietyArea();
-        this.updatePlayerAnsiety();
-    }
-
-    updatePlayerAnsietyArea() {
-        if (this.collisionInArea) {
+    updatePlayerAnxietyArea() {
+        if (this.collisionInPlayerArea) {
             if (this.areaLevelCicle == GameVariables.playerAreaLevelSpeed && this.currentAreaLevel < playerAreaLevelColors.length - 1) {
                 this.areaLevelCicle = 0;
                 this.currentAreaLevel++;
@@ -88,80 +87,93 @@ export class Player {
         }
     }
 
-    updatePlayerAnsiety() {
-        if (this.collisionInArea && this.currentAnsiety < GameVariables.playerMaxAnsiety) {
-            this.currentAnsiety += 1 + this.currentAreaLevel;
+    updatePlayerAnxietyLevel() {
+        if (this.collisionInPlayerArea && this.currentAnxiety < GameVariables.playerMaxAnxiety) {
+            this.currentAnxiety += 1 + this.currentAreaLevel;
         } else {
-            if (this.currentAnsiety > 0) {
-                this.currentAnsiety--;
+            if (this.currentAnxiety > 0) {
+                this.currentAnxiety--;
             }
         }
 
-        if (this.currentAnsiety > (GameVariables.playerMaxAnsiety / 2 + GameVariables.playerMaxAnsiety / 4)) {
-            this.currentAnsietyLevel = 2;
-        } else if (this.currentAnsiety > GameVariables.playerMaxAnsiety / 2) {
-            this.currentAnsietyLevel = 1;
+        if (this.currentAnxiety > (GameVariables.playerMaxAnxiety / 4) * 5) {
+            this.currentAnxietyLevel = 2;
+        } else if (this.currentAnxiety > GameVariables.playerMaxAnxiety / 2) {
+            this.currentAnxietyLevel = 1;
         } else {
-            this.currentAnsietyLevel = 0;
+            this.currentAnxietyLevel = 0;
         }
     }
 
-    // should only draw new image if I need to update it, I should not be always redrawing it
-    drawPlayer(keys) {
-        // Draw Player Area
+    drawPlayer(keys, context) {
+        this.drawPlayerArea(context);
+        this.drawPlayerShadow(context);
+        this.drawPlayerSprite(keys, context);
+        this.drawAnxietyBar(context);
+    }
+
+    drawPlayerArea(context) {
+        const areaXPosAjustment = this.playerRect.x - (GameVariables.oneFourthSprite * 7);
+        const areaYPosAjustment = this.playerRect.y - (GameVariables.oneFourthSprite * 5);
         for (let y = 0; y < playerAreaSprite.length; y++) {
             for (let x = 0; x < playerAreaSprite[y].length; x++) {
-                const currentAreaColor = playerAreaSprite[y][x]; //todo convert this into a boolead list maybe
-                if (currentAreaColor) {
-                    this.context.beginPath();
-                    this.context.fillStyle = playerAreaLevelColors[this.currentAreaLevel];
-                    this.context.fillRect(
-                        this.playerWidthPos + (x * (GameVariables.halfSprite)) - (GameVariables.spriteSize + (GameVariables.spriteSize / 2)),
-                        this.playerHeightPos + (y * (GameVariables.halfSprite)) - (GameVariables.halfSprite / 4) - GameVariables.halfSprite,
-                        (GameVariables.halfSprite), (GameVariables.halfSprite));
+                if (playerAreaSprite[y][x]) {
+                    context.beginPath();
+                    context.fillStyle = playerAreaLevelColors[this.currentAreaLevel];
+                    context.fillRect(
+                        areaXPosAjustment + (x * GameVariables.halfSprite),
+                        areaYPosAjustment + (y * GameVariables.halfSprite),
+                        GameVariables.halfSprite, GameVariables.halfSprite);
                 }
             }
         }
+    }
 
-        // Draw Player Shadow
+    drawPlayerShadow(context) {
+        const shadowXPosAjustment = this.playerRect.x - GameVariables.oneFourthSprite;
+        const shadowYPosAjustment = this.playerRect.y + (GameVariables.oneEighthSprite * 2);
         for (let y = 0; y < playerShadowSprite.length; y++) {
             for (let x = 0; x < playerShadowSprite[y].length; x++) {
                 const currentColor = playerShadowSprite[y][x];
                 if (currentColor) {
-                    this.context.beginPath();
-                    this.context.fillStyle = currentColor;
-                    this.context.fillRect(
-                        this.playerWidthPos + (x * (GameVariables.halfSprite / 4)),
-                        (GameVariables.spriteSize - GameVariables.spriteSize / 4) + this.playerHeightPos + (y * (GameVariables.halfSprite / 4)),
-                        (GameVariables.halfSprite / 4), (GameVariables.halfSprite / 4));
+                    context.beginPath();
+                    context.fillStyle = currentColor;
+                    context.fillRect(
+                        shadowXPosAjustment + (x * GameVariables.oneEighthSprite),
+                        shadowYPosAjustment + (y * GameVariables.oneEighthSprite),
+                        GameVariables.oneEighthSprite, GameVariables.oneEighthSprite);
                 }
             }
         }
+    }
 
-        // Draw Player
+    drawPlayerSprite(keys, context) {
+        const playerXPosAjustment = this.playerRect.x - (GameVariables.oneFourthSprite);
+        const playerYPosAjustment = this.playerRect.y - GameVariables.halfSprite;
         const spriteToUse = this.spriteToUse(keys);
         for (let y = 0; y < spriteToUse.length; y++) {
             for (let x = 0; x < spriteToUse[y].length; x++) {
                 const currentColor = spriteToUse[y][x];
                 if (currentColor) {
-                    this.context.beginPath();
-                    this.context.fillStyle = currentColor;
-                    this.context.fillRect(
-                        this.playerWidthPos + (x * (GameVariables.halfSprite / 4)),
-                        this.playerHeightPos + (y * (GameVariables.halfSprite / 4)),
-                        (GameVariables.halfSprite / 4), (GameVariables.halfSprite / 4));
+                    context.beginPath();
+                    context.fillStyle = currentColor;
+                    context.fillRect(
+                        playerXPosAjustment + (x * GameVariables.oneEighthSprite),
+                        playerYPosAjustment + (y * GameVariables.oneEighthSprite),
+                        GameVariables.oneEighthSprite, GameVariables.oneEighthSprite);
                 }
             }
         }
+    }
 
-        // Draw Player ansiety bar
-        this.context.beginPath();
-        this.context.fillStyle = playerAnsietyLevelColors[this.currentAnsietyLevel];
-        this.context.fillRect(
-            this.playerWidthPos - GameVariables.halfSprite,
-            this.playerHeightPos - GameVariables.halfSprite,
-            Math.min((this.currentAnsiety * (GameVariables.spriteSize * 2)) / GameVariables.playerMaxAnsiety, GameVariables.spriteSize * 2),
-            GameVariables.halfSprite / 2);
+    drawAnxietyBar(context) {
+        context.beginPath();
+        context.fillStyle = playerAnsietyLevelColors[this.currentAnxietyLevel];
+        context.fillRect(
+            this.playerRect.x - (GameVariables.oneFourthSprite * 3),
+            this.playerRect.y - (GameVariables.oneFourthSprite * 5),
+            Math.min((this.currentAnxiety * (GameVariables.spriteSize * 2)) / GameVariables.playerMaxAnxiety, GameVariables.spriteSize * 2),
+            GameVariables.oneFourthSprite);
     }
 
     spriteToUse(keys) {
@@ -205,12 +217,12 @@ const playerShadowSprite = [
 ];
 
 const playerAreaSprite = [
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, greenArea, greenArea, null, null, null],
-    [null, null, greenArea, greenArea, greenArea, greenArea, null, null],
-    [null, null, greenArea, greenArea, greenArea, greenArea, null, null],
-    [null, null, null, greenArea, greenArea, null, null, null],
-    [null, null, null, null, null, null, null, null],
+    [false, false, false, false, false, false, false, false],
+    [false, false, false, true, true, false, false, false],
+    [false, false, true, true, true, true, false, false],
+    [false, false, true, true, true, true, false, false],
+    [false, false, false, true, true, false, false, false],
+    [false, false, false, false, false, false, false, false],
 ];
 
 const playerFrontSprite = [

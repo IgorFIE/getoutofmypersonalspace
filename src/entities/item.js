@@ -16,6 +16,14 @@ export class Item {
         this.itemObj = new SquareObject(0, 0, GameVariables.halfSprite, GameVariables.halfSprite);
     }
 
+    get getItemBoardPosX() {
+        return this.itemBoardPosX;
+    }
+
+    get getItemBoardPosY() {
+        return this.itemBoardPosY;
+    }
+
     generateNewItem(playerXYBoardPos) {
         this.generateNewItemRandomPositions(this.itemBoardPosX, this.itemBoardPosY, playerXYBoardPos);
     }
@@ -35,7 +43,7 @@ export class Item {
 
             this.itemType = randomNumberOnRange(0, items.length - 1);
 
-            this.itemObj.x = this.itemGeneralPosX - (GameVariables.spriteSize / 3);
+            this.itemObj.x = this.itemGeneralPosX - GameVariables.oneThirdSprite;
             this.itemObj.y = this.itemGeneralPosY - GameVariables.halfSprite;
         }
     }
@@ -45,7 +53,11 @@ export class Item {
     }
 
     drawItem(context) {
-        // Draw Item Shadow
+        this.drawItemShadow(context);
+        this.drawItemSprite(context);
+    }
+
+    drawItemShadow(context) {
         for (let y = 0; y < itemShadowSprite.length; y++) {
             for (let x = 0; x < itemShadowSprite[y].length; x++) {
                 const currentColor = itemShadowSprite[y][x];
@@ -53,14 +65,15 @@ export class Item {
                     context.beginPath();
                     context.fillStyle = currentColor;
                     context.fillRect(
-                        (this.itemGeneralPosX - (GameVariables.spriteSize / 3)) + (x * (GameVariables.halfSprite / 8)),
-                        (this.itemGeneralPosY - (GameVariables.spriteSize / 8)) + (y * (GameVariables.halfSprite / 8)),
-                        (GameVariables.halfSprite / 8), (GameVariables.halfSprite / 8));
+                        (this.itemGeneralPosX - GameVariables.oneThirdSprite) + (x * GameVariables.oneSixteenthSprite),
+                        (this.itemGeneralPosY - GameVariables.oneEighthSprite) + (y * GameVariables.oneSixteenthSprite),
+                        GameVariables.oneSixteenthSprite, GameVariables.oneSixteenthSprite);
                 }
             }
         }
+    }
 
-        // Draw Item
+    drawItemSprite(context) {
         const spriteToUse = items[this.itemType];
         for (let y = 0; y < spriteToUse.length; y++) {
             for (let x = 0; x < spriteToUse[y].length; x++) {
@@ -69,9 +82,9 @@ export class Item {
                     context.beginPath();
                     context.fillStyle = currentColor;
                     context.fillRect(
-                        this.itemObj.x + (x * (GameVariables.halfSprite / 8)),
-                        this.itemObj.y + (y * (GameVariables.halfSprite / 8)),
-                        (GameVariables.halfSprite / 8), (GameVariables.halfSprite / 8));
+                        this.itemObj.x + (x * GameVariables.oneSixteenthSprite),
+                        this.itemObj.y + (y * GameVariables.oneSixteenthSprite),
+                        GameVariables.oneSixteenthSprite, GameVariables.oneSixteenthSprite);
                 }
             }
         }
@@ -79,14 +92,6 @@ export class Item {
 
     hasCollision(movingObject) {
         return rectCollision(this.itemObj, movingObject);
-    }
-
-    get getItemBoardPosX() {
-        return this.itemBoardPosX;
-    }
-
-    get getItemBoardPosY() {
-        return this.itemBoardPosY;
     }
 }
 

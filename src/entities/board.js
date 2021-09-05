@@ -9,6 +9,7 @@ export class Board {
         this.boardCollisionObjs = [];
 
         this.canvas = document.createElement('canvas');
+        this.canvas.id = 'gameBoard';
         mainDiv.appendChild(this.canvas);
 
         this.context = this.canvas.getContext('2d');
@@ -91,6 +92,7 @@ export class Board {
         this.canvas.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
     }
 
+    // TODO change this to only check collisions with 3*3 around rect position
     hasCollision(movingObject) {
         return !!this.boardCollisionObjs.find((it) => rectCollision(it, movingObject));
     }

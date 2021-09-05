@@ -2,7 +2,6 @@ import { Board } from "./entities/board";
 import { Player } from "./entities/player";
 import { GameVariables } from "./game-variables";
 import { SquareObject } from "./objects/square-object";
-import { CircleObject } from "./objects/circle-object";
 import { Minimap } from "./entities/minimap";
 import { Item } from "./entities/item";
 import { ScoreBoard } from "./entities/score-board";
@@ -16,24 +15,18 @@ export class Game {
         this.gameDiv.style.width = GameVariables.gameWidth + 'px';
         this.gameDiv.style.height = GameVariables.gameHeight + 'px';
 
-        this.sound = sound;
-
-        this.board = new Board(this.gameDiv);
-
-        this.minimap = new Minimap(this.board.getBoard(), this.gameDiv);
-
-        this.item = new Item();
-        this.item.generateNewItem({ x: 5, y: 5 });
-
         this.keys = [];
-
         this.secondsPassed = 0;
-
         this.fps = 0;
+
+        this.sound = sound;
+        this.board = new Board(this.gameDiv);
         this.scoreBoard = new ScoreBoard(this.gameDiv);
+        this.minimap = new Minimap(this.board.getBoard(), this.gameDiv);
 
         this.enemies = [];
         this.actionCanvas = document.createElement('canvas');
+        this.actionCanvas.id = 'actionCanvas'
         this.actionCanvas.width = GameVariables.boardRealSize;
         this.actionCanvas.height = GameVariables.boardRealSize;
         this.gameDiv.appendChild(this.actionCanvas);
@@ -41,20 +34,23 @@ export class Game {
         this.actionContext = this.actionCanvas.getContext('2d');
         this.actionContext.imageSmoothingEnabled = false;
 
-        this.player = new Player(this.gameDiv);
-        this.player.drawPlayer();
+        this.item = new Item();
+        this.item.generateNewItem({ x: 5, y: 5 });
 
-        const playerObj = this.player.getPlayerObj();
-        this.board.updateBoard(playerObj.x, playerObj.y);
+        this.player = new Player();
+        this.player.drawPlayer(this.keys, this.actionContext);
+
+        this.updateCanvasPositions();
     }
 
     isGameOver() {
-        return this.player.getPlayerAnsiety() >= GameVariables.playerMaxAnsiety;
+        return this.player.getPlayerAnxiety() >= GameVariables.playerMaxAnxiety;
     }
 
     gameLoop(secondsPassed, keys) {
         this.secondsPassed = secondsPassed;
         this.keys = keys;
+        this.generateEnemy();
         if (!this.isGameOver()) {
             this.update();
             this.clean();
@@ -63,76 +59,67 @@ export class Game {
     }
 
     update() {
-        this.generateEnemy();
-        this.enemies.forEach((it) => it.enemyMovement(this.board, this.secondsPassed));
-        this.playerMovement();
-        const playerObj = this.player.getPlayerObj();
-        this.board.updateBoard(playerObj.x, playerObj.y);
-        this.player.upgradePlayer();
-        this.actionCanvas.style.transform = 'translate(' + playerObj.x + 'px, ' + playerObj.y + 'px)';
+        // this.enemies.forEach((it) => it.enemyMovement(this.board, this.secondsPassed));
+        this.player.updatePlayerMovement(this.board, this.keys, this.secondsPassed);
+        this.updateGameLogic();
+        this.updateCanvasPositions();
     }
 
-    playerMovement() {
-        const playerBoardObj = this.player.getPlayerBoardObj();
-        const playerObj = this.player.getPlayerObj();
-        let newX = playerObj.x;
-        let newY = playerObj.y;
-
-        const isMultiDirection = this.keys ? Object.keys(this.keys).filter((key) => (key == 'd' || key == 'a' || key == 'w' || key == 's') && this.keys[key]).length > 1 : false;
-        const distance = isMultiDirection ? (this.secondsPassed * GameVariables.playerSpeed) / 1.4142 : this.secondsPassed * GameVariables.playerSpeed;
-
-        if (this.keys['d']) { newX -= distance; }
-        if (this.keys['a']) { newX += distance; }
-        if (this.keys['w']) { newY += distance; }
-        if (this.keys['s']) { newY -= distance; }
-
-        const playerBoardX = Math.abs(newX - (GameVariables.gameWidth / 2));
-        const playerBoardY = Math.abs(newY - (GameVariables.gameHeight / 2));
-
-        const newPlayerRect = new SquareObject(playerBoardX - GameVariables.halfSprite, playerBoardY + (GameVariables.halfSprite / 4), playerObj.w, playerObj.h);
-        const newPlayerArea = new CircleObject(playerBoardX, playerBoardY + (GameVariables.halfSprite - GameVariables.halfSprite / 4), this.player.getPlayerArea().r);
-
-        if (this.board.hasCollision(newPlayerRect)) {
-            newX = playerObj.x;
-            newY = playerObj.y;
-            newPlayerRect.x = playerBoardObj.x;
-            newPlayerRect.y = playerBoardObj.y;
+    generateEnemy() {
+        if (this.enemies.length < GameVariables.enemyNumber) {
+            const newEnemyObj = new SquareObject(this.generateRandomPositionInsideBoard(), this.generateRandomPositionInsideBoard(), GameVariables.halfSprite, GameVariables.halfSprite);
+            const hasBoardCollision = this.board.hasCollision(newEnemyObj);
+            const hasEnemyCollision = !!this.enemies.find((it) => rectCollision(it.getEnemyObj(), newEnemyObj));
+            const hasPlayerCollision = rectCollision(this.retrieveActionDrawArea(), newEnemyObj);
+            if (!hasBoardCollision && !hasEnemyCollision && !hasPlayerCollision) {
+                this.enemies.push(new Enemy(newEnemyObj));
+            }
         }
+    }
 
-        const playerBoardRect = generalRectToBoardRect(newPlayerRect, this.board.getBoard());
-        if (this.item.hasCollision(newPlayerRect)) {
+    generateRandomPositionInsideBoard() {
+        const min = GameVariables.boardSpriteSize + GameVariables.pixelMulpiplier;
+        const max = (GameVariables.boardSpriteSize * GameVariables.boardSize) - min;
+        return randomNumberOnRange(min, max);
+    }
+
+    updateGameLogic() {
+        const playerBoardRect = generalRectToBoardRect(this.player.getPlayerRect(), this.board.getBoard());
+        if (this.item.hasCollision(this.player.getPlayerRect())) {
             this.item.generateNewItem(playerBoardRect);
             this.scoreBoard.updateScore();
             this.sound.playPickSound();
         }
-
         this.minimap.drawMinimap(playerBoardRect.x, playerBoardRect.y, this.item.getItemBoardPosX, this.item.getItemBoardPosY);
 
-        const hasEnemyInPlayerArea = this.hasEnemyInPlayerArea(newPlayerArea)
-        this.player.setCollisionInArea(hasEnemyInPlayerArea);
+        const hasEnemyInPlayerArea = this.hasEnemyInPlayerArea(this.player.getPlayerArea());
+        this.player.setCollisionInPlayerArea(hasEnemyInPlayerArea);
         if (hasEnemyInPlayerArea) {
             this.sound.playInAreaSound();
         } else {
             this.sound.stopInAreaSound();
         }
+        this.player.updatePlayerAnxietyArea();
+        this.player.updatePlayerAnxietyLevel();
+    }
 
-        playerObj.x = newX;
-        playerObj.y = newY;
-        playerBoardObj.x = newPlayerRect.x;
-        playerBoardObj.y = newPlayerRect.y;
+    updateCanvasPositions(){
+        const updateGameWidthPosition = -this.player.getPlayerRect().x + GameVariables.gameHalfWidth - GameVariables.oneFourthSprite;
+        const updateGameHeightPosition = -this.player.getPlayerRect().y + GameVariables.gameHalfHeight;
+        this.board.updateBoard(updateGameWidthPosition, updateGameHeightPosition);
+        this.actionCanvas.style.transform = 'translate(' + updateGameWidthPosition + 'px, ' + updateGameHeightPosition + 'px)';
+    }
+
+    hasEnemyInPlayerArea(movingObject) {
+        return !!this.enemies.find((it) => rectCircleCollision(movingObject, it.getEnemyObj()));
     }
 
     clean() {
-        this.player.cleanPlayer();
         this.actionContext.clearRect(0, 0, this.actionCanvas.width, this.actionCanvas.height);
     }
 
     draw() {
-        const drawArea = new SquareObject(
-            this.player.getPlayerBoardObj().x - (GameVariables.gameWidth / 2) + GameVariables.halfSprite,
-            this.player.getPlayerBoardObj().y - (GameVariables.gameHeight / 2) - (GameVariables.halfSprite / 2),
-            GameVariables.gameWidth, GameVariables.gameHeight
-        );
+        const drawArea = this.retrieveActionDrawArea();
         this.enemies.forEach((enemy) => {
             if (rectCollision(drawArea, enemy.getEnemyObj())) {
                 enemy.drawEnemy(this.actionContext)
@@ -141,36 +128,15 @@ export class Game {
         if (this.item.hasCollision(drawArea)) {
             this.item.drawItem(this.actionContext);
         }
-        this.player.drawPlayer(this.keys);
+        this.player.drawPlayer(this.keys, this.actionContext);
     }
 
-    generateEnemy() {
-        if (this.enemies.length < GameVariables.enemyNumber) {
-            const newEnemyObj = new SquareObject(this.generateRandomPositionInsideBoard(), this.generateRandomPositionInsideBoard(), GameVariables.spriteSize, GameVariables.spriteSize);
-            const hasBoardCollision = this.board.hasCollision(newEnemyObj);
-            const hasEnemyCollision = !!this.enemies.find((it) => rectCollision(it.getEnemyObj(), newEnemyObj));
-
-            const hasPlayerCollision = rectCollision(new SquareObject(
-                this.player.getPlayerBoardObj().x - (GameVariables.gameWidth / 2) + GameVariables.halfSprite,
-                this.player.getPlayerBoardObj().y - (GameVariables.gameHeight / 2) - GameVariables.halfSprite,
-                GameVariables.gameWidth,
-                GameVariables.gameHeight
-            ), newEnemyObj);
-
-            if (!hasBoardCollision && !hasEnemyCollision && !hasPlayerCollision) {
-                this.enemies.push(new Enemy(newEnemyObj));
-            }
-        }
-    }
-
-    hasEnemyInPlayerArea(movingObject) {
-        return !!this.enemies.find((it) => rectCircleCollision(movingObject, it.getEnemyObj()));
-    }
-
-    generateRandomPositionInsideBoard() {
-        const min = GameVariables.boardSpriteSize + GameVariables.pixelMulpiplier;
-        const max = (GameVariables.boardSpriteSize * GameVariables.boardSize) - min;
-        return randomNumberOnRange(min, max);
+    retrieveActionDrawArea(){
+        return new SquareObject(
+            this.player.getPlayerRect().x - GameVariables.gameHalfWidth - GameVariables.halfSprite + GameVariables.oneFourthSprite,
+            this.player.getPlayerRect().y - GameVariables.gameHalfHeight - GameVariables.oneFourthSprite,
+            GameVariables.gameWidth + GameVariables.spriteSize, GameVariables.gameHeight + GameVariables.spriteSize
+        );
     }
 
     destroy() {

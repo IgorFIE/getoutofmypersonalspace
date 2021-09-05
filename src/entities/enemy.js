@@ -13,10 +13,6 @@ export class Enemy {
         this.stepMovement = 0;
     }
 
-    updateEnemy(x, y) {
-        this.canvas.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
-    }
-
     enemyMovement(board, secondsPassed) {
         this.generateEnemyMovement();
 
@@ -33,7 +29,7 @@ export class Enemy {
         if (board.hasCollision(newEnemyObj)) {
             newEnemyObj.x = this.enemyObj.x;
             newEnemyObj.y = this.enemyObj.y;
-            this.stepMovement = 0; // reset movement on collision with walls
+            this.stepMovement = 0;
         }
         this.enemyObj = newEnemyObj;
     }
@@ -44,7 +40,7 @@ export class Enemy {
             this.keys[this.lastMovementKey] = true;
         } else {
             this.keys[this.lastMovementKey] = false;
-            this.stepMovement = randomNumberOnRange(30, 120);
+            this.stepMovement = randomNumberOnRange(GameVariables.enemyMinSteps, GameVariables.enemyMaxSteps);
             switch (randomNumberOnRange(0, 3)) {
                 case 0:
                     this.lastMovementKey = 'd';
@@ -66,7 +62,13 @@ export class Enemy {
     }
 
     drawEnemy(context) {
-        // Draw Enemy Shadow
+        this.drawEnemyShadow(context);
+        this.drawEnemySprite(context);
+    }
+
+    drawEnemyShadow(context) {
+        const enemyXPosAjustment = this.enemyObj.x - GameVariables.oneFourthSprite;
+        const enemyYPosAjustment = this.enemyObj.y + (GameVariables.oneEighthSprite * 2);
         for (let y = 0; y < enemyShadowSprite.length; y++) {
             for (let x = 0; x < enemyShadowSprite[y].length; x++) {
                 const currentColor = enemyShadowSprite[y][x];
@@ -74,14 +76,17 @@ export class Enemy {
                     context.beginPath();
                     context.fillStyle = currentColor;
                     context.fillRect(
-                        this.enemyObj.x + (x * (GameVariables.halfSprite / 4)),
-                        (GameVariables.spriteSize - GameVariables.spriteSize / 4) + this.enemyObj.y + (y * (GameVariables.halfSprite / 4)),
-                        (GameVariables.halfSprite / 4), (GameVariables.halfSprite / 4));
+                        enemyXPosAjustment + (x * GameVariables.oneEighthSprite),
+                        enemyYPosAjustment + (y * GameVariables.oneEighthSprite),
+                        GameVariables.oneEighthSprite, GameVariables.oneEighthSprite);
                 }
             }
         }
+    }
 
-        // Draw Enemy
+    drawEnemySprite(context) {
+        const enemyXPosAjustment = this.enemyObj.x - (GameVariables.oneFourthSprite);
+        const enemyYPosAjustment = this.enemyObj.y - GameVariables.halfSprite;
         const spriteToUse = this.spriteToUse();
         for (let y = 0; y < spriteToUse.length; y++) {
             for (let x = 0; x < spriteToUse[y].length; x++) {
@@ -90,9 +95,9 @@ export class Enemy {
                     context.beginPath();
                     context.fillStyle = currentColor;
                     context.fillRect(
-                        this.enemyObj.x + (x * (GameVariables.halfSprite / 4)),
-                        this.enemyObj.y + (y * (GameVariables.halfSprite / 4)),
-                        (GameVariables.halfSprite / 4), (GameVariables.halfSprite / 4));
+                        enemyXPosAjustment + (x * GameVariables.oneEighthSprite),
+                        enemyYPosAjustment + (y * GameVariables.oneEighthSprite),
+                        GameVariables.oneEighthSprite, GameVariables.oneEighthSprite);
                 }
             }
         }

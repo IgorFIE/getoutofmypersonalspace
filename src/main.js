@@ -52,10 +52,11 @@ function mainLoop(timeStamp) {
                 sound.stopInAreaSound();
                 isGameOverFirstLoopProcessed = true;
             }
-            handleSkipMenuInput(destroyGameAndLoadMainMenu);
             endGameTimer += secondsPassed;
             if (endGameTimer > GameVariables.endGameScreenTimer) {
                 destroyGameAndLoadMainMenu();
+            } else {
+                handleSkipMenuInput(destroyGameAndLoadMainMenu);
             }
         } else {
             sound.playHumanMusic();
