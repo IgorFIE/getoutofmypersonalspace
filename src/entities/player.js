@@ -17,6 +17,7 @@ export class Player {
 
         const initialPosition = (GameVariables.boardRealSize / 2) - (GameVariables.playerSpriteSize/2);
         this.playerRect = new SquareObject(initialPosition, initialPosition, GameVariables.playerSpriteSize, GameVariables.playerSpriteSize);
+        this.fakeMovementRect = new SquareObject(initialPosition, initialPosition, GameVariables.playerSpriteSize, GameVariables.playerSpriteSize);
 
         const circleCenter = initialPosition + (GameVariables.playerSpriteSize / 2);
         this.playerArea = new CircleObject(circleCenter, circleCenter, GameVariables.spriteSize);
@@ -53,8 +54,10 @@ export class Player {
         if (keys['w']) { newRectY -= distance; newAreaY -= distance; }
         if (keys['s']) { newRectY += distance; newAreaY += distance; }
 
-        const newPlayerRect = new SquareObject(newRectX, newRectY, this.playerRect.w, this.playerRect.h);
-        if (board.hasCollision(newPlayerRect)) {
+        this.fakeMovementRect.x = newRectX;
+        this.fakeMovementRect.y = newRectY;
+
+        if (board.hasCollision(this.fakeMovementRect)) {
             newRectX = this.playerRect.x;
             newRectY = this.playerRect.y;
             newAreaX = this.playerArea.x;

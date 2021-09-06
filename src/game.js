@@ -30,9 +30,12 @@ export class Game {
         this.actionCanvas.width = GameVariables.boardRealSize;
         this.actionCanvas.height = GameVariables.boardRealSize;
         this.gameDiv.appendChild(this.actionCanvas);
-
+        this.newEnemyObj = new SquareObject(0, 0, GameVariables.spriteSize, GameVariables.spriteSize);
+        
         this.actionContext = this.actionCanvas.getContext('2d');
         this.actionContext.imageSmoothingEnabled = false;
+
+        this.actionRect = new SquareObject(0, 0, GameVariables.gameWidth, GameVariables.gameHeight);
 
         this.item = new Item();
         this.item.generateNewItem({ x: 5, y: 5 });
@@ -67,12 +70,13 @@ export class Game {
 
     generateEnemy() {
         if (this.enemies.length < GameVariables.enemyNumber) {
-            const newEnemyObj = new SquareObject(this.generateRandomPositionInsideBoard(), this.generateRandomPositionInsideBoard(), GameVariables.spriteSize, GameVariables.spriteSize);
-            const hasBoardCollision = this.board.hasCollision(newEnemyObj);
-            const hasEnemyCollision = !!this.enemies.find((it) => rectCollision(it.getEnemyObj(), newEnemyObj));
-            const hasPlayerCollision = rectCollision(this.retrieveActionDrawArea(), newEnemyObj);
+            this.newEnemyObj.x = this.generateRandomPositionInsideBoard();
+            this.newEnemyObj.y = this.generateRandomPositionInsideBoard();
+            const hasBoardCollision = this.board.hasCollision(this.newEnemyObj);
+            const hasEnemyCollision = !!this.enemies.find((it) => rectCollision(it.getEnemyObj(), this.newEnemyObj));
+            const hasPlayerCollision = rectCollision(this.retrieveActionDrawArea(), this.newEnemyObj);
             if (!hasBoardCollision && !hasEnemyCollision && !hasPlayerCollision) {
-                this.enemies.push(new Enemy(newEnemyObj));
+                this.enemies.push(new Enemy(this.newEnemyObj));
             }
         }
     }
@@ -103,7 +107,7 @@ export class Game {
         this.player.updatePlayerAnxietyLevel();
     }
 
-    updateCanvasPositions(){
+    updateCanvasPositions() {
         const updateGameWidthPosition = -this.player.getPlayerRect().x + GameVariables.gameHalfWidth - (this.player.getPlayerRect().w / 2);
         const updateGameHeightPosition = -this.player.getPlayerRect().y + GameVariables.gameHalfHeight - (this.player.getPlayerRect().h / 2);
         this.board.updateBoard(updateGameWidthPosition, updateGameHeightPosition);
@@ -131,12 +135,10 @@ export class Game {
         this.player.drawPlayer(this.keys, this.actionContext);
     }
 
-    retrieveActionDrawArea(){
-        return new SquareObject(
-            this.player.getPlayerRect().x - GameVariables.gameHalfWidth + GameVariables.oneFourthSprite,
-            this.player.getPlayerRect().y - GameVariables.gameHalfHeight + GameVariables.oneFourthSprite,
-            GameVariables.gameWidth, GameVariables.gameHeight
-        );
+    retrieveActionDrawArea() {
+        this.actionRect.x = this.player.getPlayerRect().x - GameVariables.gameHalfWidth + GameVariables.oneFourthSprite;
+        this.actionRect.y = this.player.getPlayerRect().y - GameVariables.gameHalfHeight + GameVariables.oneFourthSprite;
+        return this.actionRect;
     }
 
     destroy() {

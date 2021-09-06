@@ -4,7 +4,8 @@ import { randomNumberOnRange } from "../utilities/util";
 
 export class Enemy {
     constructor(enemyObj) {
-        this.enemyObj = enemyObj;
+        this.enemyRect = new SquareObject(enemyObj.x, enemyObj.y, GameVariables.spriteSize, GameVariables.spriteSize);
+        this.fakeMovementRect = new SquareObject(0, 0, GameVariables.spriteSize, GameVariables.spriteSize);
         this.animationCicle = 0;
         this.currentAnimationSprite = 0;
 
@@ -16,8 +17,8 @@ export class Enemy {
     enemyMovement(board, secondsPassed) {
         this.generateEnemyMovement();
 
-        let newX = this.enemyObj.x;
-        let newY = this.enemyObj.y;
+        let newX = this.enemyRect.x;
+        let newY = this.enemyRect.y;
 
         const distance = secondsPassed * GameVariables.playerSpeed;
         if (this.keys['d']) { newX += distance; }
@@ -25,13 +26,16 @@ export class Enemy {
         if (this.keys['w']) { newY -= distance; }
         if (this.keys['s']) { newY += distance; }
 
-        const newEnemyObj = new SquareObject(newX, newY, this.enemyObj.w, this.enemyObj.h);
-        if (board.hasCollision(newEnemyObj)) {
-            newEnemyObj.x = this.enemyObj.x;
-            newEnemyObj.y = this.enemyObj.y;
+        this.fakeMovementRect.x = newX;
+        this.fakeMovementRect.y = newY;
+
+        if (board.hasCollision(this.fakeMovementRect)) {
+            newX = this.enemyRect.x;
+            newY = this.enemyRect.y;
             this.stepMovement = 0;
         }
-        this.enemyObj = newEnemyObj;
+        this.enemyRect.x = newX;
+        this.enemyRect.y = newY;
     }
 
     generateEnemyMovement() {
@@ -66,8 +70,8 @@ export class Enemy {
         this.drawEnemySprite(context);
     }
 
-    drawEnemyShadow(context){
-        const playerYPosAjustment = this.enemyObj.y + (GameVariables.oneFourthSprite * 3);
+    drawEnemyShadow(context) {
+        const playerYPosAjustment = this.enemyRect.y + (GameVariables.oneFourthSprite * 3);
         for (let y = 0; y < enemyShadowSprite.length; y++) {
             for (let x = 0; x < enemyShadowSprite[y].length; x++) {
                 const currentColor = enemyShadowSprite[y][x];
@@ -75,7 +79,7 @@ export class Enemy {
                     context.beginPath();
                     context.fillStyle = currentColor;
                     context.fillRect(
-                        this.enemyObj.x + (x * GameVariables.oneEighthSprite),
+                        this.enemyRect.x + (x * GameVariables.oneEighthSprite),
                         playerYPosAjustment + (y * GameVariables.oneEighthSprite),
                         GameVariables.oneEighthSprite, GameVariables.oneEighthSprite);
                 }
@@ -92,8 +96,8 @@ export class Enemy {
                     context.beginPath();
                     context.fillStyle = currentColor;
                     context.fillRect(
-                        this.enemyObj.x + (x * GameVariables.oneEighthSprite),
-                        this.enemyObj.y + (y * GameVariables.oneEighthSprite),
+                        this.enemyRect.x + (x * GameVariables.oneEighthSprite),
+                        this.enemyRect.y + (y * GameVariables.oneEighthSprite),
                         GameVariables.oneEighthSprite, GameVariables.oneEighthSprite);
                 }
             }
@@ -114,11 +118,7 @@ export class Enemy {
     }
 
     getEnemyObj() {
-        return this.enemyObj;
-    }
-
-    destroyEnemy() {
-        mainDiv.removeChild(this.canvas);
+        return this.enemyRect;
     }
 }
 
