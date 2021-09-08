@@ -10,8 +10,8 @@ export class Minimap {
         this.board = board;
         this.canvas = document.createElement('canvas');
         this.canvas.id = 'minimap';
-        this.canvas.width = GameVariables.oneEighthSprite * GameVariables.boardSize;
-        this.canvas.height = GameVariables.oneEighthSprite * GameVariables.boardSize;
+        this.canvas.width = GameVariables.oneEighthSprite * GameVariables.boardSize * GameVariables.pixelMulpiplier;
+        this.canvas.height = GameVariables.oneEighthSprite * GameVariables.boardSize * GameVariables.pixelMulpiplier;
         mainDiv.appendChild(this.canvas);
 
         this.context = this.canvas.getContext('2d');
@@ -47,9 +47,10 @@ export class Minimap {
         this.context.beginPath();
         this.context.fillStyle = color;
         this.context.fillRect(
-            x * GameVariables.oneEighthSprite,
-            y * GameVariables.oneEighthSprite,
-            GameVariables.oneEighthSprite, GameVariables.oneEighthSprite
+            Math.round(x * GameVariables.oneEighthSprite * GameVariables.pixelMulpiplier),
+            Math.round(y * GameVariables.oneEighthSprite * GameVariables.pixelMulpiplier),
+            GameVariables.oneEighthSprite * GameVariables.pixelMulpiplier, 
+            GameVariables.oneEighthSprite * GameVariables.pixelMulpiplier
         );
     }
 }

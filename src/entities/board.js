@@ -67,9 +67,9 @@ export class Board {
     drawFloor(boardObj) {
         const floorPixelWidth = boardObj.w / GameVariables.originalSpriteSize;
         const floorPixelHeight = boardObj.h / GameVariables.originalSpriteSize;
-        for (let yMultiplier = 0; yMultiplier < (GameVariables.pixelMulpiplier / 2); yMultiplier++) {
+        for (let yMultiplier = 0; yMultiplier < 2; yMultiplier++) {
             const yTilePosition = yMultiplier * (boardObj.h / 2);
-            for (let xMultiplier = 0; xMultiplier < (GameVariables.pixelMulpiplier / 2); xMultiplier++) {
+            for (let xMultiplier = 0; xMultiplier < 2; xMultiplier++) {
                 const xTilePosition = xMultiplier * (boardObj.w / 2);
                 for (let y = 0; y < floorTile.length; y++) {
                     for (let x = 0; x < floorTile[y].length; x++) {

@@ -128,7 +128,7 @@ function createMainMenuScreen(mainDiv) {
     drawPixelTextInCanvasContext(soundMessageAsPixels, mainMenuCanvas, GameVariables.pixelMulpiplier, mainMenuCanvas.height - 76 - (GameVariables.pixelMulpiplier));
 
     const createdByMessageAsPixels = convertTextToPixelArt('a game by igor estevao   js13kgames 2021');
-    drawPixelTextInCanvasContext(createdByMessageAsPixels, mainMenuCanvas, GameVariables.pixelMulpiplier / 2, mainMenuCanvas.height - 28 - (GameVariables.pixelMulpiplier * 2));
+    drawPixelTextInCanvasContext(createdByMessageAsPixels, mainMenuCanvas, GameVariables.pixelMulpiplier, mainMenuCanvas.height - 28 - (GameVariables.pixelMulpiplier * 2));
 
     createNewGame();
 }

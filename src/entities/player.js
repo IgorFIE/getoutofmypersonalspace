@@ -126,8 +126,8 @@ export class Player {
                     context.beginPath();
                     context.fillStyle = playerAreaLevelColors[this.currentAreaLevel];
                     context.fillRect(
-                        areaXPosAjustment + (x * GameVariables.halfSprite),
-                        areaYPosAjustment + (y * GameVariables.halfSprite),
+                        Math.round(areaXPosAjustment + (x * GameVariables.halfSprite)),
+                        Math.round(areaYPosAjustment + (y * GameVariables.halfSprite)),
                         GameVariables.halfSprite, GameVariables.halfSprite);
                 }
             }
@@ -144,8 +144,8 @@ export class Player {
                     context.beginPath();
                     context.fillStyle = currentColor;
                     context.fillRect(
-                        shadowXPosAjustment + (x * GameVariables.oneEighthSprite),
-                        shadowYPosAjustment + (y * GameVariables.oneEighthSprite),
+                        Math.round(shadowXPosAjustment + (x * GameVariables.oneEighthSprite)),
+                        Math.round(shadowYPosAjustment + (y * GameVariables.oneEighthSprite)),
                         GameVariables.oneEighthSprite, GameVariables.oneEighthSprite);
                 }
             }
@@ -163,8 +163,8 @@ export class Player {
                     context.beginPath();
                     context.fillStyle = currentColor;
                     context.fillRect(
-                        playerXPosAjustment + (x * GameVariables.oneEighthSprite),
-                        playerYPosAjustment + (y * GameVariables.oneEighthSprite),
+                        Math.round(playerXPosAjustment + (x * GameVariables.oneEighthSprite)),
+                        Math.round(playerYPosAjustment + (y * GameVariables.oneEighthSprite)),
                         GameVariables.oneEighthSprite, GameVariables.oneEighthSprite);
                 }
             }
@@ -175,9 +175,9 @@ export class Player {
         context.beginPath();
         context.fillStyle = playerAnsietyLevelColors[this.currentAnxietyLevel];
         context.fillRect(
-            this.playerRect.x - (GameVariables.oneFourthSprite * 3),
-            this.playerRect.y - (GameVariables.oneFourthSprite * 5),
-            Math.min((this.currentAnxiety * (GameVariables.spriteSize * 2)) / GameVariables.playerMaxAnxiety, GameVariables.spriteSize * 2),
+            Math.round(this.playerRect.x - (GameVariables.oneFourthSprite * 3)),
+            Math.round(this.playerRect.y - (GameVariables.oneFourthSprite * 5)),
+            Math.round(Math.min((this.currentAnxiety * (GameVariables.spriteSize * 2)) / GameVariables.playerMaxAnxiety, GameVariables.spriteSize * 2)),
             GameVariables.oneFourthSprite);
     }
 

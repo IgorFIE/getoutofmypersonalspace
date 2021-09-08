@@ -23,7 +23,19 @@
             position: relative;
         }
 
-        #gameOver, #mainMenu, #score {
+        #actionDiv {
+            width: 100%;
+            height: 100%;
+            transform: scale(5);
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-crisp-edges;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        #gameOver,
+        #mainMenu,
+        #score {
             top: 0px;
             z-index: 999;
         }
@@ -53,7 +65,7 @@
 <body>
     <!-- remove me later -->
     <h2 id='fps'>FPS</h2>
-    
+
     <div id="main"></div>
     <script src="main.js"></script>
 </body>

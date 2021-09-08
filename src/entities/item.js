@@ -65,8 +65,8 @@ export class Item {
                     context.beginPath();
                     context.fillStyle = currentColor;
                     context.fillRect(
-                        (this.itemGeneralPosX - GameVariables.oneThirdSprite) + (x * GameVariables.oneSixteenthSprite),
-                        (this.itemGeneralPosY - GameVariables.oneEighthSprite) + (y * GameVariables.oneSixteenthSprite),
+                        Math.round((this.itemGeneralPosX - GameVariables.oneThirdSprite) + (x * GameVariables.oneSixteenthSprite)),
+                        Math.round((this.itemGeneralPosY - GameVariables.oneEighthSprite) + (y * GameVariables.oneSixteenthSprite)),
                         GameVariables.oneSixteenthSprite, GameVariables.oneSixteenthSprite);
                 }
             }
@@ -82,8 +82,8 @@ export class Item {
                     context.beginPath();
                     context.fillStyle = currentColor;
                     context.fillRect(
-                        this.itemObj.x + (x * GameVariables.oneSixteenthSprite),
-                        this.itemObj.y + (y * GameVariables.oneSixteenthSprite),
+                        Math.round(this.itemObj.x + (x * GameVariables.oneSixteenthSprite)),
+                        Math.round(this.itemObj.y + (y * GameVariables.oneSixteenthSprite)),
                         GameVariables.oneSixteenthSprite, GameVariables.oneSixteenthSprite);
                 }
             }

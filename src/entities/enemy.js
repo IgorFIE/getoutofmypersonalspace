@@ -79,8 +79,8 @@ export class Enemy {
                     context.beginPath();
                     context.fillStyle = currentColor;
                     context.fillRect(
-                        this.enemyRect.x + (x * GameVariables.oneEighthSprite),
-                        playerYPosAjustment + (y * GameVariables.oneEighthSprite),
+                        Math.round(this.enemyRect.x + (x * GameVariables.oneEighthSprite)),
+                        Math.round(playerYPosAjustment + (y * GameVariables.oneEighthSprite)),
                         GameVariables.oneEighthSprite, GameVariables.oneEighthSprite);
                 }
             }
@@ -96,8 +96,8 @@ export class Enemy {
                     context.beginPath();
                     context.fillStyle = currentColor;
                     context.fillRect(
-                        this.enemyRect.x + (x * GameVariables.oneEighthSprite),
-                        this.enemyRect.y + (y * GameVariables.oneEighthSprite),
+                        Math.round(this.enemyRect.x + (x * GameVariables.oneEighthSprite)),
+                        Math.round(this.enemyRect.y + (y * GameVariables.oneEighthSprite)),
                         GameVariables.oneEighthSprite, GameVariables.oneEighthSprite);
                 }
             }

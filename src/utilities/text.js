@@ -11,8 +11,8 @@ export const drawPixelTextInCanvasContext = (pixelText, canvas, pixelSize, textH
                 context.beginPath();
                 context.fillStyle = 'black';
                 context.fillRect(
-                    textWidthStartPosition + (x * pixelSize),
-                    textHeightStartPosition + (y * pixelSize),
+                    Math.round(textWidthStartPosition + (x * pixelSize)),
+                    Math.round(textHeightStartPosition + (y * pixelSize)),
                     pixelSize, pixelSize);
             }
         }

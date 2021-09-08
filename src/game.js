@@ -15,27 +15,32 @@ export class Game {
         this.gameDiv.style.width = GameVariables.gameWidth + 'px';
         this.gameDiv.style.height = GameVariables.gameHeight + 'px';
 
+        this.sound = sound;
         this.keys = [];
         this.secondsPassed = 0;
         this.fps = 0;
 
-        this.sound = sound;
-        this.board = new Board(this.gameDiv);
-        this.scoreBoard = new ScoreBoard(this.gameDiv);
-        this.minimap = new Minimap(this.board.getBoard(), this.gameDiv);
+        const actionDiv = document.createElement('div');
+        actionDiv.id = 'actionDiv';
+        this.gameDiv.appendChild(actionDiv);
 
-        this.enemies = [];
+        this.board = new Board(actionDiv);
+
         this.actionCanvas = document.createElement('canvas');
         this.actionCanvas.id = 'actionCanvas'
         this.actionCanvas.width = GameVariables.boardRealSize;
         this.actionCanvas.height = GameVariables.boardRealSize;
-        this.gameDiv.appendChild(this.actionCanvas);
-        this.newEnemyObj = new SquareObject(0, 0, GameVariables.spriteSize, GameVariables.spriteSize);
-        
+        actionDiv.appendChild(this.actionCanvas);
+
         this.actionContext = this.actionCanvas.getContext('2d');
         this.actionContext.imageSmoothingEnabled = false;
-
         this.actionRect = new SquareObject(0, 0, GameVariables.gameWidth, GameVariables.gameHeight);
+
+        this.scoreBoard = new ScoreBoard(this.gameDiv);
+        this.minimap = new Minimap(this.board.getBoard(), this.gameDiv);
+
+        this.enemies = [];
+        this.newEnemyObj = new SquareObject(0, 0, GameVariables.spriteSize, GameVariables.spriteSize);
 
         this.item = new Item();
         this.item.generateNewItem({ x: 5, y: 5 });
@@ -108,8 +113,8 @@ export class Game {
     }
 
     updateCanvasPositions() {
-        const updateGameWidthPosition = -this.player.getPlayerRect().x + GameVariables.gameHalfWidth - (this.player.getPlayerRect().w / 2);
-        const updateGameHeightPosition = -this.player.getPlayerRect().y + GameVariables.gameHalfHeight - (this.player.getPlayerRect().h / 2);
+        const updateGameWidthPosition = Math.round(-this.player.getPlayerRect().x + GameVariables.gameHalfWidth - (this.player.getPlayerRect().w / 2));
+        const updateGameHeightPosition = Math.round(-this.player.getPlayerRect().y + GameVariables.gameHalfHeight - (this.player.getPlayerRect().h / 2));
         this.board.updateBoard(updateGameWidthPosition, updateGameHeightPosition);
         this.actionCanvas.style.transform = 'translate(' + updateGameWidthPosition + 'px, ' + updateGameHeightPosition + 'px)';
     }
