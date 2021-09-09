@@ -140,7 +140,7 @@ export class Enemy {
 }
 
 const hairColors = ['#ffffab', '#cd9722', '#999a9e', '#1b1116', '#6e5e40', '#9e6800'];
-const shirtColors = ['#52804d', '#10495e', '#354a5c', '#843d0d', '#a80000', '#ffff57'];
+const shirtColors = ['#52804d', '#10495e', '#354a5c', '#3c4f68', '#a80000', '#ffff57'];
 const skinColors = ['#e7c688', '#ffffab', '#edeef7', '#843d0d', '#38252e', '#703a33'];
 
 const hairId = 'hairId';
