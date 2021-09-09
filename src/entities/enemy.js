@@ -9,6 +9,10 @@ export class Enemy {
         this.animationCicle = 0;
         this.currentAnimationSprite = 0;
 
+        this.hairColor = hairColors[randomNumberOnRange(0, hairColors.length - 1)];
+        this.skinColor = skinColors[randomNumberOnRange(0, skinColors.length - 1)];
+        this.shirtColor = shirtColors[randomNumberOnRange(0, shirtColors.length - 1)];
+
         this.keys = [];
         this.lastMovementKey = '';
         this.stepMovement = 0;
@@ -91,7 +95,7 @@ export class Enemy {
         const spriteToUse = this.spriteToUse();
         for (let y = 0; y < spriteToUse.length; y++) {
             for (let x = 0; x < spriteToUse[y].length; x++) {
-                const currentColor = spriteToUse[y][x];
+                const currentColor = this.getEnemySpecificColorById(spriteToUse[y][x]);
                 if (currentColor) {
                     context.beginPath();
                     context.fillStyle = currentColor;
@@ -101,6 +105,19 @@ export class Enemy {
                         GameVariables.oneEighthSprite, GameVariables.oneEighthSprite);
                 }
             }
+        }
+    }
+
+    getEnemySpecificColorById(currentColor) {
+        switch (currentColor) {
+            case hairId:
+                return this.hairColor;
+            case skinId:
+                return this.skinColor;
+            case shirtId:
+                return this.shirtColor;
+            default:
+                return currentColor;
         }
     }
 
@@ -122,10 +139,14 @@ export class Enemy {
     }
 }
 
-const hairColor = '#ffffab';
+const hairColors = ['#ffffab', '#cd9722', '#999a9e', '#1b1116', '#6e5e40', '#9e6800'];
+const shirtColors = ['#52804d', '#10495e', '#354a5c', '#843d0d', '#a80000', '#ffff57'];
+const skinColors = ['#e7c688', '#ffffab', '#edeef7', '#843d0d', '#38252e', '#703a33'];
+
+const hairId = 'hairId';
 const black = '#000000';
-const skinColor = '#e7c688';
-const shirt = '#52804d';
+const skinId = 'skinId';
+const shirtId = 'shirtId';
 const gloves = '#641f14';
 const boots = '#1b1116';
 const shadow = 'rgba(0,0,0,0.5)';
@@ -137,134 +158,134 @@ const enemyShadowSprite = [
 ];
 
 const enemyFrontSprite = [
-    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
-    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
-    [null, hairColor, black, skinColor, skinColor, black, hairColor, null],
-    [null, skinColor, skinColor, skinColor, skinColor, skinColor, skinColor, null],
-    [null, null, skinColor, skinColor, skinColor, skinColor, null, null],
-    [null, shirt, shirt, shirt, shirt, shirt, shirt, null],
-    [null, gloves, shirt, shirt, shirt, shirt, gloves, null],
+    [null, null, hairId, hairId, hairId, hairId, null, null],
+    [null, hairId, hairId, hairId, hairId, hairId, hairId, null],
+    [null, hairId, black, skinId, skinId, black, hairId, null],
+    [null, skinId, skinId, skinId, skinId, skinId, skinId, null],
+    [null, null, skinId, skinId, skinId, skinId, null, null],
+    [null, shirtId, shirtId, shirtId, shirtId, shirtId, shirtId, null],
+    [null, gloves, shirtId, shirtId, shirtId, shirtId, gloves, null],
     [null, null, boots, null, null, boots, null, null]
 ];
 
 const enemyFrontSpriteWalk1 = [
     [null, null, null, null, null, null, null, null],
-    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
-    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
-    [null, hairColor, black, skinColor, skinColor, black, hairColor, null],
-    [null, skinColor, skinColor, skinColor, skinColor, skinColor, skinColor, null],
-    [null, gloves, skinColor, skinColor, skinColor, skinColor, null, null],
-    [null, null, shirt, shirt, shirt, gloves, null, null],
+    [null, null, hairId, hairId, hairId, hairId, null, null],
+    [null, hairId, hairId, hairId, hairId, hairId, hairId, null],
+    [null, hairId, black, skinId, skinId, black, hairId, null],
+    [null, skinId, skinId, skinId, skinId, skinId, skinId, null],
+    [null, gloves, skinId, skinId, skinId, skinId, null, null],
+    [null, null, shirtId, shirtId, shirtId, gloves, null, null],
     [null, null, boots, null, null, null, null, null]
 ];
 
 const enemyFrontSpriteWalk2 = [
     [null, null, null, null, null, null, null, null],
-    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
-    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
-    [null, hairColor, black, skinColor, skinColor, black, hairColor, null],
-    [null, skinColor, skinColor, skinColor, skinColor, skinColor, skinColor, null],
-    [null, null, skinColor, skinColor, skinColor, skinColor, gloves, null],
-    [null, null, gloves, shirt, shirt, shirt, null, null],
+    [null, null, hairId, hairId, hairId, hairId, null, null],
+    [null, hairId, hairId, hairId, hairId, hairId, hairId, null],
+    [null, hairId, black, skinId, skinId, black, hairId, null],
+    [null, skinId, skinId, skinId, skinId, skinId, skinId, null],
+    [null, null, skinId, skinId, skinId, skinId, gloves, null],
+    [null, null, gloves, shirtId, shirtId, shirtId, null, null],
     [null, null, null, null, null, boots, null, null]
 ];
 
 const enemyBackSprite = [
-    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
-    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
-    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
-    [null, skinColor, hairColor, hairColor, hairColor, hairColor, skinColor, null],
-    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
-    [null, shirt, shirt, shirt, shirt, shirt, shirt, null],
-    [null, gloves, shirt, shirt, shirt, shirt, gloves, null],
+    [null, null, hairId, hairId, hairId, hairId, null, null],
+    [null, hairId, hairId, hairId, hairId, hairId, hairId, null],
+    [null, hairId, hairId, hairId, hairId, hairId, hairId, null],
+    [null, skinId, hairId, hairId, hairId, hairId, skinId, null],
+    [null, null, hairId, hairId, hairId, hairId, null, null],
+    [null, shirtId, shirtId, shirtId, shirtId, shirtId, shirtId, null],
+    [null, gloves, shirtId, shirtId, shirtId, shirtId, gloves, null],
     [null, null, boots, null, null, boots, null, null]
 ];
 
 const enemyBackSpriteWalk1 = [
     [null, null, null, null, null, null, null, null],
-    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
-    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
-    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
-    [null, skinColor, hairColor, hairColor, hairColor, hairColor, skinColor, null],
-    [null, shirt, hairColor, hairColor, hairColor, hairColor, gloves, null],
-    [null, gloves, shirt, shirt, shirt, shirt, null, null],
+    [null, null, hairId, hairId, hairId, hairId, null, null],
+    [null, hairId, hairId, hairId, hairId, hairId, hairId, null],
+    [null, hairId, hairId, hairId, hairId, hairId, hairId, null],
+    [null, skinId, hairId, hairId, hairId, hairId, skinId, null],
+    [null, shirtId, hairId, hairId, hairId, hairId, gloves, null],
+    [null, gloves, shirtId, shirtId, shirtId, shirtId, null, null],
     [null, null, null, null, null, boots, null, null]
 ];
 
 const enemyBackSpriteWalk2 = [
     [null, null, null, null, null, null, null, null],
-    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
-    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
-    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
-    [null, skinColor, hairColor, hairColor, hairColor, hairColor, skinColor, null],
-    [null, gloves, hairColor, hairColor, hairColor, hairColor, shirt, null],
-    [null, null, shirt, shirt, shirt, shirt, gloves, null],
+    [null, null, hairId, hairId, hairId, hairId, null, null],
+    [null, hairId, hairId, hairId, hairId, hairId, hairId, null],
+    [null, hairId, hairId, hairId, hairId, hairId, hairId, null],
+    [null, skinId, hairId, hairId, hairId, hairId, skinId, null],
+    [null, gloves, hairId, hairId, hairId, hairId, shirtId, null],
+    [null, null, shirtId, shirtId, shirtId, shirtId, gloves, null],
     [null, null, boots, null, null, null, null, null]
 ];
 
 const enemyRightSprite = [
-    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
-    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
-    [null, hairColor, hairColor, hairColor, skinColor, black, skinColor, null],
-    [null, hairColor, hairColor, hairColor, skinColor, skinColor, skinColor, null],
-    [null, null, hairColor, skinColor, skinColor, skinColor, skinColor, null],
-    [null, null, shirt, shirt, shirt, shirt, null, null],
-    [null, null, shirt, gloves, gloves, shirt, null, null],
+    [null, null, hairId, hairId, hairId, hairId, null, null],
+    [null, hairId, hairId, hairId, hairId, hairId, hairId, null],
+    [null, hairId, hairId, hairId, skinId, black, skinId, null],
+    [null, hairId, hairId, hairId, skinId, skinId, skinId, null],
+    [null, null, hairId, skinId, skinId, skinId, skinId, null],
+    [null, null, shirtId, shirtId, shirtId, shirtId, null, null],
+    [null, null, shirtId, gloves, gloves, shirtId, null, null],
     [null, null, null, boots, boots, null, null, null]
 ];
 
 const enemyRightSpriteWalk1 = [
     [null, null, null, null, null, null, null, null],
-    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
-    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
-    [null, hairColor, hairColor, hairColor, skinColor, black, skinColor, null],
-    [null, hairColor, hairColor, hairColor, skinColor, skinColor, skinColor, null],
-    [null, null, hairColor, skinColor, skinColor, skinColor, skinColor, null],
-    [null, null, gloves, shirt, shirt, shirt, null, null],
+    [null, null, hairId, hairId, hairId, hairId, null, null],
+    [null, hairId, hairId, hairId, hairId, hairId, hairId, null],
+    [null, hairId, hairId, hairId, skinId, black, skinId, null],
+    [null, hairId, hairId, hairId, skinId, skinId, skinId, null],
+    [null, null, hairId, skinId, skinId, skinId, skinId, null],
+    [null, null, gloves, shirtId, shirtId, shirtId, null, null],
     [null, null, boots, null, null, boots, null, null]
 ];
 
 const enemyRightSpriteWalk2 = [
     [null, null, null, null, null, null, null, null],
-    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
-    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
-    [null, hairColor, hairColor, hairColor, skinColor, black, skinColor, null],
-    [null, hairColor, hairColor, hairColor, skinColor, skinColor, skinColor, null],
-    [null, null, hairColor, skinColor, skinColor, skinColor, skinColor, null],
-    [null, null, shirt, shirt, shirt, gloves, null, null],
+    [null, null, hairId, hairId, hairId, hairId, null, null],
+    [null, hairId, hairId, hairId, hairId, hairId, hairId, null],
+    [null, hairId, hairId, hairId, skinId, black, skinId, null],
+    [null, hairId, hairId, hairId, skinId, skinId, skinId, null],
+    [null, null, hairId, skinId, skinId, skinId, skinId, null],
+    [null, null, shirtId, shirtId, shirtId, gloves, null, null],
     [null, null, boots, null, null, boots, null, null]
 ];
 
 const enemyLeftSprite = [
-    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
-    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
-    [null, skinColor, black, skinColor, hairColor, hairColor, hairColor, null],
-    [null, skinColor, skinColor, skinColor, hairColor, hairColor, hairColor, null],
-    [null, skinColor, skinColor, skinColor, skinColor, hairColor, null, null],
-    [null, null, shirt, shirt, shirt, shirt, null, null],
-    [null, null, shirt, gloves, gloves, shirt, null, null],
+    [null, null, hairId, hairId, hairId, hairId, null, null],
+    [null, hairId, hairId, hairId, hairId, hairId, hairId, null],
+    [null, skinId, black, skinId, hairId, hairId, hairId, null],
+    [null, skinId, skinId, skinId, hairId, hairId, hairId, null],
+    [null, skinId, skinId, skinId, skinId, hairId, null, null],
+    [null, null, shirtId, shirtId, shirtId, shirtId, null, null],
+    [null, null, shirtId, gloves, gloves, shirtId, null, null],
     [null, null, null, boots, boots, null, null, null]
 ];
 
 const enemyLeftSpriteWalk1 = [
     [null, null, null, null, null, null, null, null],
-    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
-    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
-    [null, skinColor, black, skinColor, hairColor, hairColor, hairColor, null],
-    [null, skinColor, skinColor, skinColor, hairColor, hairColor, hairColor, null],
-    [null, skinColor, skinColor, skinColor, skinColor, hairColor, null, null],
-    [null, null, shirt, shirt, shirt, gloves, null, null],
+    [null, null, hairId, hairId, hairId, hairId, null, null],
+    [null, hairId, hairId, hairId, hairId, hairId, hairId, null],
+    [null, skinId, black, skinId, hairId, hairId, hairId, null],
+    [null, skinId, skinId, skinId, hairId, hairId, hairId, null],
+    [null, skinId, skinId, skinId, skinId, hairId, null, null],
+    [null, null, shirtId, shirtId, shirtId, gloves, null, null],
     [null, null, boots, null, null, boots, null, null]
 ];
 
 const enemyLeftSpriteWalk2 = [
     [null, null, null, null, null, null, null, null],
-    [null, null, hairColor, hairColor, hairColor, hairColor, null, null],
-    [null, hairColor, hairColor, hairColor, hairColor, hairColor, hairColor, null],
-    [null, skinColor, black, skinColor, hairColor, hairColor, hairColor, null],
-    [null, skinColor, skinColor, skinColor, hairColor, hairColor, hairColor, null],
-    [null, skinColor, skinColor, skinColor, skinColor, hairColor, null, null],
-    [null, null, gloves, shirt, shirt, shirt, null, null],
+    [null, null, hairId, hairId, hairId, hairId, null, null],
+    [null, hairId, hairId, hairId, hairId, hairId, hairId, null],
+    [null, skinId, black, skinId, hairId, hairId, hairId, null],
+    [null, skinId, skinId, skinId, hairId, hairId, hairId, null],
+    [null, skinId, skinId, skinId, skinId, hairId, null, null],
+    [null, null, gloves, shirtId, shirtId, shirtId, null, null],
     [null, null, boots, null, null, boots, null, null]
 ];
 

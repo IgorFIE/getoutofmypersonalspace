@@ -47,8 +47,8 @@ export class Board {
     }
 
     drawBuilding(boardObj) {
-        const buildPixelWidth = boardObj.w / GameVariables.originalHalfSprite;
-        const buildPixelHeight = boardObj.h / GameVariables.originalHalfSprite;
+        const buildPixelWidth = boardObj.w / GameVariables.halfSprite;
+        const buildPixelHeight = boardObj.h / GameVariables.halfSprite;
         for (let y = 0; y < buildingTile.length; y++) {
             for (let x = 0; x < buildingTile[y].length; x++) {
                 const currentColor = buildingTile[y][x];
@@ -65,8 +65,8 @@ export class Board {
     }
 
     drawFloor(boardObj) {
-        const floorPixelWidth = boardObj.w / GameVariables.originalSpriteSize;
-        const floorPixelHeight = boardObj.h / GameVariables.originalSpriteSize;
+        const floorPixelWidth = boardObj.w / GameVariables.spriteSize;
+        const floorPixelHeight = boardObj.h / GameVariables.spriteSize;
         for (let yMultiplier = 0; yMultiplier < 2; yMultiplier++) {
             const yTilePosition = yMultiplier * (boardObj.h / 2);
             for (let xMultiplier = 0; xMultiplier < 2; xMultiplier++) {

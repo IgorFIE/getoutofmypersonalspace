@@ -13,9 +13,6 @@ const oneFourthSprite = spriteSize / 4;
 const oneEighthSprite = spriteSize / 8;
 const oneSixteenthSprite = spriteSize / 16;
 
-const originalSpriteSize = spriteSize;
-const originalHalfSprite = halfSprite;
-
 const endGameScreenTimer = 4;
 
 const boardSize = 11;
@@ -47,8 +44,6 @@ export const GameVariables = {
     oneFourthSprite,
     oneEighthSprite,
     oneSixteenthSprite,
-    originalSpriteSize,
-    originalHalfSprite,
     endGameScreenTimer,
     boardSize,
     boardScaleMultiplier,

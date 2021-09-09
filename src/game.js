@@ -34,7 +34,7 @@ export class Game {
 
         this.actionContext = this.actionCanvas.getContext('2d');
         this.actionContext.imageSmoothingEnabled = false;
-        this.actionRect = new SquareObject(0, 0, GameVariables.gameWidth, GameVariables.gameHeight);
+        this.actionRect = new SquareObject(0, 0, GameVariables.boardSpriteSize * 4, GameVariables.boardSpriteSize * 2);
 
         this.scoreBoard = new ScoreBoard(this.gameDiv);
         this.minimap = new Minimap(this.board.getBoard(), this.gameDiv);
@@ -78,9 +78,8 @@ export class Game {
             this.newEnemyObj.x = this.generateRandomPositionInsideBoard();
             this.newEnemyObj.y = this.generateRandomPositionInsideBoard();
             const hasBoardCollision = this.board.hasCollision(this.newEnemyObj);
-            const hasEnemyCollision = !!this.enemies.find((it) => rectCollision(it.getEnemyObj(), this.newEnemyObj));
             const hasPlayerCollision = rectCollision(this.retrieveActionDrawArea(), this.newEnemyObj);
-            if (!hasBoardCollision && !hasEnemyCollision && !hasPlayerCollision) {
+            if (!hasBoardCollision && !hasPlayerCollision) {
                 this.enemies.push(new Enemy(this.newEnemyObj));
             }
         }
@@ -141,8 +140,8 @@ export class Game {
     }
 
     retrieveActionDrawArea() {
-        this.actionRect.x = this.player.getPlayerRect().x - GameVariables.gameHalfWidth + GameVariables.oneFourthSprite;
-        this.actionRect.y = this.player.getPlayerRect().y - GameVariables.gameHalfHeight + GameVariables.oneFourthSprite;
+        this.actionRect.x = this.player.getPlayerRect().x - GameVariables.boardSpriteSize * 2;
+        this.actionRect.y = this.player.getPlayerRect().y - GameVariables.boardSpriteSize;
         return this.actionRect;
     }
 
