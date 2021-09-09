@@ -13,6 +13,8 @@ let gameOverCanvas;
 let sound;
 let isGameOverFirstLoopProcessed = false;
 
+let highScore = parseInt(localStorage.getItem(GameVariables.storeId)) || 0;
+
 let isGameRunning = false;
 let game;
 let keys = [];
@@ -50,6 +52,7 @@ function mainLoop(timeStamp) {
                 showGameOverScreen();
                 sound.playGameOverSound();
                 sound.stopInAreaSound();
+                updateHighScore();
                 isGameOverFirstLoopProcessed = true;
             }
             endGameTimer += secondsPassed;
@@ -67,6 +70,13 @@ function mainLoop(timeStamp) {
     }
     handleMuteInput();
     window.requestAnimationFrame(mainLoop);
+}
+
+function updateHighScore(){
+    if(highScore < game.getGameScore()){
+        highScore = game.getGameScore();
+        localStorage.setItem(GameVariables.storeId, highScore);
+    }
 }
 
 function destroyGameAndLoadMainMenu() {
@@ -102,7 +112,7 @@ function addKeyListenerEvents() {
 function createNewGame() {
     endGameTimer = 0;
     isGameOverFirstLoopProcessed = false;
-    game = new Game(gameDiv, sound);
+    game = new Game(gameDiv, sound, highScore);
 }
 
 function createMainMenuScreen(mainDiv) {
@@ -141,6 +151,7 @@ function showMainMenuScreen() {
 
 function hideMainMenuScreen() {
     isGameRunning = true;
+    game.initGameScoreBoard();
     mainMenuCanvas.classList.add('hidden');
 }
 

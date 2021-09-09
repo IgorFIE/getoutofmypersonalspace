@@ -10,7 +10,7 @@ import { rectCircleCollision, rectCollision } from "./utilities/collision-utilit
 import { generalRectToBoardRect, randomNumberOnRange } from "./utilities/util";
 
 export class Game {
-    constructor(gameDiv, sound) {
+    constructor(gameDiv, sound, highScore) {
         this.gameDiv = gameDiv;
         this.gameDiv.style.width = GameVariables.gameWidth + 'px';
         this.gameDiv.style.height = GameVariables.gameHeight + 'px';
@@ -36,7 +36,7 @@ export class Game {
         this.actionContext.imageSmoothingEnabled = false;
         this.actionRect = new SquareObject(0, 0, GameVariables.boardSpriteSize * 4, GameVariables.boardSpriteSize * 2);
 
-        this.scoreBoard = new ScoreBoard(this.gameDiv);
+        this.scoreBoard = new ScoreBoard(this.gameDiv, highScore);
         this.minimap = new Minimap(this.board.getBoard(), this.gameDiv);
 
         this.enemies = [];
@@ -53,6 +53,14 @@ export class Game {
 
     isGameOver() {
         return this.player.getPlayerAnxiety() >= GameVariables.playerMaxAnxiety;
+    }
+
+    initGameScoreBoard() {
+        this.scoreBoard.resetGameScoreBoard();
+    }
+
+    getGameScore() {
+        return this.scoreBoard.getCurrentScore();
     }
 
     gameLoop(secondsPassed, keys) {

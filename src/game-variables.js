@@ -1,3 +1,5 @@
+const storeId = 'igorfie-get-out-of-my-personal-space-high-score';
+
 const pixelMulpiplier = 5;
 
 const gameWidth = window.innerWidth;
@@ -33,6 +35,7 @@ const enemyMinSteps = 30;
 const enemyMaxSteps = 120;
 
 export const GameVariables = {
+    storeId,
     pixelMulpiplier,
     gameWidth,
     gameHeight,

@@ -2,7 +2,7 @@ import { GameVariables } from "../game-variables";
 import { convertTextToPixelArt, drawPixelTextInCanvasContext } from "../utilities/text";
 
 export class ScoreBoard {
-    constructor(mainDiv) {
+    constructor(mainDiv, highScore) {
         this.scoreCanvas = document.createElement('canvas');
         this.scoreCanvas.id = 'score';
         this.scoreCanvas.width = GameVariables.gameWidth;
@@ -12,24 +12,38 @@ export class ScoreBoard {
         this.scoreContext = this.scoreCanvas.getContext('2d');
         this.scoreContext.imageSmoothingEnabled = false;
 
-        this.currentScore = 0;
+        this.highScore = highScore;
+        this.currentScore = this.highScore;
 
-        this.drawScoreMessage();
+        this.drawScoreMessage('BEST SCORE');
         this.drawScore();
     }
 
+    resetGameScoreBoard() {
+        this.currentScore = 0;
+        this.cleanScore();
+        this.drawScoreMessage('SCORE');
+        this.drawScore();
+    }
+
+    getCurrentScore(){
+        return this.currentScore;
+    }
+
     cleanScore(){
-        this.scoreContext.clearRect(0, 76 - (GameVariables.pixelMulpiplier * 3), GameVariables.gameWidth, GameVariables.gameHeight / 3);
+        this.scoreContext.clearRect(0, 0, GameVariables.gameWidth, GameVariables.gameHeight / 3);
     }
 
     updateScore() {
         this.currentScore++;
         this.cleanScore();
+        const scoreMessage = this.currentScore > this.highScore ? 'NEW HIGH SCORE' : 'SCORE';
+        this.drawScoreMessage(scoreMessage);
         this.drawScore();
     }
 
-    drawScoreMessage() {
-        const scoreMessageHasPixels = convertTextToPixelArt('SCORE');
+    drawScoreMessage(scoreMessage) {
+        const scoreMessageHasPixels = convertTextToPixelArt(scoreMessage);
         drawPixelTextInCanvasContext(scoreMessageHasPixels, this.scoreCanvas, GameVariables.pixelMulpiplier, 28 + GameVariables.pixelMulpiplier * 2);
     }
 

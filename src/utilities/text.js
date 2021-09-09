@@ -143,11 +143,11 @@ const B = [
 ];
 
 const C = [
-    [true, true, true],
+    [false, true, true],
     [true, false, false],
     [true, false, false],
     [true, false, false],
-    [true, true, true]
+    [false, true, true]
 ];
 
 const D = [
@@ -175,11 +175,11 @@ const F = [
 ];
 
 const G = [
-    [true, true, true],
-    [true, false, false],
-    [true, false, true],
-    [true, false, true],
-    [true, true, false]
+    [true, true, true, true],
+    [true, false, false, false],
+    [true, false, true, true],
+    [true, false, false, true],
+    [true, true, true, false]
 ];
 
 const H = [
@@ -223,19 +223,19 @@ const L = [
 ];
 
 const M = [
-    [true, false, true],
-    [true, true, true],
-    [true, false, true],
-    [true, false, true],
-    [true, false, true]
+    [true, false, false, false, true],
+    [true, true, false, true, true],
+    [true, false, true, false, true],
+    [true, false, false, false, true],
+    [true, false, false, false, true]
 ];
 
 const N = [
-    [true, false, true],
-    [true, false, true],
-    [true, false, true],
-    [true, true, true],
-    [true, false, true]
+    [true, false, false, true],
+    [true, true, false, true],
+    [true, true, true, true],
+    [true, false, true, true],
+    [true, false, false, true]
 ];
 
 const O = [
@@ -271,11 +271,11 @@ const R = [
 ];
 
 const S = [
-    [true, true, true],
+    [false, true, true],
     [true, false, false],
     [true, true, true],
     [false, false, true],
-    [true, true, true]
+    [true, true, false]
 ];
 
 const T = [
@@ -303,11 +303,11 @@ const V = [
 ];
 
 const W = [
-    [true, false, true],
-    [true, false, true],
-    [true, false, true],
-    [true, true, true],
-    [true, false, true]
+    [true, false, false, false, true],
+    [true, false, false, false, true],
+    [true, false, true, false, true],
+    [true, true, false, true, true],
+    [true, false, false, false, true]
 ];
 
 const X = [
