@@ -77,7 +77,7 @@ export class Game {
     }
 
     update() {
-        // this.enemies.forEach((it) => it.enemyMovement(this.board, this.secondsPassed));
+        this.enemies.forEach((it) => it.enemyMovement(this.board, this.secondsPassed));
         this.player.updatePlayerMovement(this.board, this.keys, this.secondsPassed);
         this.updateGameLogic();
         this.updateCanvasPositions();
