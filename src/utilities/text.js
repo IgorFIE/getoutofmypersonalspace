@@ -91,6 +91,10 @@ const retrievePixelLetter = (letter) => {
             return Y;
         case 'Z':
             return Z;
+        case '?':
+            return INTERROGATION_MARK;
+        case '!':
+            return EXCLAMATION_MARK;
 
         case '0':
             return ZERO;
@@ -332,6 +336,22 @@ const Z = [
     [false, true, false],
     [true, false, false],
     [true, true, true]
+];
+
+const INTERROGATION_MARK = [
+    [true, true, false],
+    [false, false, true],
+    [false, true, false],
+    [false, false, false],
+    [false, true, false]
+];
+
+const EXCLAMATION_MARK = [
+    [true],
+    [true],
+    [true],
+    [false],
+    [true]
 ];
 
 const ZERO = [

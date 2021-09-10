@@ -24,6 +24,11 @@ export class Item {
         return this.itemBoardPosY;
     }
 
+    getItemDisplayMessage(){
+        const currentItemMsgs = itemsMsgs[this.itemType];
+        return currentItemMsgs[randomNumberOnRange(0, currentItemMsgs.length - 1)];
+    }
+
     generateNewItem(playerXYBoardPos) {
         this.generateNewItemRandomPositions(this.itemBoardPosX, this.itemBoardPosY, playerXYBoardPos);
     }
@@ -196,4 +201,14 @@ const toiletPaperItem = [
     [itemBlackColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemBlackColor, itemBlackColor, itemlightBlueColor]
 ];
 
+const maskMsgs = ['Nanofibre Mask Almost 100 Effective', 'inhale exhale Luke Im your father!','no kiss allowed', 'allows entrance to shops!', 'dont forget to use it in public transports'];
+const gloveMsgs = ['gloves','Yes this are gloves', 'This one looks like a used condom but for your hands', 'Its like a condom but for your hands', 'Yea they are called gloves', 'its not a condom', 'its not a condom but also gives you protection'];
+const vaccineMsgs = ['Got that Jab!!!', 'Moderna uh thats fancy', 'Didnt even feel a thing', 'I feel safer already', 'the second one almost killed me', 'if you dont die from the virus you die from the cure', 'security patch update', 'Bloody mosquitos!', 'what doesnt kill you makes you strong'];
+const pillMsgs = ['just some ibuprofen', 'Got to keep that Vitamin D up', 'Mmmhmm just like candies'];
+const soapMsgs = ['wash your hands people!', 'Cant forget to sing happy birthday twice', 'Squeaky clean!', 'thats not lube'];
+const glassesMsgs = ['dont forget to protect your eyes', 'Ah! thats where I left them!', 'COVID in my eyes?! NEVER!'];
+const visorMsgs = ['Re-used my star wars visor as a covid mask', 'Its a shield! but for your face!', 'visor protection!'];
+const toiletPaperMsgs = ['finaly got some toilet paper!!!', 'Phew finally I wipe my ass', 'Ever heard of a bidet?'];
+
 const items = [maskItem, gloveItem, vaccineItem, pillItem, soapItem, glasesItem, visorItem, toiletPaperItem];
+const itemsMsgs = [maskMsgs, gloveMsgs, vaccineMsgs, pillMsgs, soapMsgs, glassesMsgs, visorMsgs, toiletPaperMsgs];

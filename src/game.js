@@ -8,6 +8,7 @@ import { ScoreBoard } from "./entities/score-board";
 import { Enemy } from "./entities/enemy";
 import { rectCircleCollision, rectCollision } from "./utilities/collision-utilities";
 import { generalRectToBoardRect, randomNumberOnRange } from "./utilities/util";
+import { MsgHandler } from "./entities/MsgHandler";
 
 export class Game {
     constructor(gameDiv, sound, highScore) {
@@ -38,6 +39,7 @@ export class Game {
 
         this.scoreBoard = new ScoreBoard(this.gameDiv, highScore);
         this.minimap = new Minimap(this.board.getBoard(), this.gameDiv);
+        this.msgHandler = new MsgHandler(this.gameDiv);
 
         this.enemies = [];
         this.newEnemyObj = new SquareObject(0, 0, GameVariables.spriteSize, GameVariables.spriteSize);
@@ -75,7 +77,7 @@ export class Game {
     }
 
     update() {
-        this.enemies.forEach((it) => it.enemyMovement(this.board, this.secondsPassed));
+        // this.enemies.forEach((it) => it.enemyMovement(this.board, this.secondsPassed));
         this.player.updatePlayerMovement(this.board, this.keys, this.secondsPassed);
         this.updateGameLogic();
         this.updateCanvasPositions();
@@ -87,7 +89,8 @@ export class Game {
             this.newEnemyObj.y = this.generateRandomPositionInsideBoard();
             const hasBoardCollision = this.board.hasCollision(this.newEnemyObj);
             const hasPlayerCollision = rectCollision(this.retrieveActionDrawArea(), this.newEnemyObj);
-            if (!hasBoardCollision && !hasPlayerCollision) {
+            const hasEnemyCollision = !!this.enemies.find((it) => rectCollision(it.getEnemyObj(), this.newEnemyObj));
+            if (!hasBoardCollision && !hasEnemyCollision && !hasPlayerCollision) {
                 this.enemies.push(new Enemy(this.newEnemyObj));
             }
         }
@@ -102,6 +105,7 @@ export class Game {
     updateGameLogic() {
         const playerBoardRect = generalRectToBoardRect(this.player.getPlayerRect(), this.board.getBoard());
         if (this.item.hasCollision(this.player.getPlayerRect())) {
+            this.msgHandler.updateItemMsg(this.item.getItemDisplayMessage());
             this.item.generateNewItem(playerBoardRect);
             this.scoreBoard.updateScore();
             this.sound.playPickSound();
@@ -145,6 +149,7 @@ export class Game {
             this.item.drawItem(this.actionContext);
         }
         this.player.drawPlayer(this.keys, this.actionContext);
+        this.msgHandler.drawItemMsg(this.secondsPassed);
     }
 
     retrieveActionDrawArea() {
