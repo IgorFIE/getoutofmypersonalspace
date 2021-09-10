@@ -201,7 +201,7 @@ const toiletPaperItem = [
     [itemBlackColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemBlackColor, itemBlackColor, itemlightBlueColor]
 ];
 
-const maskMsgs = ['Nanofibre Mask Almost 100 Effective', 'inhale exhale Luke Im your father!','no kiss allowed', 'allows entrance to shops!', 'dont forget to use it in public transports'];
+const maskMsgs = ['Nanofibre Mask Almost 100 Effective', 'Luke Im your father!','no kiss allowed', 'allows entrance to shops!', 'dont forget to use it in public transports'];
 const gloveMsgs = ['gloves','Yes this are gloves', 'This one looks like a used condom but for your hands', 'Its like a condom but for your hands', 'Yea they are called gloves', 'its not a condom', 'its not a condom but also gives you protection'];
 const vaccineMsgs = ['Got that Jab!!!', 'Moderna uh thats fancy', 'Didnt even feel a thing', 'I feel safer already', 'the second one almost killed me', 'if you dont die from the virus you die from the cure', 'security patch update', 'Bloody mosquitos!', 'what doesnt kill you makes you strong'];
 const pillMsgs = ['just some ibuprofen', 'Got to keep that Vitamin D up', 'Mmmhmm just like candies'];
