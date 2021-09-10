@@ -106,6 +106,7 @@ export class Game {
         const playerBoardRect = generalRectToBoardRect(this.player.getPlayerRect(), this.board.getBoard());
         if (this.item.hasCollision(this.player.getPlayerRect())) {
             this.msgHandler.updateItemMsg(this.item.getItemDisplayMessage());
+            this.player.reduceAnxiety();
             this.item.generateNewItem(playerBoardRect);
             this.scoreBoard.updateScore();
             this.sound.playPickSound();
@@ -149,7 +150,7 @@ export class Game {
             this.item.drawItem(this.actionContext);
         }
         this.player.drawPlayer(this.keys, this.actionContext);
-        this.msgHandler.drawItemMsg(this.secondsPassed);
+        this.msgHandler.drawMsgs(this.secondsPassed);
     }
 
     retrieveActionDrawArea() {

@@ -15,7 +15,7 @@ export class Player {
         this.currentAnxiety = 0;
         this.currentAnxietyLevel = 0;
 
-        const initialPosition = (GameVariables.boardRealSize / 2) - (GameVariables.playerSpriteSize/2);
+        const initialPosition = (GameVariables.boardRealSize / 2) - (GameVariables.playerSpriteSize / 2);
         this.playerRect = new SquareObject(initialPosition, initialPosition, GameVariables.playerSpriteSize, GameVariables.playerSpriteSize);
         this.fakeMovementRect = new SquareObject(initialPosition, initialPosition, GameVariables.playerSpriteSize, GameVariables.playerSpriteSize);
 
@@ -25,6 +25,11 @@ export class Player {
 
     getPlayerAnxiety() {
         return this.currentAnxiety;
+    }
+
+    reduceAnxiety() {
+        this.currentAnxiety -= GameVariables.itemReducedAnxietyValue;
+        this.currentAnxiety = this.currentAnxiety < 0 ? 0 : this.currentAnxiety;
     }
 
     getPlayerRect() {

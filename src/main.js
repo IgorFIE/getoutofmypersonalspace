@@ -38,6 +38,7 @@ function init() {
     hideGameOverScreen();
 
     addKeyListenerEvents();
+    addMonetizationEvent();
     window.requestAnimationFrame(mainLoop);
 }
 
@@ -48,7 +49,7 @@ function mainLoop(timeStamp) {
     if (isGameRunning) {
         game.gameLoop(secondsPassed, keys);
         if (game.isGameOver()) {
-            if(!isGameOverFirstLoopProcessed){
+            if (!isGameOverFirstLoopProcessed) {
                 showGameOverScreen();
                 sound.playGameOverSound();
                 sound.stopInAreaSound();
@@ -72,8 +73,8 @@ function mainLoop(timeStamp) {
     window.requestAnimationFrame(mainLoop);
 }
 
-function updateHighScore(){
-    if(highScore < game.getGameScore()){
+function updateHighScore() {
+    if (highScore < game.getGameScore()) {
         highScore = game.getGameScore();
         localStorage.setItem(GameVariables.storeId, highScore);
     }
@@ -98,6 +99,11 @@ function handleMuteInput() {
         keys['m'] = false;
         sound.muteMusic();
     }
+
+    // todo remove me later
+    if(keys['p']){
+        document.monetization.dispatchEvent(new CustomEvent("monetizationstart", {}));
+    }
 }
 
 function addKeyListenerEvents() {
@@ -107,6 +113,16 @@ function addKeyListenerEvents() {
     window.addEventListener('keyup', function (e) {
         keys[e.key] = false;
     });
+}
+
+function addMonetizationEvent() {
+    if (document.monetization) {
+        document.monetization.addEventListener('monetizationstart', function () {
+            GameVariables.monetizationActive = true;
+            GameVariables.playerMaxAnxiety = 350;
+            GameVariables.itemReducedAnxietyValue = 80;
+        });
+    }
 }
 
 function createNewGame() {
@@ -138,7 +154,7 @@ function createMainMenuScreen(mainDiv) {
     drawPixelTextInCanvasContext(soundMessageAsPixels, mainMenuCanvas, GameVariables.pixelMulpiplier, mainMenuCanvas.height - 76 - (GameVariables.pixelMulpiplier));
 
     const createdByMessageAsPixels = convertTextToPixelArt('a game by igor estevao   js13kgames 2021');
-    drawPixelTextInCanvasContext(createdByMessageAsPixels, mainMenuCanvas, GameVariables.pixelMulpiplier, mainMenuCanvas.height - 28 - (GameVariables.pixelMulpiplier * 2));
+    drawPixelTextInCanvasContext(createdByMessageAsPixels, mainMenuCanvas, Math.ceil(GameVariables.pixelMulpiplier / 2), mainMenuCanvas.height - 28 - (GameVariables.pixelMulpiplier * 2));
 
     createNewGame();
 }

@@ -26,7 +26,6 @@ const boardRealSize = boardSpriteSize * boardSize;
 const playerSpeed = 100;
 const playerAnimationSpeed = 12;
 const playerAreaLevelSpeed = 30;
-const playerMaxAnxiety = 250;
 const playerSpriteSize = oneFourthSprite * 3;
 
 const enemySpeed = 100;
@@ -34,6 +33,10 @@ const enemyAnimationSpeed = 12;
 const enemyNumber = 80;
 const enemyMinSteps = 30;
 const enemyMaxSteps = 120;
+
+let monetizationActive = false;
+let playerMaxAnxiety = 250;
+let itemReducedAnxietyValue = 30;
 
 export const GameVariables = {
     storeId,
@@ -57,11 +60,13 @@ export const GameVariables = {
     playerSpeed,
     playerAnimationSpeed,
     playerAreaLevelSpeed,
-    playerMaxAnxiety,
     playerSpriteSize,
     enemySpeed,
     enemyAnimationSpeed,
     enemyNumber,
     enemyMinSteps,
-    enemyMaxSteps
+    enemyMaxSteps,
+    monetizationActive,
+    playerMaxAnxiety,
+    itemReducedAnxietyValue
 }

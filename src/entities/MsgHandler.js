@@ -2,7 +2,7 @@ import { GameVariables } from "../game-variables";
 import { convertTextToPixelArt, drawPixelTextInCanvasContext } from "../utilities/text";
 
 export class MsgHandler {
-    constructor(mainDiv){
+    constructor(mainDiv) {
         this.canvas = document.createElement('canvas');
         this.canvas.id = 'msgHandler';
         this.canvas.width = GameVariables.gameWidth;
@@ -17,9 +17,11 @@ export class MsgHandler {
         this.wasItemMsgDraw = true;
         this.wasItemMsgClean = true;
         this.itemPosition = (GameVariables.gameHeight / 4) + (GameVariables.pixelMulpiplier * 9)
+
+        this.wasMonitizationMsgDraw = false;
     }
 
-    updateItemMsg(newItemMsg){
+    updateItemMsg(newItemMsg) {
         this.cleanItemMsg();
         this.itemMsg = newItemMsg;
         this.itemTimer = 0
@@ -27,23 +29,36 @@ export class MsgHandler {
         this.wasItemMsgClean = false;
     }
 
-    cleanItemMsg(){
+    cleanItemMsg() {
         this.context.clearRect(0, this.itemPosition - (GameVariables.pixelMulpiplier * 3), GameVariables.gameWidth, GameVariables.pixelMulpiplier * 6);
     }
 
-    drawItemMsg(secondsPassed){
-        if(!this.wasItemMsgDraw){
+    drawMsgs(secondsPassed){
+        this.drawItemMsg(secondsPassed);
+        this.drawMonetizationMsg();
+    }
+
+    drawItemMsg(secondsPassed) {
+        if (!this.wasItemMsgDraw) {
             this.wasItemMsgDraw = true;
-            const scoreHasPixels = convertTextToPixelArt(this.itemMsg);
-            drawPixelTextInCanvasContext(scoreHasPixels, this.canvas, GameVariables.pixelMulpiplier, this.itemPosition);
+            const itemMsg = convertTextToPixelArt(this.itemMsg);
+            drawPixelTextInCanvasContext(itemMsg, this.canvas, GameVariables.pixelMulpiplier, this.itemPosition);
         } else {
-            if(!this.wasItemMsgClean){
+            if (!this.wasItemMsgClean) {
                 this.itemTimer += secondsPassed;
-                if(this.itemTimer > GameVariables.msgDisplayTimer){
+                if (this.itemTimer > GameVariables.msgDisplayTimer) {
                     this.cleanItemMsg();
                     this.wasItemMsgClean = true;
                 }
             }
+        }
+    }
+
+    drawMonetizationMsg() {
+        if (!this.wasMonitizationMsgDraw && GameVariables.monetizationActive) {
+            const monetizationMsg = convertTextToPixelArt('Subscription Activated! Extra anxiety tolerance and healing!');
+            drawPixelTextInCanvasContext(monetizationMsg, this.canvas, Math.ceil(GameVariables.pixelMulpiplier / 2), GameVariables.gameHeight - 28 - (GameVariables.pixelMulpiplier * 2));
+            this.wasMonitizationMsgDraw = true;
         }
     }
 }
