@@ -17,4 +17,4 @@ Run `npm run start` to start the game in a development server on `localhost:8080
 ### Production
 Use `npm run build` to create minified file and zip him with the `index.html`. The result will be available in the `dist` directory.
 
-![main menu](GetOutOfMyPersonalSpace.JPG "Get Out Of My Personal Space Main Menu")
+![image](GetOutOfMyPersonalSpace_Big.JPG "Get Out Of My Personal Space!")
