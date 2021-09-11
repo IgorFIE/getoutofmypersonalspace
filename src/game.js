@@ -19,7 +19,6 @@ export class Game {
         this.sound = sound;
         this.keys = [];
         this.secondsPassed = 0;
-        this.fps = 0;
 
         const actionDiv = document.createElement('div');
         actionDiv.id = 'actionDiv';
@@ -106,16 +105,7 @@ export class Game {
     updateGameLogic() {
         const playerBoardRect = generalRectToBoardRect(this.player.getPlayerRect(), this.board.getBoard());
         if (this.item.hasCollision(this.player.getPlayerRect())) {
-            this.msgHandler.updateItemMsg(this.item.getItemDisplayMessage());
-            this.player.reduceAnxiety();
-            this.item.generateNewItem(playerBoardRect);
-            this.scoreBoard.updateScore();
-            this.sound.playPickSound();
-            if (this.scoreBoard.getCurrentScore() % GameVariables.levelScoreGap === 0) {
-                this.msgHandler.updateEventMsg();
-                this.enemyNumber = this.enemyNumber === GameVariables.maxEnemyNumber ? GameVariables.maxEnemyNumber : this.enemyNumber + GameVariables.amountOfEnemiesToScale;
-                console.log(this.enemyNumber);
-            }
+            this.handlePickItem(playerBoardRect);
         }
         this.minimap.drawMinimap(playerBoardRect.x, playerBoardRect.y, this.item.getItemBoardPosX, this.item.getItemBoardPosY);
 
@@ -128,6 +118,18 @@ export class Game {
         }
         this.player.updatePlayerAnxietyArea();
         this.player.updatePlayerAnxietyLevel();
+    }
+
+    handlePickItem(playerBoardRect) {
+        this.msgHandler.updateItemMsg(this.item.getItemDisplayMessage());
+        this.player.reduceAnxiety();
+        this.item.generateNewItem(playerBoardRect);
+        this.scoreBoard.updateScore();
+        this.sound.playPickSound();
+        if (this.scoreBoard.getCurrentScore() % GameVariables.levelScoreGap === 0) {
+            this.msgHandler.updateEventMsg();
+            this.enemyNumber = this.enemyNumber === GameVariables.maxEnemyNumber ? GameVariables.maxEnemyNumber : this.enemyNumber + GameVariables.amountOfEnemiesToScale;
+        }
     }
 
     updateCanvasPositions() {

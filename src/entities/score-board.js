@@ -6,7 +6,7 @@ export class ScoreBoard {
         this.scoreCanvas = document.createElement('canvas');
         this.scoreCanvas.id = 'score';
         this.scoreCanvas.width = GameVariables.gameWidth;
-        this.scoreCanvas.height = GameVariables.gameHeight;
+        this.scoreCanvas.height = 140;
         mainDiv.appendChild(this.scoreCanvas);
 
         this.scoreContext = this.scoreCanvas.getContext('2d');
@@ -31,7 +31,7 @@ export class ScoreBoard {
     }
 
     cleanScore(){
-        this.scoreContext.clearRect(0, 0, GameVariables.gameWidth, GameVariables.gameHeight / 3);
+        this.scoreContext.clearRect(0, 0, this.scoreCanvas.width, this.scoreCanvas.height);
     }
 
     updateScore() {

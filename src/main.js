@@ -3,7 +3,6 @@ const { GameVariables } = require("./game-variables");
 const { Sound } = require("./utilities/sound");
 const { convertTextToPixelArt, drawPixelTextInCanvasContext } = require("./utilities/text");
 
-let fpsElem;
 let mainDiv;
 let mainMenuCanvas;
 
@@ -25,7 +24,6 @@ let endGameTimer;
 
 function init() {
     mainDiv = document.getElementById('main');
-    fpsElem = document.getElementById('fps');
 
     gameDiv = document.createElement('div');
     gameDiv.id = 'gameDiv';
@@ -45,7 +43,6 @@ function init() {
 function mainLoop(timeStamp) {
     secondsPassed = (timeStamp - oldTimeStamp) / 1000;
     oldTimeStamp = timeStamp;
-    fpsElem.innerHTML = Math.round(1 / secondsPassed) + 's';
     if (isGameRunning) {
         game.gameLoop(secondsPassed, keys);
         if (game.isGameOver()) {
@@ -98,11 +95,6 @@ function handleMuteInput() {
     if (keys['m']) {
         keys['m'] = false;
         sound.muteMusic();
-    }
-
-    // todo remove me later
-    if(keys['p']){
-        document.monetization.dispatchEvent(new CustomEvent("monetizationstart", {}));
     }
 }
 

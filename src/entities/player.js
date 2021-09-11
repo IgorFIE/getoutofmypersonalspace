@@ -30,6 +30,8 @@ export class Player {
     reduceAnxiety() {
         this.currentAnxiety -= GameVariables.itemReducedAnxietyValue;
         this.currentAnxiety = this.currentAnxiety < 0 ? 0 : this.currentAnxiety;
+        this.currentAreaLevel = 0;
+        this.areaLevelCicle = 0;
     }
 
     getPlayerRect() {
@@ -180,7 +182,7 @@ export class Player {
         context.beginPath();
         context.fillStyle = playerAnsietyLevelColors[this.currentAnxietyLevel];
         context.fillRect(
-            Math.round(this.playerRect.x - (GameVariables.oneFourthSprite * 3)),
+            Math.round(this.playerRect.x - (GameVariables.oneEighthSprite * 5)),
             Math.round(this.playerRect.y - (GameVariables.oneFourthSprite * 5)),
             Math.round(Math.min((this.currentAnxiety * (GameVariables.spriteSize * 2)) / GameVariables.playerMaxAnxiety, GameVariables.spriteSize * 2)),
             GameVariables.oneFourthSprite);

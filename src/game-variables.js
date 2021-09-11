@@ -17,8 +17,7 @@ const oneSixteenthSprite = spriteSize / 16;
 
 const endGameScreenTimer = 4;
 const msgDisplayTimer = 4;
-const eventMsgDisplayTimer = 6;
-const timeToNextEvent = 20;
+const eventMsgDisplayTimer = 8;
 
 const boardSize = 11;
 const boardScaleMultiplier = 5;
@@ -38,7 +37,7 @@ const enemyMaxSteps = 120;
 const minEnemyNumber = 40;
 const levelScoreGap = 5;
 const amountOfEnemiesToScale = 10;
-const maxEnemyNumber = 160; 
+const maxEnemyNumber = 160;
 
 let monetizationActive = false;
 let playerMaxAnxiety = 250;
@@ -60,7 +59,6 @@ export const GameVariables = {
     endGameScreenTimer,
     msgDisplayTimer,
     eventMsgDisplayTimer,
-    timeToNextEvent,
     boardSize,
     boardScaleMultiplier,
     boardSpriteSize,

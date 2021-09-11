@@ -17,12 +17,12 @@ export class MsgHandler {
         this.itemTimer = 0;
         this.wasItemMsgDraw = true;
         this.wasItemMsgClean = true;
-        this.itemPosition = (GameVariables.gameHeight / 3);
+        this.itemMsgPosition = (GameVariables.gameHeight / 2) - ((GameVariables.oneEighthSprite * 19) * (GameVariables.pixelMulpiplier / 2));
 
         this.eventTimer = 0;
         this.wasEventMsgDraw = true;
         this.wasEventMsgClean = true;
-        this.eventPosition = (GameVariables.gameHeight / 4);
+        this.eventMsgPosition = 146 + GameVariables.pixelMulpiplier * 2;
 
         this.wasMonitizationMsgDraw = false;
     }
@@ -42,11 +42,11 @@ export class MsgHandler {
     }
 
     cleanItemMsg() {
-        this.context.clearRect(0, this.itemPosition - (GameVariables.pixelMulpiplier * 3), GameVariables.gameWidth, GameVariables.pixelMulpiplier * 6);
+        this.context.clearRect(0, this.itemMsgPosition - (GameVariables.pixelMulpiplier * 3), GameVariables.gameWidth, GameVariables.pixelMulpiplier * 6);
     }
 
     cleanEventMsg() {
-        this.context.clearRect(0, this.eventPosition - (GameVariables.pixelMulpiplier * 6), GameVariables.gameWidth, GameVariables.pixelMulpiplier * 12);
+        this.context.clearRect(0, this.eventMsgPosition - (GameVariables.pixelMulpiplier * 6), GameVariables.gameWidth, GameVariables.pixelMulpiplier * 12);
     }
 
     drawMsgs(secondsPassed) {
@@ -59,7 +59,7 @@ export class MsgHandler {
         if (!this.wasItemMsgDraw) {
             this.wasItemMsgDraw = true;
             const itemMsg = convertTextToPixelArt(this.itemMsg);
-            drawPixelTextInCanvasContext(itemMsg, this.canvas, GameVariables.pixelMulpiplier, this.itemPosition);
+            drawPixelTextInCanvasContext(itemMsg, this.canvas, GameVariables.pixelMulpiplier, this.itemMsgPosition);
         } else {
             if (!this.wasItemMsgClean) {
                 this.itemTimer += secondsPassed;
@@ -75,7 +75,7 @@ export class MsgHandler {
         if (!this.wasEventMsgDraw) {
             this.wasEventMsgDraw = true;
             const eventMsg = convertTextToPixelArt(eventMessages[randomNumberOnRange(0, eventMessages.length - 1)]);
-            drawPixelTextInCanvasContext(eventMsg, this.canvas, GameVariables.pixelMulpiplier * 2, this.eventPosition);
+            drawPixelTextInCanvasContext(eventMsg, this.canvas, GameVariables.pixelMulpiplier * 2, this.eventMsgPosition);
         } else {
             if (!this.wasEventMsgClean) {
                 this.eventTimer += secondsPassed;
