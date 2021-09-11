@@ -30,6 +30,7 @@ function init() {
     mainDiv.appendChild(gameDiv);
 
     sound = new Sound();
+    window['SOUND'] = sound;
 
     createMainMenuScreen(mainDiv);
     createGameOverScreen(mainDiv);
@@ -104,7 +105,7 @@ function addKeyListenerEvents() {
         sound.initSound();
     });
     window.addEventListener('keyup', (e) => keys[e.key] = false);
-    window.addEventListener("click", () => sound.initSound())
+    window.addEventListener("click", (e) => sound.initSound());
 }
 
 function addMonetizationEvent() {
