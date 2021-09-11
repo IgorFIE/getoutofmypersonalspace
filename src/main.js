@@ -30,7 +30,6 @@ function init() {
     mainDiv.appendChild(gameDiv);
 
     sound = new Sound();
-    window['SOUND'] = sound;
 
     createMainMenuScreen(mainDiv);
     createGameOverScreen(mainDiv);
