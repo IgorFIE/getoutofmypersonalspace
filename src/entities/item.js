@@ -24,7 +24,7 @@ export class Item {
         return this.itemBoardPosY;
     }
 
-    getItemDisplayMessage(){
+    getItemDisplayMessage() {
         const currentItemMsgs = itemsMsgs[this.itemType];
         return currentItemMsgs[randomNumberOnRange(0, currentItemMsgs.length - 1)];
     }
@@ -201,14 +201,48 @@ const toiletPaperItem = [
     [itemBlackColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemlightBlueColor, itemBlackColor, itemBlackColor, itemlightBlueColor]
 ];
 
-const maskMsgs = ['Nanofibre Mask Almost 100 Effective', 'Luke Im your father!','no kiss allowed', 'allows entrance to shops!', 'dont forget to use it in public transports'];
-const gloveMsgs = ['Yes this are gloves', 'This one looks like a used condom but its for your hands', 'Yea they are called gloves', 'its not a condom but gives your hands protection', 'I can shake hands again!'];
-const vaccineMsgs = ['Got that Jab!!!', 'Moderna uh thats fancy', 'Didnt even feel a thing', 'I feel safer already', 'that second jab almost killed me', 'if you dont die from the virus you die from the cure', 'security jab update', 'My arm hurts!', 'what doesnt kill you makes you strong'];
-const pillMsgs = ['ibuprofen', 'paracetamol', 'Got to keep that Vitamin D up', 'Mmmmm just like candy'];
-const soapMsgs = ['wash your hands people!', 'Cant forget to sing happy birthday twice', 'Squeaky clean!', 'thats not lube'];
-const glassesMsgs = ['dont forget to protect your eyes', 'Ah! thats where I left them!', 'COVID in my eyes?! NEVER!', 'just like cyclops'];
-const visorMsgs = ['Re-used my star wars visor as a covid mask', 'Its a shield! but for your face!', 'visor protection!'];
-const toiletPaperMsgs = ['finaly got some toilet paper!!!', 'Phew finally I wipe my ass', 'Ever heard of a bidet?'];
+const maskMsgs = [
+    'nanofibre mask almost 100 effective', 'luke im your father!', 'no kissing allowed',
+    'allows entrance to shops!', 'dont forget to use it in public transports',
+    'its not for your chin!'
+  ];
+  
+  const gloveMsgs = [
+    'yes these are gloves', 'this one looks like a used condom but its for your hands', 'yea they are called gloves',
+    'its not a condom but gives your hands protection', 'i can shake hands again!'
+  ];
+  
+  const vaccineMsgs = [
+    'got that jab!!!', 'moderna uh thats fancy', 'didnt even feel a thing',
+    'i feel safer already', 'that second jab almost killed me', 'if you dont die from the virus you die from the cure',
+    'security jab update', 'my arm hurts!', 'what doesnt kill you makes you stronger', 'its super effective!',
+    'AKA not a G5 chip'
+  ];
+  
+  const pillMsgs = [
+    'ibuprofen', 'paracetamol', 'got to keep that vitamin d up',
+    'mmmmm just like candy', 'popping pills'
+  ];
+  
+  const soapMsgs = [
+    'wash your hands people!', 'cant forget to sing happy birthday twice', 'squeaky clean!',
+    'thats not lube', 'scrub well', 'dont forget the soap', 
+    'dont wash with only water', 'Rub rub rub till its squeaky clean!'
+  ];
+  
+  const glassesMsgs = [
+    'dont forget to protect your eyes', 'ah! thats where i left them!', 'covid in my eyes?! never!',
+    'just like cyclops'
+  ];
+  
+  const visorMsgs = [
+    're-used my star wars visor as a covid mask', 'its a shield! but for your face!', 'visor protection!',
+    'welder visors should work', 'just like a plague doctor!'
+  ];
+  
+  const toiletPaperMsgs = [
+    'finally got some toilet paper!!!', 'phew finally i can wipe my ass', 'ever heard of a bidet?'
+  ];
 
 const items = [maskItem, gloveItem, vaccineItem, pillItem, soapItem, glasesItem, visorItem, toiletPaperItem];
 const itemsMsgs = [maskMsgs, gloveMsgs, vaccineMsgs, pillMsgs, soapMsgs, glassesMsgs, visorMsgs, toiletPaperMsgs];

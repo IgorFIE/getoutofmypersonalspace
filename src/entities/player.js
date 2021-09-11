@@ -53,13 +53,13 @@ export class Player {
         let newAreaX = this.playerArea.x;
         let newAreaY = this.playerArea.y;
 
-        const isMultiDirection = keys ? Object.keys(keys).filter((key) => (key == 'd' || key == 'a' || key == 'w' || key == 's') && keys[key]).length > 1 : false;
+        const isMultiDirection = keys ? Object.keys(keys).filter((key) => (key == 'd' || key == 'D' || key == 'a' || key == 'A' || key == 'w' || key == 'W' || key == 's' || key == 'S') && keys[key]).length > 1 : false;
         const distance = isMultiDirection ? (secondsPassed * GameVariables.playerSpeed) / 1.4142 : secondsPassed * GameVariables.playerSpeed;
 
-        if (keys['d']) { newRectX += distance; newAreaX += distance; }
-        if (keys['a']) { newRectX -= distance; newAreaX -= distance; }
-        if (keys['w']) { newRectY -= distance; newAreaY -= distance; }
-        if (keys['s']) { newRectY += distance; newAreaY += distance; }
+        if (keys['d'] || keys['D']) { newRectX += distance; newAreaX += distance; }
+        if (keys['a'] || keys['A']) { newRectX -= distance; newAreaX -= distance; }
+        if (keys['w'] || keys['W']) { newRectY -= distance; newAreaY -= distance; }
+        if (keys['s'] || keys['S']) { newRectY += distance; newAreaY += distance; }
 
         this.fakeMovementRect.x = newRectX;
         this.fakeMovementRect.y = newRectY;
@@ -194,10 +194,10 @@ export class Player {
             this.currentAnimationSprite = this.currentAnimationSprite === playerFrontWalkingCicle.length - 1 ? 0 : this.currentAnimationSprite + 1;
             this.animationCicle = 0;
         }
-        if (keys && keys['d']) { return playerRightWalkingCicle[this.currentAnimationSprite]; }
-        if (keys && keys['a']) { return playerLeftWalkingCicle[this.currentAnimationSprite]; }
-        if (keys && keys['w']) { return playerBackWalkingCicle[this.currentAnimationSprite]; }
-        if (keys && keys['s']) { return playerFrontWalkingCicle[this.currentAnimationSprite]; }
+        if (keys && (keys['d'] || keys['D'])) { return playerRightWalkingCicle[this.currentAnimationSprite]; }
+        if (keys && (keys['a'] || keys['A'])) { return playerLeftWalkingCicle[this.currentAnimationSprite]; }
+        if (keys && (keys['w'] || keys['W'])) { return playerBackWalkingCicle[this.currentAnimationSprite]; }
+        if (keys && (keys['s'] || keys['S'])) { return playerFrontWalkingCicle[this.currentAnimationSprite]; }
         return playerFrontSprite;
     }
 }

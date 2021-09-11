@@ -97,7 +97,8 @@ export class MsgHandler {
 }
 
 const eventMessages = [
-    'pubs now open!', 'lockdown easing!', 'Football match!', 
-    'summer holidays!', 'nightclubs open!', 'music festival!', 
-    'BBQ season!', 'movie night!', 'board game events!', 
-    'js13k!', 'E3!', 'Black Friday!'];
+    'pubs now open!', 'lockdown easing!', 'football match!',
+    'summer holidays!', 'nightclubs open!', 'music festival!',
+    'bbq season!', 'movie night!', 'board game events!',
+    'js13k!', 'e3!', 'black friday!', 'freedom day', 'euro cup!'
+];
