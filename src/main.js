@@ -99,17 +99,17 @@ function handleMuteInput() {
 }
 
 function addKeyListenerEvents() {
-    window.addEventListener('keydown', function (e) {
+    window.addEventListener('keydown', (e) => {
         keys[e.key] = true;
+        sound.initSound();
     });
-    window.addEventListener('keyup', function (e) {
-        keys[e.key] = false;
-    });
+    window.addEventListener('keyup', (e) => keys[e.key] = false);
+    window.addEventListener("click", () => sound.initSound())
 }
 
 function addMonetizationEvent() {
     if (document.monetization) {
-        document.monetization.addEventListener('monetizationstart', function () {
+        document.monetization.addEventListener('monetizationstart', () => {
             GameVariables.monetizationActive = true;
             GameVariables.playerMaxAnxiety = 350;
             GameVariables.itemReducedAnxietyValue = 80;

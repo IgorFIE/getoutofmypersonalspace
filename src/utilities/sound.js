@@ -2,8 +2,9 @@ import { randomNumberOnRange } from "./util";
 
 export class Sound {
     constructor() {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
         this.context = new AudioContext();
-        
+
         this.loopTime = 0.01;
         this.loopMaxTime = 4;
         this.notesPeerLoop = 32;
@@ -11,15 +12,20 @@ export class Sound {
 
         this.isSoundOn = true;
         this.playAreaSound = false;
+        this.isSoundInitialized = false;
     }
 
     muteMusic() {
         this.isSoundOn = !this.isSoundOn;
     }
 
+    initSound() {
+        this.isSoundInitialized = true;
+    }
+
     playPickSound() {
-        if (this.isSoundOn) {
-            this.playSound("square", 932.3, 0.5, 0, 0.1); // Bb5
+        if (this.isSoundOn && this.isSoundInitialized) {
+            this.playSound("square", 932.3, 0.3, 0, 0.1); // Bb5
             this.playSound("square", 1865, 0.5, 0.1, 0.2); // Bb6
         }
     }
@@ -33,7 +39,7 @@ export class Sound {
     }
 
     playHumanMusic() {
-        if (this.isSoundOn) {
+        if (this.isSoundOn && this.isSoundInitialized) {
             if (this.currentTime >= (this.loopMaxTime / this.notesPeerLoop)) {
                 const randomBassSound = randomNumberOnRange(0, 3) === 0 ? '' : cMajorPantonicScale[randomNumberOnRange(0, cMajorPantonicScale.length - 1)];
                 const randomMelodySound = randomNumberOnRange(0, 2) === 0 ? '' : cMinorPantonicScale[randomNumberOnRange(0, cMinorPantonicScale.length - 1)];
@@ -51,9 +57,9 @@ export class Sound {
     }
 
     playGameOverSound() {
-        if (this.isSoundOn) {
+        if (this.isSoundOn && this.isSoundInitialized) {
             this.playSound("square", 32.70, 0.5, 0, 0.1); // C1
-            this.playSound("square", 36.71, 0.5, 0.1, 0.2); // D1
+            this.playSound("square", 36.71, 0.3, 0.1, 0.2); // D1
             this.playSound("square", 16.35, 0.5, 0.2, 1); // C0
         }
     }
@@ -71,5 +77,5 @@ export class Sound {
     }
 }
 
-const cMajorPantonicScale = [32.70,	36.71,41.20,49.00,55.00,65.41];
-const cMinorPantonicScale = [1047,1175,1319,1568,1760,2093];
+const cMajorPantonicScale = [32.70, 36.71, 41.20, 49.00, 55.00, 65.41];
+const cMinorPantonicScale = [1047, 1175, 1319, 1568, 1760, 2093];

@@ -206,7 +206,7 @@ const gloveMsgs = ['Yes this are gloves', 'This one looks like a used condom but
 const vaccineMsgs = ['Got that Jab!!!', 'Moderna uh thats fancy', 'Didnt even feel a thing', 'I feel safer already', 'that second jab almost killed me', 'if you dont die from the virus you die from the cure', 'security jab update', 'My arm hurts!', 'what doesnt kill you makes you strong'];
 const pillMsgs = ['ibuprofen', 'paracetamol', 'Got to keep that Vitamin D up', 'Mmmmm just like candy'];
 const soapMsgs = ['wash your hands people!', 'Cant forget to sing happy birthday twice', 'Squeaky clean!', 'thats not lube'];
-const glassesMsgs = ['dont forget to protect your eyes', 'Ah! thats where I left them!', 'COVID in my eyes?! NEVER!'];
+const glassesMsgs = ['dont forget to protect your eyes', 'Ah! thats where I left them!', 'COVID in my eyes?! NEVER!', 'just like cyclops'];
 const visorMsgs = ['Re-used my star wars visor as a covid mask', 'Its a shield! but for your face!', 'visor protection!'];
 const toiletPaperMsgs = ['finaly got some toilet paper!!!', 'Phew finally I wipe my ass', 'Ever heard of a bidet?'];
 
