@@ -21,6 +21,7 @@ export class Sound {
 
     initSound() {
         this.isSoundInitialized = true;
+        this.context.resume();
     }
 
     playPickSound() {
