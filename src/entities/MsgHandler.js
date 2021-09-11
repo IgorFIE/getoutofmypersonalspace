@@ -1,5 +1,6 @@
 import { GameVariables } from "../game-variables";
 import { convertTextToPixelArt, drawPixelTextInCanvasContext } from "../utilities/text";
+import { randomNumberOnRange } from "../utilities/util";
 
 export class MsgHandler {
     constructor(mainDiv) {
@@ -16,7 +17,12 @@ export class MsgHandler {
         this.itemTimer = 0;
         this.wasItemMsgDraw = true;
         this.wasItemMsgClean = true;
-        this.itemPosition = (GameVariables.gameHeight / 4) + (GameVariables.pixelMulpiplier * 9)
+        this.itemPosition = (GameVariables.gameHeight / 3);
+
+        this.eventTimer = 0;
+        this.wasEventMsgDraw = true;
+        this.wasEventMsgClean = true;
+        this.eventPosition = (GameVariables.gameHeight / 4);
 
         this.wasMonitizationMsgDraw = false;
     }
@@ -29,12 +35,23 @@ export class MsgHandler {
         this.wasItemMsgClean = false;
     }
 
+    updateEventMsg() {
+        this.eventTimer = 0
+        this.wasEventMsgDraw = false;
+        this.wasEventMsgClean = false;
+    }
+
     cleanItemMsg() {
         this.context.clearRect(0, this.itemPosition - (GameVariables.pixelMulpiplier * 3), GameVariables.gameWidth, GameVariables.pixelMulpiplier * 6);
     }
 
-    drawMsgs(secondsPassed){
+    cleanEventMsg() {
+        this.context.clearRect(0, this.eventPosition - (GameVariables.pixelMulpiplier * 6), GameVariables.gameWidth, GameVariables.pixelMulpiplier * 12);
+    }
+
+    drawMsgs(secondsPassed) {
         this.drawItemMsg(secondsPassed);
+        this.drawEventMsg(secondsPassed);
         this.drawMonetizationMsg();
     }
 
@@ -54,6 +71,22 @@ export class MsgHandler {
         }
     }
 
+    drawEventMsg(secondsPassed) {
+        if (!this.wasEventMsgDraw) {
+            this.wasEventMsgDraw = true;
+            const eventMsg = convertTextToPixelArt(eventMessages[randomNumberOnRange(0, eventMessages.length - 1)]);
+            drawPixelTextInCanvasContext(eventMsg, this.canvas, GameVariables.pixelMulpiplier * 2, this.eventPosition);
+        } else {
+            if (!this.wasEventMsgClean) {
+                this.eventTimer += secondsPassed;
+                if (this.eventTimer > GameVariables.eventMsgDisplayTimer) {
+                    this.cleanEventMsg();
+                    this.wasEventMsgClean = true;
+                }
+            }
+        }
+    }
+
     drawMonetizationMsg() {
         if (!this.wasMonitizationMsgDraw && GameVariables.monetizationActive) {
             const monetizationMsg = convertTextToPixelArt('Subscription Activated! Extra anxiety tolerance and healing!');
@@ -62,3 +95,9 @@ export class MsgHandler {
         }
     }
 }
+
+const eventMessages = [
+    'pubs now open!', 'lockdown easing!', 'Football match!', 
+    'summer holidays!', 'nightclubs open!', 'music festival!', 
+    'BBQ season!', 'movie night!', 'board game events!', 
+    'js13k!', 'E3!', 'Black Friday!'];

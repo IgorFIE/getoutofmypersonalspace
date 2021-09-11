@@ -42,6 +42,7 @@ export class Game {
         this.msgHandler = new MsgHandler(this.gameDiv);
 
         this.enemies = [];
+        this.enemyNumber = GameVariables.minEnemyNumber;
         this.newEnemyObj = new SquareObject(0, 0, GameVariables.spriteSize, GameVariables.spriteSize);
 
         this.item = new Item();
@@ -84,7 +85,7 @@ export class Game {
     }
 
     generateEnemy() {
-        if (this.enemies.length < GameVariables.enemyNumber) {
+        if (this.enemies.length < this.enemyNumber) {
             this.newEnemyObj.x = this.generateRandomPositionInsideBoard();
             this.newEnemyObj.y = this.generateRandomPositionInsideBoard();
             const hasBoardCollision = this.board.hasCollision(this.newEnemyObj);
@@ -110,6 +111,11 @@ export class Game {
             this.item.generateNewItem(playerBoardRect);
             this.scoreBoard.updateScore();
             this.sound.playPickSound();
+            if (this.scoreBoard.getCurrentScore() % GameVariables.levelScoreGap === 0) {
+                this.msgHandler.updateEventMsg();
+                this.enemyNumber = this.enemyNumber === GameVariables.maxEnemyNumber ? GameVariables.maxEnemyNumber : this.enemyNumber + GameVariables.amountOfEnemiesToScale;
+                console.log(this.enemyNumber);
+            }
         }
         this.minimap.drawMinimap(playerBoardRect.x, playerBoardRect.y, this.item.getItemBoardPosX, this.item.getItemBoardPosY);
 

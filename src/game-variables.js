@@ -17,6 +17,8 @@ const oneSixteenthSprite = spriteSize / 16;
 
 const endGameScreenTimer = 4;
 const msgDisplayTimer = 4;
+const eventMsgDisplayTimer = 6;
+const timeToNextEvent = 20;
 
 const boardSize = 11;
 const boardScaleMultiplier = 5;
@@ -30,9 +32,13 @@ const playerSpriteSize = oneFourthSprite * 3;
 
 const enemySpeed = 100;
 const enemyAnimationSpeed = 12;
-const enemyNumber = 80;
 const enemyMinSteps = 30;
 const enemyMaxSteps = 120;
+
+const minEnemyNumber = 40;
+const levelScoreGap = 5;
+const amountOfEnemiesToScale = 10;
+const maxEnemyNumber = 160; 
 
 let monetizationActive = false;
 let playerMaxAnxiety = 250;
@@ -53,6 +59,8 @@ export const GameVariables = {
     oneSixteenthSprite,
     endGameScreenTimer,
     msgDisplayTimer,
+    eventMsgDisplayTimer,
+    timeToNextEvent,
     boardSize,
     boardScaleMultiplier,
     boardSpriteSize,
@@ -63,9 +71,12 @@ export const GameVariables = {
     playerSpriteSize,
     enemySpeed,
     enemyAnimationSpeed,
-    enemyNumber,
     enemyMinSteps,
     enemyMaxSteps,
+    minEnemyNumber,
+    levelScoreGap,
+    amountOfEnemiesToScale,
+    maxEnemyNumber,
     monetizationActive,
     playerMaxAnxiety,
     itemReducedAnxietyValue

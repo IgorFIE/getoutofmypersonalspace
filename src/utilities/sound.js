@@ -19,8 +19,8 @@ export class Sound {
 
     playPickSound() {
         if (this.isSoundOn) {
-            this.playSound("square", 932.3, 1, 0, 0.1); // Bb5
-            this.playSound("square", 1865, 1, 0.1, 0.2); // Bb6
+            this.playSound("square", 932.3, 0.5, 0, 0.1); // Bb5
+            this.playSound("square", 1865, 0.5, 0.1, 0.2); // Bb6
         }
     }
 
@@ -52,9 +52,9 @@ export class Sound {
 
     playGameOverSound() {
         if (this.isSoundOn) {
-            this.playSound("square", 32.70, 1, 0, 0.1); // C1
-            this.playSound("square", 36.71, 1, 0.1, 0.2); // D1
-            this.playSound("square", 16.35, 1, 0.2, 1); // C0
+            this.playSound("square", 32.70, 0.5, 0, 0.1); // C1
+            this.playSound("square", 36.71, 0.5, 0.1, 0.2); // D1
+            this.playSound("square", 16.35, 0.5, 0.2, 1); // C0
         }
     }
 
